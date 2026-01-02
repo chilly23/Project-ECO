@@ -1,0 +1,40 @@
+.bento-desktop {
+  display: grid;
+  grid-template-columns: 4fr 2fr;
+  gap: 24px;
+  margin-left: -200px;
+  margin-right: -200px;
+}
+
+.profile-card-fixed {
+  height: 420px;
+  width: 500px;
+  background-color: #1E3E62;
+}
+
+.profile-avatar{
+  height: 300px;
+  width: auto;
+}
+
+.color_codde{
+  color: #cf30aa;
+  color: #402fb5;
+  color: #1E3E62;
+  color: #0B192C;
+}
+
+
+.side-rect-fixed {
+  height: 420px;
+  aspect-ratio: 2/5;
+  background-color: #0B192C;
+}
+
+.recent-activities {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+

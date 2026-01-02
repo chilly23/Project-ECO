@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECO - Executive Context Engine</title>
+  <meta name="description" content="Context-first networking platform for founders and CXOs. Turn cold outreach into warm introductions with AI-powered insights.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    /* CSS Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --background: hsl(222, 47%, 5%);
+      --foreground: hsl(210, 40%, 98%);
+      --card: hsl(222, 47%, 8%);
+      --card-foreground: hsl(210, 40%, 98%);
+      --primary: hsl(199, 89%, 48%);
+      --primary-foreground: hsl(222, 47%, 5%);
+      --secondary: hsl(222, 30%, 14%);
+      --secondary-foreground: hsl(210, 40%, 98%);
+      --muted: hsl(222, 30%, 12%);
+      --muted-foreground: hsl(215, 20%, 55%);
+      --border: hsl(222, 30%, 18%);
+      --radius: 0.75rem;
+      --gradient-primary: linear-gradient(135deg, hsl(199, 89%, 48%), hsl(180, 70%, 45%));
+      --shadow-glow: 0 0 60px hsla(199, 89%, 48%, 0.15);
+      --shadow-card: 0 4px 24px hsla(222, 47%, 2%, 0.4);
+    }
+
+    body {
+      font-family: 'Sora', system-ui, sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Background Effects */
+    .bg-effects {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow-top {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 600px;
+      background: radial-gradient(ellipse 80% 50% at 50% -20%, hsla(199, 89%, 48%, 0.12), transparent);
+    }
+
+    .bg-glow-bottom {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at 100% 100%, hsla(199, 89%, 48%, 0.08), transparent);
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.02;
+      background-image: 
+        linear-gradient(var(--foreground) 1px, transparent 1px),
+        linear-gradient(90deg, var(--foreground) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Utility Classes */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .glass {
+      background: hsla(222, 47%, 8%, 0.6);
+      backdrop-filter: blur(24px);
+      border: 1px solid hsla(222, 30%, 18%, 0.5);
+    }
+
+    .glass-strong {
+      background: hsla(222, 47%, 8%, 0.8);
+      backdrop-filter: blur(40px);
+      border: 1px solid hsla(222, 30%, 18%, 0.6);
+    }
+
+    .card-shadow {
+      box-shadow: var(--shadow-card);
+    }
+
+    .gradient-text {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .glow {
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* Header */
+    .header {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid hsla(222, 30%, 18%, 0.5);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--gradient-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--foreground);
+    }
+
+    .logo-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      background: var(--secondary);
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+    }
+
+    /* Main Content */
+    main {
+      position: relative;
+      z-index: 10;
+      padding: 2rem 0;
+    }
+
+    /* Search View */
+    .search-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+    }
+
+    .search-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .context-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background: hsla(199, 89%, 48%, 0.1);
+      color: var(--primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .main-title {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: var(--foreground);
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-size: 1.125rem;
+      color: var(--muted-foreground);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Search Input */
+    .search-container {
+      width: 100%;
+      max-width: 672px;
+    }
+
+    .search-wrapper {
+      position: relative;
+      border-radius: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .search-wrapper.focused {
+      transform: scale(1.02);
+    }
+
+    .search-glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 1rem;
+      background: linear-gradient(90deg, hsla(199, 89%, 48%, 0.2), hsla(199, 89%, 48%, 0.1), hsla(199, 89%, 48%, 0.2));
+      filter: blur(24px);
+      opacity: 0.5;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+    }
+
+    .search-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--muted-foreground);
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    .search-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--foreground);
+      font-size: 1.125rem;
+      font-family: 'Sora', system-ui, sans-serif;
+    }
+
+    .search-input::placeholder {
+      color: var(--muted-foreground);
+    }
+
+    .search-btn {
+      margin-left: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-btn.active {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    .search-btn.active:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+
+    .search-btn.inactive {
+      background: var(--secondary);
+      color: var(--muted-foreground);
+      cursor: not-allowed;
+    }
+
+    /* Suggestions */
+    .suggestions {
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+
+    .suggestions-label {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+      margin-bottom: 0.75rem;
+    }
+
+    .suggestions-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .suggestion-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background: hsla(222, 47%, 8%, 0.6);
+      backdrop-filter: blur(24px);
+      border: 1px solid hsla(222, 30%, 18%, 0.5);
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Sora', system-ui, sans-serif;
+    }
+
+    .suggestion-btn:hover {
+      color: var(--foreground);
+      border-color: hsla(199, 89%, 48%, 0.5);
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    /* Loading View */
+    .loading-view {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+    }
+
+    .loading-view.active {
+      display: flex;
+    }
+
+    .loading-card {
+      width: 100%;
+      max-width: 560px;
+      padding: 2rem;
+      border-radius: 1rem;
+    }
+
+    .loading-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .researching-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background: hsla(199, 89%, 48%, 0.1);
+      color: var(--primary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 1rem;
+    }
+
+    .loading-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--foreground);
+      margin-bottom: 0.5rem;
+    }
+
+    .loading-subtitle {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+    }
+
+    /* Loading Steps */
+    .loading-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .loading-step {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+      transition: background 0.3s ease;
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: slideIn 0.3s ease forwards;
+    }
+
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .loading-step.active {
+      background: hsla(199, 89%, 48%, 0.1);
+    }
+
+    .loading-step.completed {
+      background: hsla(199, 89%, 48%, 0.05);
+    }
+
+    .step-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .step-icon.pending {
+      background: var(--secondary);
+      color: var(--muted-foreground);
+    }
+
+    .step-icon.active {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      animation: glow-pulse 2s infinite;
+    }
+
+    .step-icon.completed {
+      background: hsla(199, 89%, 48%, 0.2);
+      color: var(--primary);
+    }
+
+    @keyframes glow-pulse {
+      0%, 100% { box-shadow: 0 0 10px hsla(199, 89%, 48%, 0.3); }
+      50% { box-shadow: 0 0 20px hsla(199, 89%, 48%, 0.5); }
+    }
+
+    .step-icon.active i {
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .step-label.pending {
+      color: var(--muted-foreground);
+    }
+
+    .step-label.active {
+      color: var(--foreground);
+    }
+
+    .step-label.completed {
+      color: var(--primary);
+    }
+
+    .step-progress {
+      height: 4px;
+      background: hsla(199, 89%, 48%, 0.3);
+      border-radius: 9999px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .step-progress-bar {
+      height: 100%;
+      width: 0;
+      background: var(--primary);
+      border-radius: 9999px;
+      animation: progress 1.5s linear forwards;
+    }
+
+    @keyframes progress {
+      to { width: 100%; }
+    }
+
+    /* Results View */
+    .results-view {
+      display: none;
+    }
+
+    .results-view.active {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted-foreground);
+      background: transparent;
+      border: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+      margin-bottom: 2rem;
+      transition: all 0.2s ease;
+      font-family: 'Sora', system-ui, sans-serif;
+    }
+
+    .back-btn:hover {
+      color: var(--foreground);
+      transform: translateX(-4px);
+    }
+
+    /* Bento Grid */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 1024px) {
+      .bento-grid {
+        grid-template-columns: repeat(12, 1fr);
+      }
+
+      .bento-profile { grid-column: span 5; }
+      .bento-synthesis { grid-column: span 7; }
+      .bento-posts { grid-column: span 7; }
+      .bento-icebreakers { grid-column: span 5; }
+    }
+
+    /* Profile Card */
+    .profile-card {
+      padding: 1.5rem;
+      border-radius: 1rem;
+    }
+
+    .profile-header {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 1rem;
+      object-fit: cover;
+      border: 2px solid hsla(199, 89%, 48%, 0.2);
+    }
+
+    .avatar-badge {
+      position: absolute;
+      bottom: -4px;
+      right: -4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 9999px;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: var(--primary-foreground);
+    }
+
+    .profile-info {
+      flex: 1;
+    }
+
+    .profile-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--foreground);
+      margin-bottom: 0.25rem;
+    }
+
+    .profile-title {
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .profile-link {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      color: var(--muted-foreground);
+      transition: all 0.2s ease;
+    }
+
+    .profile-link:hover {
+      background: var(--secondary);
+      transform: scale(1.1);
+    }
+
+    .profile-company {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+      margin-top: 0.75rem;
+    }
+
+    .profile-footer {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid hsla(222, 30%, 18%, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: hsl(142, 76%, 36%);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .status-text {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+    }
+
+    .divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border);
+    }
+
+    /* Synthesis Card */
+    .synthesis-card {
+      position: relative;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      overflow: hidden;
+    }
+
+    .synthesis-gradient {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, hsla(199, 89%, 48%, 0.05), transparent, hsla(199, 89%, 48%, 0.1));
+      pointer-events: none;
+    }
+
+    .synthesis-content {
+      position: relative;
+    }
+
+    .synthesis-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .synthesis-icon {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: hsla(199, 89%, 48%, 0.1);
+      color: var(--primary);
+    }
+
+    .synthesis-title-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .synthesis-title {
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
+    .sparkle-icon {
+      color: var(--primary);
+      animation: wiggle 2s infinite;
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(10deg); }
+      75% { transform: rotate(-10deg); }
+    }
+
+    .synthesis-text {
+      font-size: 1.125rem;
+      color: var(--foreground);
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+
+    .synthesis-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding-top: 0.5rem;
+    }
+
+    .meta-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 9999px;
+      background: var(--primary);
+      animation: pulse 2s infinite;
+    }
+
+    .meta-text {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+    }
+
+    /* Posts Section */
+    .posts-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
+    .title-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: var(--primary);
+    }
+
+    /* Context Card (Post) */
+    .context-card {
+      padding: 1.5rem;
+      border-radius: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .context-card:hover {
+      border-color: hsla(199, 89%, 48%, 0.3);
+    }
+
+    .context-card:hover .copy-btn {
+      opacity: 1;
+    }
+
+    .context-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .platform-info {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .platform-icon-wrapper {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    .platform-icon-wrapper.linkedin {
+      background: hsla(207, 91%, 39%, 0.1);
+      color: #0A66C2;
+    }
+
+    .platform-icon-wrapper.twitter {
+      background: hsla(0, 0%, 100%, 0.1);
+      color: var(--foreground);
+    }
+
+    .platform-icon-wrapper.news {
+      background: hsla(199, 89%, 48%, 0.1);
+      color: var(--primary);
+    }
+
+    .platform-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--foreground);
+    }
+
+    .platform-date {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+    }
+
+    .copy-btn {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--secondary);
+      transform: scale(1.1);
+    }
+
+    .copy-btn .check-icon {
+      color: var(--primary);
+    }
+
+    .copy-btn .copy-icon {
+      color: var(--muted-foreground);
+    }
+
+    .post-content {
+      color: var(--foreground);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .keyword-highlight {
+      background: hsla(199, 89%, 48%, 0.2);
+      color: var(--primary);
+      padding: 0 0.25rem;
+      border-radius: 0.25rem;
+      font-weight: 500;
+    }
+
+    .engagement-stats {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid hsla(222, 30%, 18%, 0.5);
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      color: var(--muted-foreground);
+      font-size: 0.875rem;
+    }
+
+    .keywords-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .keyword-tag {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      border-radius: 9999px;
+      background: var(--secondary);
+      color: var(--muted-foreground);
+    }
+
+    /* Icebreaker Card */
+    .icebreaker-card {
+      padding: 1.5rem;
+      border-radius: 1rem;
+    }
+
+    .icebreaker-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .icebreaker-icon {
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      background: hsla(199, 89%, 48%, 0.1);
+      color: var(--primary);
+    }
+
+    .icebreaker-title {
+      font-weight: 600;
+      color: var(--foreground);
+    }
+
+    .icebreaker-subtitle {
+      font-size: 0.875rem;
+      color: var(--muted-foreground);
+    }
+
+    .icebreaker-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .icebreaker-item {
+      padding: 1rem;
+      border-radius: 0.75rem;
+      border: 1px solid hsla(222, 30%, 18%, 0.5);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .icebreaker-item:hover {
+      border-color: hsla(199, 89%, 48%, 0.3);
+      background: hsla(222, 30%, 14%, 0.5);
+    }
+
+    .icebreaker-item.selected {
+      border-color: var(--primary);
+      background: hsla(199, 89%, 48%, 0.05);
+    }
+
+    .icebreaker-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .icebreaker-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .icebreaker-number.default {
+      background: var(--secondary);
+      color: var(--muted-foreground);
+    }
+
+    .icebreaker-number.selected {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    .icebreaker-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .icebreaker-preview {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .icebreaker-text-preview {
+      color: var(--muted-foreground);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .icebreaker-full {
+      display: none;
+    }
+
+    .icebreaker-item.selected .icebreaker-preview {
+      display: none;
+    }
+
+    .icebreaker-item.selected .icebreaker-full {
+      display: block;
+    }
+
+    .icebreaker-full-text {
+      color: var(--foreground);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .copy-message-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      border: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: 'Sora', system-ui, sans-serif;
+    }
+
+    .copy-message-btn.default {
+      background: var(--secondary);
+      color: var(--foreground);
+    }
+
+    .copy-message-btn.default:hover {
+      background: hsla(222, 30%, 14%, 0.8);
+    }
+
+    .copy-message-btn.copied {
+      background: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      z-index: 1000;
+    }
+
+    .toast {
+      display: none;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      border-radius: 0.75rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      animation: toastIn 0.3s ease;
+    }
+
+    .toast.show {
+      display: flex;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .toast-icon {
+      color: hsl(142, 76%, 36%);
+    }
+
+    .toast-message {
+      color: var(--foreground);
+      font-size: 0.875rem;
+    }
+
+    /* Error Toast */
+    .toast.error .toast-icon {
+      color: hsl(0, 84%, 60%);
+    }
+
+    /* Hidden utility */
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background Effects -->
+  <div class="bg-effects">
+    <div class="bg-glow-top"></div>
+    <div class="bg-glow-bottom"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">
+            <i data-lucide="sparkles" style="width: 20px; height: 20px; color: var(--primary-foreground);"></i>
+          </div>
+          <span class="logo-text">ECO</span>
+          <span class="logo-badge">Beta</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+      <!-- Search View -->
+      <div id="searchView" class="search-view">
+        <div class="search-header">
+          <div class="context-badge">
+            <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i>
+            <span>Context-First Networking</span>
+          </div>
+          <h1 class="main-title">The <span class="gradient-text">Warmest</span> Cold Call</h1>
+          <p class="subtitle">Enter an executive's name and company. We'll aggregate their public digital footprint to craft the perfect introduction.</p>
+        </div>
+
+        <div class="search-container">
+          <div class="search-wrapper glass-strong" id="searchWrapper">
+            <div class="search-glow"></div>
+            <div class="search-input-wrapper">
+              <i data-lucide="search" class="search-icon"></i>
+              <input 
+                type="text" 
+                id="searchInput" 
+                class="search-input" 
+                placeholder="Enter name and company (e.g., Jensen Huang, NVIDIA)"
+              >
+              <button id="searchBtn" class="search-btn inactive">
+                <i data-lucide="arrow-right" style="width: 20px; height: 20px;"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="suggestions">
+            <p class="suggestions-label">Try searching for executives:</p>
+            <div class="suggestions-list" id="suggestionsList">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading View -->
+      <div id="loadingView" class="loading-view">
+        <div class="loading-card glass-strong card-shadow">
+          <div class="loading-header">
+            <div class="researching-badge">
+              <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i>
+              <span>Researching</span>
+            </div>
+            <h3 class="loading-title">Analyzing <span id="loadingName">...</span></h3>
+            <p class="loading-subtitle">Building your personalized context...</p>
+          </div>
+          <div class="loading-steps" id="loadingSteps">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Results View -->
+      <div id="resultsView" class="results-view">
+        <button class="back-btn" id="backBtn">
+          <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+          <span>New Search</span>
+        </button>
+
+        <div class="bento-grid">
+          <!-- Profile Card -->
+          <div class="bento-profile">
+            <div class="profile-card glass card-shadow" id="profileCard">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Synthesis Card -->
+          <div class="bento-synthesis">
+            <div class="synthesis-card glass card-shadow" id="synthesisCard">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Posts Section -->
+          <div class="bento-posts">
+            <div class="posts-section" id="postsSection">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Icebreakers -->
+          <div class="bento-icebreakers">
+            <div class="icebreaker-card glass card-shadow" id="icebreakerCard">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container">
+    <div class="toast" id="toast">
+      <i data-lucide="check-circle" class="toast-icon" style="width: 20px; height: 20px;"></i>
+      <span class="toast-message" id="toastMessage">Copied to clipboard!</span>
+    </div>
+  </div>
+
+  <script>
+    // Mock Executive Data
+    const mockExecutives = [
+      {
+        id: "satya-nadella",
+        name: "Satya Nadella",
+        title: "Chairman & CEO",
+        company: "Microsoft",
+        avatar: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=200&h=200&fit=crop&crop=face",
+        linkedinUrl: "https://linkedin.com/in/satyanadella",
+        latestPosts: [
+          {
+            id: "1",
+            platform: "linkedin",
+            content: "The age of AI is here. We're seeing unprecedented adoption of Copilot across enterprises, transforming how knowledge workers create, collaborate, and innovate. This isn't just about productivity—it's about augmenting human capability.",
+            date: "2 days ago",
+            keywords: ["AI", "Copilot", "productivity", "innovation"],
+            engagement: { likes: 45200, comments: 1230, shares: 3400 }
+          },
+          {
+            id: "2",
+            platform: "twitter",
+            content: "Excited to announce our partnership with OpenAI continues to drive breakthrough innovations. The future of computing is being written today.",
+            date: "5 days ago",
+            keywords: ["OpenAI", "partnership", "innovation"],
+            engagement: { likes: 28000, comments: 890, shares: 2100 }
+          },
+          {
+            id: "3",
+            platform: "news",
+            content: "Microsoft CEO discusses responsible AI development at World Economic Forum, emphasizing the need for global collaboration on AI governance.",
+            date: "1 week ago",
+            keywords: ["responsible AI", "governance", "WEF"]
+          }
+        ],
+        aiSynthesis: "Satya is deeply focused on AI democratization and enterprise transformation. He's particularly receptive to conversations about responsible AI implementation and productivity enhancement tools.",
+        icebreakers: [
+          "Hi Satya, your insights on AI augmenting human capability really resonated with me. I'm working on [specific AI project] that aligns with Microsoft's vision of empowering every person.",
+          "Loved your recent take on Copilot adoption. We've seen similar patterns in our research on enterprise AI. Would love to share some complementary insights.",
+          "Your emphasis on responsible AI at WEF was inspiring. Our team has been exploring governance frameworks that might interest Microsoft's approach."
+        ]
+      },
+      {
+        id: "jensen-huang",
+        name: "Jensen Huang",
+        title: "Founder & CEO",
+        company: "NVIDIA",
+        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+        linkedinUrl: "https://linkedin.com/in/jensenhnung",
+        latestPosts: [
+          {
+            id: "1",
+            platform: "linkedin",
+            content: "The next wave of AI requires a new computing paradigm. Blackwell architecture represents our answer—a platform designed for the age of generative AI, capable of running trillion-parameter models efficiently.",
+            date: "3 days ago",
+            keywords: ["Blackwell", "generative AI", "computing paradigm", "trillion-parameter"],
+            engagement: { likes: 52000, comments: 2100, shares: 4500 }
+          },
+          {
+            id: "2",
+            platform: "twitter",
+            content: "Every industry is being transformed by accelerated computing. The data center is the new unit of computing. #GTC2024",
+            date: "1 week ago",
+            keywords: ["accelerated computing", "data center", "GTC"],
+            engagement: { likes: 34000, comments: 1500, shares: 2800 }
+          },
+          {
+            id: "3",
+            platform: "news",
+            content: "NVIDIA unveils next-generation robotics platform, signaling major push into physical AI and autonomous systems.",
+            date: "2 weeks ago",
+            keywords: ["robotics", "physical AI", "autonomous systems"]
+          }
+        ],
+        aiSynthesis: "Jensen is laser-focused on accelerated computing infrastructure and the physical AI revolution. He's most engaged by discussions around scaling AI workloads and novel applications of GPU computing.",
+        icebreakers: [
+          "Jensen, your vision for Blackwell as the foundation for trillion-parameter models is groundbreaking. We're building [specific application] that could showcase this capability.",
+          "The 'data center as computing unit' concept resonates with our infrastructure work. Would love to discuss how we're solving similar scaling challenges.",
+          "Your push into physical AI is timely—our robotics work aligns closely with NVIDIA's vision. Open to exploring potential synergies?"
+        ]
+      },
+      {
+        id: "sundar-pichai",
+        name: "Sundar Pichai",
+        title: "CEO",
+        company: "Google & Alphabet",
+        avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+        linkedinUrl: "https://linkedin.com/in/sundarpichai",
+        latestPosts: [
+          {
+            id: "1",
+            platform: "linkedin",
+            content: "Gemini represents our most capable AI model yet. What excites me most is how it's natively multimodal—understanding text, images, audio, and video seamlessly. This is the future of AI interaction.",
+            date: "4 days ago",
+            keywords: ["Gemini", "multimodal", "AI interaction"],
+            engagement: { likes: 38000, comments: 1800, shares: 3200 }
+          },
+          {
+            id: "2",
+            platform: "twitter",
+            content: "Proud of the team shipping AI Overviews in Search. Making information more accessible has always been our mission.",
+            date: "6 days ago",
+            keywords: ["AI Overviews", "Search", "accessibility"],
+            engagement: { likes: 25000, comments: 950, shares: 1900 }
+          },
+          {
+            id: "3",
+            platform: "news",
+            content: "Google CEO outlines quantum computing roadmap, predicting practical applications within the decade.",
+            date: "2 weeks ago",
+            keywords: ["quantum computing", "roadmap", "practical applications"]
+          }
+        ],
+        aiSynthesis: "Sundar is championing multimodal AI and making advanced technology accessible to everyone. He responds well to discussions about democratizing AI and novel ways to surface information.",
+        icebreakers: [
+          "Sundar, Gemini's multimodal capabilities are impressive. We're exploring [specific use case] that could demonstrate its potential in new ways.",
+          "Your focus on making AI accessible aligns with our mission. Would love to share how we're bringing AI capabilities to underserved markets.",
+          "The quantum computing roadmap is fascinating—our research touches on quantum-classical hybrid approaches that might interest Google's quantum team."
+        ]
+      },
+      {
+        id: "elon-musk",
+        name: "Elon Musk",
+        title: "CEO",
+        company: "Tesla, SpaceX, xAI",
+        avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop&crop=face",
+        linkedinUrl: "https://linkedin.com/in/elonmusk",
+        latestPosts: [
+          {
+            id: "1",
+            platform: "twitter",
+            content: "Grok 2 is now the most capable AI assistant. Truth-seeking AI that can engage with any topic, no artificial restrictions. The future of AI should be maximally helpful.",
+            date: "1 day ago",
+            keywords: ["Grok", "AI assistant", "truth-seeking"],
+            engagement: { likes: 180000, comments: 15000, shares: 28000 }
+          },
+          {
+            id: "2",
+            platform: "twitter",
+            content: "Full Self-Driving is getting incredibly good. The march to autonomy continues. Robotaxi unveil coming soon.",
+            date: "4 days ago",
+            keywords: ["FSD", "autonomy", "Robotaxi"],
+            engagement: { likes: 145000, comments: 12000, shares: 22000 }
+          },
+          {
+            id: "3",
+            platform: "news",
+            content: "SpaceX Starship achieves successful orbital flight, marking major milestone toward Mars colonization.",
+            date: "1 week ago",
+            keywords: ["Starship", "orbital flight", "Mars"]
+          }
+        ],
+        aiSynthesis: "Elon is pushing boundaries across AI, autonomous vehicles, and space exploration simultaneously. He engages most with bold, unconventional ideas and first-principles thinking.",
+        icebreakers: [
+          "Elon, Grok's approach to truth-seeking AI is refreshing. We're building [specific tool] with similar principles—maximum helpfulness, zero unnecessary restrictions.",
+          "The path to robotaxi is exciting. Our work on [specific autonomous tech] could accelerate certain aspects of the FSD stack.",
+          "Starship's progress is inspiring. We're solving [specific challenge] that could support Mars infrastructure development."
+        ]
+      },
+      {
+        id: "tim-cook",
+        name: "Tim Cook",
+        title: "CEO",
+        company: "Apple",
+        avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face",
+        linkedinUrl: "https://linkedin.com/in/timcook",
+        latestPosts: [
+          {
+            id: "1",
+            platform: "linkedin",
+            content: "Apple Intelligence represents our vision for AI: deeply personal, remarkably capable, and fundamentally private. We believe AI should understand you without compromising your privacy.",
+            date: "5 days ago",
+            keywords: ["Apple Intelligence", "privacy", "personal AI"],
+            engagement: { likes: 42000, comments: 2200, shares: 3800 }
+          },
+          {
+            id: "2",
+            platform: "twitter",
+            content: "Vision Pro is just the beginning. Spatial computing will transform how we work, learn, and connect. The future is here.",
+            date: "1 week ago",
+            keywords: ["Vision Pro", "spatial computing", "transform"],
+            engagement: { likes: 35000, comments: 1800, shares: 2900 }
+          },
+          {
+            id: "3",
+            platform: "news",
+            content: "Apple CEO announces expanded sustainability initiatives, commits to carbon neutral supply chain by 2030.",
+            date: "2 weeks ago",
+            keywords: ["sustainability", "carbon neutral", "supply chain"]
+          }
+        ],
+        aiSynthesis: "Tim is focused on privacy-first AI and the emergence of spatial computing. He's most receptive to conversations about user privacy, sustainable technology, and human-centric design.",
+        icebreakers: [
+          "Tim, Apple Intelligence's privacy-first approach is exactly right. We're developing [specific solution] that maintains similar privacy standards while delivering powerful AI capabilities.",
+          "Vision Pro's potential for spatial computing is immense. Our team is exploring [specific use case] that could showcase new interaction paradigms.",
+          "Apple's sustainability commitment is inspiring. We've achieved [specific milestone] and would love to share learnings that could support your 2030 goals."
+        ]
+      }
+    ];
+
+    const suggestions = [
+      { name: "Satya Nadella", company: "Microsoft" },
+      { name: "Jensen Huang", company: "NVIDIA" },
+      { name: "Sundar Pichai", company: "Google" },
+      { name: "Elon Musk", company: "Tesla" },
+      { name: "Tim Cook", company: "Apple" }
+    ];
+
+    const loadingSteps = [
+      { id: 1, label: "Connecting to Public Index...", icon: "globe", duration: 1500 },
+      { id: 2, label: "Scanning LinkedIn Activity...", icon: "linkedin", duration: 2000 },
+      { id: 3, label: "Checking Twitter/X Feed...", icon: "twitter", duration: 1800 },
+      { id: 4, label: "Aggregating News Mentions...", icon: "newspaper", duration: 1500 },
+      { id: 5, label: "Synthesizing Context with AI...", icon: "brain", duration: 2000 },
+      { id: 6, label: "Generating Icebreakers...", icon: "sparkles", duration: 1200 }
+    ];
+
+    // DOM Elements
+    const searchView = document.getElementById('searchView');
+    const loadingView = document.getElementById('loadingView');
+    const resultsView = document.getElementById('resultsView');
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchWrapper = document.getElementById('searchWrapper');
+    const suggestionsList = document.getElementById('suggestionsList');
+    const loadingStepsContainer = document.getElementById('loadingSteps');
+    const loadingName = document.getElementById('loadingName');
+    const backBtn = document.getElementById('backBtn');
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+
+    let currentQuery = '';
+    let currentExecutive = null;
+
+    // Initialize
+    function init() {
+      lucide.createIcons();
+      renderSuggestions();
+      setupEventListeners();
+    }
+
+    // Render suggestion buttons
+    function renderSuggestions() {
+      suggestionsList.innerHTML = suggestions.map(s => 
+        `<button class="suggestion-btn" data-name="${s.name}" data-company="${s.company}">${s.name}</button>`
+      ).join('');
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Search input
+      searchInput.addEventListener('input', handleInputChange);
+      searchInput.addEventListener('focus', () => searchWrapper.classList.add('focused'));
+      searchInput.addEventListener('blur', () => searchWrapper.classList.remove('focused'));
+      searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && searchInput.value.trim()) {
+          handleSearch(searchInput.value.trim());
+        }
+      });
+
+      // Search button
+      searchBtn.addEventListener('click', () => {
+        if (searchInput.value.trim()) {
+          handleSearch(searchInput.value.trim());
+        }
+      });
+
+      // Suggestions
+      suggestionsList.addEventListener('click', (e) => {
+        if (e.target.classList.contains('suggestion-btn')) {
+          const name = e.target.dataset.name;
+          const company = e.target.dataset.company;
+          const query = `${name}, ${company}`;
+          searchInput.value = query;
+          handleInputChange();
+          handleSearch(query);
+        }
+      });
+
+      // Back button
+      backBtn.addEventListener('click', handleBack);
+    }
+
+    // Handle input change
+    function handleInputChange() {
+      if (searchInput.value.trim()) {
+        searchBtn.classList.remove('inactive');
+        searchBtn.classList.add('active');
+      } else {
+        searchBtn.classList.remove('active');
+        searchBtn.classList.add('inactive');
+      }
+    }
+
+    // Handle search
+    function handleSearch(query) {
+      currentQuery = query;
+      showView('loading');
+      loadingName.textContent = query.split(',')[0].trim();
+      runLoadingSequence();
+    }
+
+    // Run loading sequence
+    function runLoadingSequence() {
+      loadingStepsContainer.innerHTML = '';
+      
+      let cumulativeTime = 0;
+      
+      loadingSteps.forEach((step, index) => {
+        const stepEl = document.createElement('div');
+        stepEl.className = 'loading-step';
+        stepEl.style.animationDelay = `${index * 0.1}s`;
+        stepEl.innerHTML = `
+          <div class="step-icon pending">
+            <i data-lucide="${step.icon}" style="width: 20px; height: 20px;"></i>
+          </div>
+          <div class="step-content">
+            <p class="step-label pending">${step.label}</p>
+          </div>
+        `;
+        loadingStepsContainer.appendChild(stepEl);
+
+        // Activate step
+        setTimeout(() => {
+          // Reset previous step
+          if (index > 0) {
+            const prevStep = loadingStepsContainer.children[index - 1];
+            prevStep.classList.remove('active');
+            prevStep.classList.add('completed');
+            prevStep.querySelector('.step-icon').classList.remove('active');
+            prevStep.querySelector('.step-icon').classList.add('completed');
+            prevStep.querySelector('.step-icon').innerHTML = '<i data-lucide="check" style="width: 20px; height: 20px;"></i>';
+            prevStep.querySelector('.step-label').classList.remove('active');
+            prevStep.querySelector('.step-label').classList.add('completed');
+            const progressEl = prevStep.querySelector('.step-progress');
+            if (progressEl) progressEl.remove();
+            lucide.createIcons();
+          }
+
+          // Activate current step
+          stepEl.classList.add('active');
+          stepEl.querySelector('.step-icon').classList.remove('pending');
+          stepEl.querySelector('.step-icon').classList.add('active');
+          stepEl.querySelector('.step-label').classList.remove('pending');
+          stepEl.querySelector('.step-label').classList.add('active');
+
+          // Add progress bar
+          const progressEl = document.createElement('div');
+          progressEl.className = 'step-progress';
+          progressEl.innerHTML = '<div class="step-progress-bar"></div>';
+          stepEl.querySelector('.step-content').appendChild(progressEl);
+
+          lucide.createIcons();
+        }, cumulativeTime);
+
+        cumulativeTime += step.duration;
+      });
+
+      // Complete and show results
+      setTimeout(() => {
+        const lastStep = loadingStepsContainer.children[loadingSteps.length - 1];
+        lastStep.classList.remove('active');
+        lastStep.classList.add('completed');
+        lastStep.querySelector('.step-icon').classList.remove('active');
+        lastStep.querySelector('.step-icon').classList.add('completed');
+        lastStep.querySelector('.step-icon').innerHTML = '<i data-lucide="check" style="width: 20px; height: 20px;"></i>';
+        lastStep.querySelector('.step-label').classList.remove('active');
+        lastStep.querySelector('.step-label').classList.add('completed');
+        lucide.createIcons();
+
+        setTimeout(() => {
+          handleLoadingComplete();
+        }, 500);
+      }, cumulativeTime);
+    }
+
+    // Handle loading complete
+    function handleLoadingComplete() {
+      const normalizedQuery = currentQuery.toLowerCase();
+      currentExecutive = mockExecutives.find(exec => 
+        exec.name.toLowerCase().includes(normalizedQuery) ||
+        exec.company.toLowerCase().includes(normalizedQuery)
+      );
+
+      if (currentExecutive) {
+        renderResults();
+        showView('results');
+      } else {
+        showToast('Executive not found in our database. Try one of the suggested names!', true);
+        showView('search');
+      }
+    }
+
+    // Render results
+    function renderResults() {
+      renderProfileCard();
+      renderSynthesisCard();
+      renderPostsSection();
+      renderIcebreakerCard();
+      lucide.createIcons();
+    }
+
+    // Render profile card
+    function renderProfileCard() {
+      const profileCard = document.getElementById('profileCard');
+      profileCard.innerHTML = `
+        <div class="profile-header">
+          <div class="avatar-wrapper">
+            <img src="${currentExecutive.avatar}" alt="${currentExecutive.name}" class="avatar">
+            <div class="avatar-badge">
+              <div class="avatar-badge-dot"></div>
+            </div>
+          </div>
+          <div class="profile-info">
+            <div class="profile-top">
+              <div>
+                <h2 class="profile-name">${currentExecutive.name}</h2>
+                <p class="profile-title">${currentExecutive.title}</p>
+              </div>
+              <a href="${currentExecutive.linkedinUrl}" target="_blank" rel="noopener noreferrer" class="profile-link">
+                <i data-lucide="external-link" style="width: 20px; height: 20px; color: var(--muted-foreground);"></i>
+              </a>
+            </div>
+            <div class="profile-company">
+              <i data-lucide="building-2" style="width: 16px; height: 16px;"></i>
+              <span>${currentExecutive.company}</span>
+            </div>
+          </div>
+        </div>
+        <div class="profile-footer">
+          <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span class="status-text">Active on social</span>
+          </div>
+          <div class="divider"></div>
+          <span class="status-text">${currentExecutive.latestPosts.length} recent posts analyzed</span>
+        </div>
+      `;
+    }
+
+    // Render synthesis card
+    function renderSynthesisCard() {
+      const synthesisCard = document.getElementById('synthesisCard');
+      synthesisCard.innerHTML = `
+        <div class="synthesis-gradient"></div>
+        <div class="synthesis-content">
+          <div class="synthesis-header">
+            <div class="synthesis-icon">
+              <i data-lucide="brain" style="width: 20px; height: 20px;"></i>
+            </div>
+            <div class="synthesis-title-wrapper">
+              <h3 class="synthesis-title">AI Synthesis</h3>
+              <i data-lucide="sparkles" class="sparkle-icon" style="width: 16px; height: 16px;"></i>
+            </div>
+          </div>
+          <p class="synthesis-text">${currentExecutive.aiSynthesis}</p>
+          <div class="synthesis-meta">
+            <div class="meta-dot"></div>
+            <p class="meta-text">Based on ${currentExecutive.name}'s recent public activity</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Highlight keywords in content
+    function highlightKeywords(content, keywords) {
+      let result = content;
+      keywords.forEach(keyword => {
+        const regex = new RegExp(`(${keyword})`, 'gi');
+        result = result.replace(regex, '<span class="keyword-highlight">$1</span>');
+      });
+      return result;
+    }
+
+    // Format number
+    function formatNumber(num) {
+      if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+      }
+      return num.toString();
+    }
+
+    // Render posts section
+    function renderPostsSection() {
+      const postsSection = document.getElementById('postsSection');
+      const platformIcons = {
+        linkedin: 'linkedin',
+        twitter: 'twitter',
+        news: 'newspaper'
+      };
+      const platformLabels = {
+        linkedin: 'LinkedIn',
+        twitter: 'Twitter/X',
+        news: 'News'
+      };
+
+      postsSection.innerHTML = `
+        <h3 class="section-title">
+          <span class="title-dot"></span>
+          Latest Activity
+        </h3>
+        ${currentExecutive.latestPosts.map((post, index) => `
+          <div class="context-card glass card-shadow" data-index="${index}">
+            <div class="context-header">
+              <div class="platform-info">
+                <div class="platform-icon-wrapper ${post.platform}">
+                  <i data-lucide="${platformIcons[post.platform]}" style="width: 16px; height: 16px;"></i>
+                </div>
+                <div>
+                  <p class="platform-name">${platformLabels[post.platform]}</p>
+                  <p class="platform-date">${post.date}</p>
+                </div>
+              </div>
+              <button class="copy-btn" onclick="copyPostContent(${index})">
+                <i data-lucide="copy" class="copy-icon" style="width: 16px; height: 16px;"></i>
+              </button>
+            </div>
+            <p class="post-content">${highlightKeywords(post.content, post.keywords)}</p>
+            ${post.engagement ? `
+              <div class="engagement-stats">
+                <div class="stat">
+                  <i data-lucide="heart" style="width: 16px; height: 16px;"></i>
+                  <span>${formatNumber(post.engagement.likes)}</span>
+                </div>
+                <div class="stat">
+                  <i data-lucide="message-circle" style="width: 16px; height: 16px;"></i>
+                  <span>${formatNumber(post.engagement.comments)}</span>
+                </div>
+                <div class="stat">
+                  <i data-lucide="share-2" style="width: 16px; height: 16px;"></i>
+                  <span>${formatNumber(post.engagement.shares)}</span>
+                </div>
+              </div>
+            ` : ''}
+            <div class="keywords-list">
+              ${post.keywords.map(k => `<span class="keyword-tag">${k}</span>`).join('')}
+            </div>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    // Copy post content
+    window.copyPostContent = function(index) {
+      const post = currentExecutive.latestPosts[index];
+      navigator.clipboard.writeText(post.content);
+      showToast('Content copied to clipboard!');
+    };
+
+    // Render icebreaker card
+    function renderIcebreakerCard() {
+      const icebreakerCard = document.getElementById('icebreakerCard');
+      icebreakerCard.innerHTML = `
+        <div class="icebreaker-header">
+          <div class="icebreaker-icon">
+            <i data-lucide="wand-2" style="width: 20px; height: 20px;"></i>
+          </div>
+          <div>
+            <h3 class="icebreaker-title">Icebreaker Messages</h3>
+            <p class="icebreaker-subtitle">AI-generated warm intro options for ${currentExecutive.name}</p>
+          </div>
+        </div>
+        <div class="icebreaker-list">
+          ${currentExecutive.icebreakers.map((icebreaker, index) => `
+            <div class="icebreaker-item" data-index="${index}" onclick="toggleIcebreaker(${index})">
+              <div class="icebreaker-row">
+                <div class="icebreaker-number default">${index + 1}</div>
+                <div class="icebreaker-content">
+                  <div class="icebreaker-preview">
+                    <p class="icebreaker-text-preview">${icebreaker.substring(0, 80)}...</p>
+                    <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--muted-foreground); flex-shrink: 0;"></i>
+                  </div>
+                  <div class="icebreaker-full">
+                    <p class="icebreaker-full-text">${icebreaker}</p>
+                    <button class="copy-message-btn default" onclick="event.stopPropagation(); copyIcebreaker(${index})">
+                      <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+                      <span>Copy Message</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    // Toggle icebreaker selection
+    window.toggleIcebreaker = function(index) {
+      const items = document.querySelectorAll('.icebreaker-item');
+      items.forEach((item, i) => {
+        if (i === index) {
+          item.classList.toggle('selected');
+          const numberEl = item.querySelector('.icebreaker-number');
+          if (item.classList.contains('selected')) {
+            numberEl.classList.remove('default');
+            numberEl.classList.add('selected');
+          } else {
+            numberEl.classList.remove('selected');
+            numberEl.classList.add('default');
+          }
+        } else {
+          item.classList.remove('selected');
+          const numberEl = item.querySelector('.icebreaker-number');
+          numberEl.classList.remove('selected');
+          numberEl.classList.add('default');
+        }
+      });
+    };
+
+    // Copy icebreaker
+    window.copyIcebreaker = function(index) {
+      const icebreaker = currentExecutive.icebreakers[index];
+      navigator.clipboard.writeText(icebreaker);
+      
+      const btn = document.querySelectorAll('.copy-message-btn')[index];
+      btn.classList.remove('default');
+      btn.classList.add('copied');
+      btn.innerHTML = '<i data-lucide="check" style="width: 16px; height: 16px;"></i><span>Copied!</span>';
+      lucide.createIcons();
+      
+      showToast('Icebreaker copied to clipboard!');
+      
+      setTimeout(() => {
+        btn.classList.remove('copied');
+        btn.classList.add('default');
+        btn.innerHTML = '<i data-lucide="copy" style="width: 16px; height: 16px;"></i><span>Copy Message</span>';
+        lucide.createIcons();
+      }, 2000);
+    };
+
+    // Handle back
+    function handleBack() {
+      searchInput.value = '';
+      handleInputChange();
+      currentExecutive = null;
+      currentQuery = '';
+      showView('search');
+    }
+
+    // Show view
+    function showView(view) {
+      searchView.style.display = view === 'search' ? 'flex' : 'none';
+      loadingView.classList.toggle('active', view === 'loading');
+      resultsView.classList.toggle('active', view === 'results');
+    }
+
+    // Show toast
+    function showToast(message, isError = false) {
+      toastMessage.textContent = message;
+      toast.classList.toggle('error', isError);
+      toast.classList.add('show');
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

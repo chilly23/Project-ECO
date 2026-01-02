@@ -1,0 +1,33 @@
+1. Wikipedia API - for photos & suggestions
+2. Gen AI API - for magical writing & drafting Intro
+3. Contacts API - for the network mails, whatsapps & phonecalls
+4. Firebase API - for db backup
+5. Google search news API - result fetched on searching
+6. Linkedin API - no API I can get, but I can get the linkedin post links from google search API and use that embedded
+7. X API - same as linkedin API
+
+⚠️ Limitation for LinkedIn and X:
+You only get public posts, not private feed content.
+
+       ----------------------------------
+       |                                |
+       |                                |
+       |            Platform            |
+       |                                |
+       |                                |
+       |                                |
+       ----------------------------------
+            |           |           |___________________________________________
+            |           |______________________                                 |
+            |                                  |                                |
+      -------------------------------          |                                |
+      |  Search Suggestion, img     |          |                                |
+      |   for micro, main result    |          |                                |
+      |             & network       |          |                                |
+      |                             |          |                                |
+      |                             |          |                                |
+      |  Used: Wikipedia API        |          |                                |
+      -------------------------------          |                                |
+                                               |                                |
+                                               |                                |
+                                               
