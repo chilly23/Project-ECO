@@ -37,7 +37,7 @@
 }
 
 /* Profile Card - Fixed */
-.profile-card-fixed {
+/* .profile-card-fixed {
   min-height: 400px;
   display: flex;
   flex-direction: column;
@@ -45,65 +45,9 @@
   justify-content: center;
   text-align: center;
   gap: 16px;
-}
+} */
 
-.profile-avatar {
-  width: 200px; 
-  height: 200px;
-  object-fit: cover;
-}
 
-.profile-card-fixed h3 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.social-row {
-  display: flex;
-  gap: 12px;
-  margin: 16px 0;
-}
-
-.social-btn {
-  width: 40px;
-  height: 40px;
-  background: rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.social-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
-}
-
-.follow-btn,
-.draft-intro-btn {
-  padding: 12px 24px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  color: white;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.follow-btn:hover,
-.draft-intro-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: translateY(-2px);
-}
-
-.draft-intro-btn {
-  margin-top: 8px;
-}
 
 /* AI Summary Card - Fixed */
 .ai-summary-card {
@@ -416,14 +360,6 @@
   }
 }
 
-.profile-card,
-.profile-card * {
-  color: #000 !important;
-}
-
-[data-theme="dark"] .profile-card {
-  background: #f2f2f2;
-}
 
 
 /* Light Mode Support */
@@ -478,9 +414,6 @@
   align-items: start;
 }
 
-.profile-card {
-  grid-column: 1;
-}
 
 .news-grid {
   grid-column: 1 / -1; /* spans both columns */

@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="css/themecss.css">
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/hand.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -57,6 +59,9 @@
       --gradient-primary: linear-gradient(135deg, hsl(199, 89%, 48%), hsl(180, 70%, 45%));
       --shadow-glow: 0 0 60px hsla(199, 89%, 48%, 0.15);
       --shadow-card: 0 4px 24px hsla(222, 47%, 2%, 0.4);
+
+      --profile-bg: #000;
+      --profile-text: #C9C1B1;
     }
 
     body {
@@ -71,7 +76,11 @@
     body.light-mode {
       --bg: #EEE9DF;
       --fg: #000;
+      
+  --profile-bg: #C9C1B1;
+  --profile-text: #000;
     }
+
 
     /* Vanta Background */
     #vanta-bg {
@@ -101,6 +110,7 @@
     .follow-btn.following {
       background: #00cb4b;
       color: #000000;
+      border: solid 1px white;
     }
 
     /* Utility Classes */
@@ -189,13 +199,13 @@
       transform: translateY(-2px);
     }
 
-    body.light-mode .settings-btn {
+    /* body.light-mode .settings-btn {
       border-color: rgba(0,0,0,0.2);
     }
 
     body.light-mode .settings-btn:hover {
       background: rgba(0,0,0,0.05);
-    }
+    } */
 
 .lable {
   line-height: 20px;
@@ -305,7 +315,7 @@
     
     /* Track */
     ::-webkit-scrollbar-track {
-      background: transparent; 
+      background-color: rgba(0,0,0,0.05); 
     }
      
     /* Handle */
@@ -325,7 +335,7 @@
       padding: 0.5rem 2rem;
       border-radius: 20px;
       background: rgba(23, 162, 184, 0.1);
-      color: var(--primary);
+      color: #58d3e6;
       font-size: 0.875rem;
       font-weight: 500;
       margin-right: 60px;
@@ -336,36 +346,6 @@
       color: #fff;
     }
 
-    /* Settings Button */
-    .settings-btn {
-      position: fixed;
-      top: 20px;
-      right: 24px;
-      z-index: 200;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--fg);
-      padding: 8px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: var(--transition);
-    }
-
-    .settings-btn:hover {
-      background: rgba(255,255,255,0.1);
-      transform: translateY(-2px);
-    }
-
-    body.light-mode .settings-btn {
-      border-color: rgba(0,0,0,0.2);
-    }
-
-    body.light-mode .settings-btn:hover {
-      background: rgba(0,0,0,0.05);
-    }
 .svg-icon {
   animation: spin 2s linear infinite;
 }
@@ -862,39 +842,35 @@ main,
 
     /* Fixed Cards */
     .profile-card {
-      grid-column: span 2;
-      height: 450px;
-      width: 350px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      background-color: #C9C1B1;
-      color: black;
-    }
+  grid-column: span 2;
+  height: 450px;
+  width: 350px;
 
-    body.light-mode .profile-card{
-      background-color: #000;
-      color: #C9C1B1;
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 
-    .profile-card,
+  position: relative;
+
+  background-color: var(--profile-bg);
+  color: var(--profile-text);
+
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 .profile-card * {
-  color: #000 !important;
+  color: inherit;
 }
 
-[data-theme="dark"] .profile-card {
-  background: #f2f2f2;
-}
 
 
 
     .profile-avatar {
       width: 180px;
       height: 180px;
-      border-radius: 20px;
+      border-radius: 2px;
       object-fit: cover;
       margin-bottom: 1.3rem;
     }
@@ -919,7 +895,7 @@ main,
     .social-btn {
       width: 44px;
       height: 44px;
-      border-radius: 10px;
+      /* border-radius: 10px; */
       background: rgba(255,255,255,0.2);
       border: none;
       color: #fff;
@@ -931,9 +907,28 @@ main,
       font-weight: 600;
     }
 
+    body.light-mode .social-btn { background: #0B192C; }
+
     .social-btn:hover {
       background: rgba(255,255,255,0.3);
       transform: translateY(-2px);
+    }
+
+    
+    .mailb:hover{
+      background-color: red;
+    } 
+    
+    .linkedinb:hover{
+      background-color: #0072b1;
+    } 
+    
+    .wb:hover{
+      background-color: #25D366;
+    } 
+    
+    .xb:hover{
+      background-color: #000;
     }
 
     .action-btns {
@@ -943,11 +938,12 @@ main,
 
     .follow-btn, .draft-btn {
       padding: 0.75rem 1.5rem;
-      border-radius: 10px;
+      border-radius: 2px;
       border: none;
       font-family: inherit;
       font-weight: 600;
       cursor: pointer;
+      width: 150px;
       transition: var(--transition);
     }
 
@@ -957,14 +953,65 @@ main,
     }
 
     .draft-btn {
-      background: rgba(255,255,255,0.2);
+      background: var(--card-3);
       color: #fff;
+      border: solid 1px white;
     }
 
     .follow-btn:hover, .draft-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
+
+    .draft-btn {
+  flex: 1;
+  position: relative;
+  transition: all 1s;
+  overflow: hidden;
+}
+
+.draft-btn::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  top: 0;
+  left: -40px;
+  transform: skewX(45deg);
+  background-color: rgb(0, 0, 0);
+  z-index: -1;
+  transition: all 1s;
+}
+
+.draft-btn:hover::before {
+  width: 160%;
+}
+    .follow-btn {
+  flex: 1;
+  text-decoration: none;
+  border: 2px solid white;
+  
+  position: relative;
+  transition: all 1s;
+  overflow: hidden;
+}
+
+.follow-btn::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  top: 0;
+  left: -40px;
+  transform: skewX(45deg);
+  background-color: white;
+  z-index: -1;
+  transition: all 1s;
+}
+
+.follow-btn:hover::before {
+  width: 160%;
+}
 
     .ai-card {
       min-height: 300px;
@@ -1241,6 +1288,42 @@ body.is-loading .static-suggestions {
   animation: spin 1.2s linear infinite;
 }
 
+.results-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.row-top {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.drafts-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.row-bottom {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.row-top > div,
+.row-bottom > div {
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .row-top,
+  .row-bottom {
+    grid-template-columns: 1fr;
+  }
+}
 
 
 
@@ -1386,6 +1469,9 @@ body.is-loading .static-suggestions {
     
   </div>
 
+  <div id="toast-root"></div>
+
+
   
   <!-- Main Content -->
 
@@ -1466,7 +1552,7 @@ body.is-loading .static-suggestions {
       <div id="jumper" style="height: 50px;"></div>
 
       <!-- Results View -->
-      <div class="results-view" id="resultsView">
+       <div class="results-view" id="resultsView">
         <button class="back-btn" id="backBtn">
           <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
           <span>New Search</span>
@@ -1484,6 +1570,28 @@ body.is-loading .static-suggestions {
         </div>
         
       </div>
+      
+      <!-- <div class="results-layout">
+
+        <!-- ROW 1 -->
+        <div class="row-top">
+          <div id="profileCard"></div>
+          <div id="aiSummaryCard"></div>
+      
+          <div class="drafts-column">
+            <div id="draft1"></div>
+            <div id="draft2"></div>
+            <div id="draft3"></div>
+          </div>
+        </div>
+      
+        <!-- ROW 2+ -->
+        <div class="row-bottom">
+          <div class="news-column"></div>
+          <div class="social-column"></div>
+        </div>
+      
+      </div> -->
       </div>
 
       <!-- Toast Container -->
@@ -1537,7 +1645,7 @@ body.is-loading .static-suggestions {
       <div class="bp-top-row">
         <div class="bp-brand-col">
           <div class="bp-brand-top">
-            <span class="bp-small">&copy; 2025 ECO | All rights reserved.         </span>
+            <span class="bp-small">&copy; 2025 ECO                | All rights reserved.         | PoC by Velan</span>
             <span class="bp-small"></span>
             <span class="bp-small">Branding + Network</span>
           </div>

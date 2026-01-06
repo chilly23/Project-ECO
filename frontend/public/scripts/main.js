@@ -1,7 +1,7 @@
 // Configuration
 const API_KEY = "AIzaSyDObv6ZowtHDhU1zmhDSwalW_b-gZn5-j4";
 const CX = "3144ca98089234e28";
-const OPENROUTER_KEY = "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";
+const OPENROUTER_KEY = "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";
 const APOLLO_API_KEY = "0qjcfFpnIhph5hh380cgww"; // Add your Apollo API key here
 
 
@@ -475,6 +475,21 @@ function handleInputChange() {
   }, 300);
 }
 
+document.addEventListener("click", (e) => {
+  const panel = document.getElementById("settingsPanel");
+  const button = document.getElementById("settingsBtn");
+
+  if (!panel.classList.contains("open")) return;
+
+  const clickedInsidePanel = panel.contains(e.target);
+  const clickedButton = button.contains(e.target);
+
+  if (!clickedInsidePanel && !clickedButton) {
+    panel.classList.remove("open");
+    button.classList.remove("spinning"); // if you have icon spin
+  }
+});
+
 
 async function fetchSuggestions(query) {
   const dropdown = document.getElementById('suggestionsDropdown');
@@ -727,6 +742,27 @@ async function getWikiProfile(name) {
   }
 }
 
+function showToast(message, type = "info", duration = 5000) {
+  const root = document.getElementById("toast-root");
+  if (!root) return;
+
+  const toast = document.createElement("div");
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+
+  root.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.classList.add("visible");
+  });
+
+  setTimeout(() => {
+    toast.classList.remove("visible");
+    setTimeout(() => toast.remove(), 300);
+  }, duration);
+}
+
+
 function getOpenRouterKey() {
   // Prefer user-provided key from settings, fall back to baked-in key
   return localStorage.getItem('eco_openrouter_api') || OPENROUTER_KEY;
@@ -747,14 +783,17 @@ async function getAISummary(name) {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${key}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'ECO Platform'
       },
       body: JSON.stringify({
-        model: 'google/gemma-2-9b-it:free',
+        model: 'openai/gpt-oss-20b:free',
         messages: [{
           role: 'user',
-          content: `You are helping with executive research. For "${name}", return strict JSON with two fields: "summary" (2-3 sentence overview) and "icebreakers" (array of 3 short, warm intro messages). No extra text.`
-        }]
+          content: `You are helping with executive research. For "${name}", return strict JSON with two fields: "summary" (2-3 sentence overview) and "icebreakers" (array of 3 short-medium, warm intro messages). No extra text.`
+        }],
+        "reasoning": {"enabled": true}
       })
     });
     const data = await res.json();
@@ -864,14 +903,17 @@ async function draftIntro(targetName) {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${key}`,
-        'Content-Type': 'application/json'
-      },
+        'Content-Type': 'application/json',
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'ECO Platform'
+      },      
       body: JSON.stringify({
-        model: 'google/gemma-2-9b-it:free',
+        model: 'openai/gpt-oss-20b:free',
         messages: [{
           role: 'user',
           content: `Here's about me: ${aboutMe}. Now write a brief, warm introduction email for ${targetName}. Keep it under 100 words.`
-        }]
+        }],
+        "reasoning": {"enabled": true}
       })
     });
     
@@ -882,8 +924,7 @@ async function draftIntro(targetName) {
     navigator.clipboard.writeText(draft);
     showToast("Draft intro copied to clipboard!");
     
-    // Show in alert (can be replaced with modal)
-    alert(`Draft Introduction:\n\n${draft}`);
+    showToast(`Draft Introduction:\n\n${draft}`, "success", 6000);
   } catch (err) {
     console.error("Draft intro error:", err);
     showToast("Failed to generate draft intro.", true);
@@ -918,7 +959,7 @@ function processLinkedIn(items) {
 function renderResults() {
   const isHome = !searchResults.profile;
   
-
+  
 
   document.getElementById("searchView").style.display = "none";
   if (!searchResults) return;
@@ -956,19 +997,19 @@ function renderResults() {
         <h2 class="profile-name">${profile.name}</h2>
         <p class="profile-title">${profile.company || '—'}</p>
         <div class="social-row">
-          <button class="social-btn" onclick="openSocial('mail','${profile.name}','${contacts.email}')">
+          <button class="social-btn mailb" onclick="openSocial('mail','${profile.name}','${contacts.email}')">
             <i data-lucide="mail"></i>
           </button>
 
-          <button class="social-btn" onclick="openSocial('linkedin','${profile.name}','${contacts.linkedin}')">
+          <button class="social-btn linkedinb" onclick="openSocial('linkedin','${profile.name}','${contacts.linkedin}')">
             <i data-lucide="linkedin"></i>
           </button>
 
-          <button class="social-btn" onclick="openSocial('x','${profile.name}','${contacts.twitter}')">
+          <button class="social-btn xb" onclick="openSocial('x','${profile.name}','${contacts.twitter}')">
             <i data-lucide="twitter"></i>
           </button>
 
-          <button class="social-btn" onclick="openSocial('whatsapp','${profile.name}','${contacts.phone}')">
+          <button class="social-btn wb" onclick="openSocial('whatsapp','${profile.name}','${contacts.phone}')">
             <i data-lucide="phone"></i>
           </button>
       </div>
@@ -977,7 +1018,8 @@ function renderResults() {
 
           <button class="follow-btn ${isAlreadyFollowing ? 'following' : ''}" onclick="toggleFollow('${profile.name}', this)"> ${isAlreadyFollowing ? 'Following' : 'Follow'} </button>
 
-          <button class="draft-btn" onclick="draftIntro('${profile.name}')">Draft Intro</button>
+          <button class="draft-btn" onclick="draftIntro('${profile.name}')"><i data-lucide="sparkles" style="width: 16px; height: 16px; color: white;"></i>
+          Draft Intro</button>
         </div>
       </div>
     `;
@@ -1135,7 +1177,7 @@ function handleBack() {
   currentQuery = '';
   searchResults = null;
 
-  document.getElementById("suggestionsDropdown").style.display = "block";
+  document.getElementById("static-suggestions").style.display = "block";
   document.getElementById("resultsView").style.display = "none";
   document.getElementById("greeting").style.display = "block";
   document.getElementById("searchView").style.display = "block";
@@ -1250,7 +1292,7 @@ function renderNetwork({ nodes, links }) {
 
   const cx = width / 2;
   const cy = height / 2;
-  const radius = Math.min(width, height) * 0.42;
+  const radius = Math.min(width, height) * 0.32;
 
   const angleStep = (2 * Math.PI) / (nodes.length - 1);
 

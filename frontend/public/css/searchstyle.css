@@ -2,8 +2,8 @@
 .border,
 .darkBorderBg,
 .glow {
-  max-height: 70px;
-  max-width: 414px;
+  max-height: 100px;
+  max-width: 500px;
   height: 100%;
   width: 100%;
   position: absolute;
@@ -216,8 +216,8 @@
   overflow: hidden;
   filter: blur(30px);
   opacity: 0.4;
-  max-height: 130px;
-  max-width: 354px;
+  max-height: 230px;
+  max-width: 454px;
 }
 .glow:before {
   content: "";
