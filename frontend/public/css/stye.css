@@ -702,17 +702,18 @@
     }
 
     .icebreaker-item {
-      padding: 1rem;
-      border-radius: 0.75rem;
-      border: 1px solid hsla(222, 30%, 18%, 0.5);
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      margin-bottom: 8px;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-
+    
     .icebreaker-item:hover {
-      border-color: hsla(199, 89%, 48%, 0.3);
-      background: hsla(222, 30%, 14%, 0.5);
+      background: rgba(255,255,255,0.06);
     }
+    
 
     .icebreaker-item.selected {
       border-color: var(--primary);
@@ -814,7 +815,7 @@
     }
 
     /* Toast */
-    .toast-container {
+    .toast-root {
       position: fixed;
       bottom: 1rem;
       right: 1rem;
@@ -852,6 +853,69 @@
     .bg-bento-purple {
       background: linear-gradient(135deg,#6d28d9,#9333ea);
     }
+
+    /* Change from vertical (top/bottom) to horizontal (left/right) */
+.link-one::before {
+  clip-path: circle(0% at 50% 50%); /* Same */
+}
+.link-one:hover::before {
+  clip-path: circle(100% at 50% 50%); /* Same */
+}
+
+/* Change the after pseudo-element for horizontal reveal */
+.link-one::after {
+  clip-path: polygon(
+    0% 40%,
+    0% 60%,
+    0% 60%,
+    0% 40%,
+    100% 40%,
+    100% 60%,
+    100% 60%,
+    100% 40%
+  );
+}
+
+.link-one:hover::after {
+  clip-path: polygon(
+    10% 40%,
+    10% 60%,
+    35% 60%,
+    35% 40%,
+    90% 40%,
+    90% 60%,
+    65% 60%,
+    65% 40%
+  );
+}
+
+/* For link-two - horizontal stripes */
+.link-two::before {
+  clip-path: polygon(
+    -20% 0%,
+    -30% 100%,
+    -10% 100%,
+    0% 0%,
+    130% 0%,
+    120% 100%,
+    100% 100%,
+    110% 0%
+  );
+}
+
+.link-two:hover::before {
+  clip-path: polygon(
+    10% 0%,
+    0% 100%,
+    20% 100%,
+    30% 0%,
+    100% 0%,
+    90% 100%,
+    70% 100%,
+    80% 0%
+  );
+}
+
 
     
     @keyframes toastIn {

@@ -1,16 +1,24 @@
 // Configuration
 const API_KEY = "AIzaSyDObv6ZowtHDhU1zmhDSwalW_b-gZn5-j4";
 const CX = "3144ca98089234e28";
-const OPENROUTER_KEY = "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";
+const OPENROUTER_KEY = "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";
 const APOLLO_API_KEY = "0qjcfFpnIhph5hh380cgww"; // Add your Apollo API key here
 
 
 const API_KEY2 = "AIzaSyD7nM0cQm1zF4wOtUMiwWAIFhkkm490A2s";
 const CX2 = "70b3250e0d4e740a9";
 
+// import { handleDemoResult } from "demoresults.js";
+
+
 // Google Custom Search key rotation config index
 // We'll build configs dynamically from localStorage + these defaults
 let currentConfigIndex = 0;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 function getGoogleConfigs() {
   const primaryKey = localStorage.getItem('eco_google_api') || API_KEY;
@@ -235,6 +243,18 @@ function setupTheme() {
   // Already handled in loadSettings
 }
 
+
+  // Pre-fill inputs
+document.getElementById('googleKey').value = API_KEY;
+document.getElementById('googleKey2').value = API_KEY2;
+document.getElementById('googleCX').value = CX;
+document.getElementById('googleCX2').value = CX2;
+document.getElementById('openrouterKey').value = OPENROUTER_KEY;
+document.getElementById('apolloKey').value = APOLLO_API_KEY;
+  // ... other keys
+
+
+
 function applyTheme(theme) {
   document.body.classList.toggle('light-mode', theme === 'light');
   localStorage.setItem('eco_theme', theme);
@@ -271,6 +291,12 @@ function setBackground(bgType) {
     case 'net':
       if (VANTA.NET) vantaEffect = VANTA.NET(config);
       break;
+    // case 'cells':
+    //   if (VANTA.CELLS) vantaEffect = VANTA.CELLS(config);
+    //   break;
+    // case 'topo':
+    //   if (VANTA.TOPOLOGY) vantaEffect = VANTA.TOPOLOGY(config);
+    //   break;
     default:
       const grid = document.querySelector(".bg-grid");
       if (grid) grid.style.display = "block";
@@ -343,12 +369,12 @@ function renderNetworkFeed(data) {
   const networkFeedContent = document.getElementById("networkFeedContent");
   networkFeedContent.innerHTML = data.map(({ person, news }) => `
     <div class="network-person-section">
-      <h4>${person}</h4>
       <div class="network-news-grid">
         ${news.map(n => `
-          <div class="network-news-card bento-card" style="background-color: ${getRandomBentoColor()}">
+        <div class="network-news-card bento-card" style="color: #000; background-color: #D3DAD9">
+        <!-- <div class="network-news-card bento-card" style="background-color: ${getRandomBentoColor()}"> -->
             ${n.image ? `<img src="${n.image}" alt="${n.title}" />` : ""}
-            <a href="${n.link}" target="_blank">${n.title}</a>
+            <a href="${n.link}" target="_blank" style="color: #000;">${n.title}</a>
             <div class="meta">${n.source}</div>
           </div>
         `).join("")}
@@ -541,6 +567,24 @@ async function fetchSuggestions(query) {
   }
 }
 
+function isDemoMode() {
+  return localStorage.getItem("eco_demo_mode") === "true";
+}
+
+const demoToggle = document.getElementById("demoModeToggle");
+
+if (demoToggle) {
+  demoToggle.checked = isDemoMode();
+
+  demoToggle.addEventListener("change", () => {
+    localStorage.setItem(
+      "eco_demo_mode",
+      demoToggle.checked ? "true" : "false"
+    );
+  });
+}
+
+
 function showLoader() {
   const loaderEl = document.getElementById("loader");
   if (loaderEl) loaderEl.classList.remove("hidden");
@@ -554,6 +598,46 @@ function hideLoader() {
   // document.body.classList.remove("is-loading");
 }
 
+function extractProfileLinksFromResults(xItems, liItems) {
+  let xProfile = null;
+  let linkedinProfile = null;
+
+  // X / Twitter
+  if (Array.isArray(xItems)) {
+    for (const item of xItems) {
+      const url = item.link;
+      if (!url) continue;
+
+      // Ignore posts
+      if (url.includes("/status/")) continue;
+
+      // Keep clean profile root
+      if (url.includes("x.com/") || url.includes("twitter.com/")) {
+        xProfile = url.split("/status")[0];
+        break;
+      }
+    }
+  }
+
+  // LinkedIn
+  if (Array.isArray(liItems)) {
+    for (const item of liItems) {
+      const url = item.link;
+      if (!url) continue;
+
+      if (url.includes("linkedin.com/in/")) {
+        linkedinProfile = url.split("?")[0];
+        break;
+      }
+    }
+  }
+
+  return {
+    x: xProfile,
+    linkedin: linkedinProfile
+  };
+}
+
 
 // Search Flow
 async function startSearchFlow() {
@@ -562,6 +646,8 @@ async function startSearchFlow() {
 
   currentQuery = query;
 
+  
+
   const MIN_LOADING_TIME = 4000; // 4 seconds
   const startTime = Date.now();
 
@@ -569,34 +655,47 @@ async function startSearchFlow() {
 
   showLoader();
 
-  // Keep search view visible, hide only what CSS handles
-  // if (searchView) {
-  //   searchView.style.display = "";
-  //   searchView.classList.remove("hiding");
-  // }
-
-  // if (resultsView) {
-  //   resultsView.classList.remove("visible");
-  // }
+  if (isDemoMode()) {
+    handleDemoResult(query);
+    return;
+  }
 
   try {
-    const [
-      profile,
-      newsResults,
-      xResults,
-      liResults,
-      aiSummaryResult
-    ] = await Promise.all([
-      getWikiProfile(query),
-      fetchGoogleResults(`recent news on ${query}`, 3, { recentDays: 30 }),
-      fetchGoogleResults(`site:x.com OR site:twitter.com ${query}`, 2, { recentDays: 14 }),
-      fetchGoogleResults(`site:linkedin.com ${query}`, 2, { recentDays: 30 }),
-      getAISummary(query)
-    ]);
+    // 1. Non-rate-limited calls can stay parallel
+const [profile, aiSummaryResult] = await Promise.all([
+  getWikiProfile(query),
+  getAISummary(query)
+]);
+
+// 2. Google calls MUST be serial
+const newsResults = await fetchGoogleResults(
+  `recent news on ${query}`,
+  1,
+  { recentDays: 30 }
+);
+
+await sleep(400);
+
+const xResults = await fetchGoogleResults(
+  `site:x.com OR site:twitter.com ${query}`,
+  1,
+  { recentDays: 14 }
+);
+
+await sleep(400);
+
+const liResults = await fetchGoogleResults(
+  `site:linkedin.com ${query}`,
+  1,
+  { recentDays: 30 }
+);
+
 
     const news = processNews(newsResults).slice(0, 16);
     const xPosts = processXPosts(xResults).slice(0, 6);
     const linkedin = processLinkedIn(liResults).slice(0, 6);
+    const socialProfiles = extractProfileLinksFromResults(xResults, liResults);
+
 
     const aiSummary = aiSummaryResult || {
       summary: null,
@@ -609,7 +708,8 @@ async function startSearchFlow() {
       news,
       xPosts,
       linkedin,
-      aiSummary
+      aiSummary,
+      socialProfiles
     };
 
     // ⏱ Ensure loader stays for at least 4s
@@ -742,7 +842,7 @@ async function getWikiProfile(name) {
   }
 }
 
-function showToast(message, type = "info", duration = 5000) {
+function showToast(message, type = "info", duration = 8000) {
   const root = document.getElementById("toast-root");
   if (!root) return;
 
@@ -807,18 +907,34 @@ async function getAISummary(name) {
       };
     }
 
-    const raw = data.choices?.[0]?.message?.content || '';
-    let parsed = null;
-    try {
-      parsed = JSON.parse(raw);
-    } catch {
-      // If model didn't obey JSON, treat whole content as summary
-      return {
-        summary: raw || null,
-        icebreakers: [],
-        error: raw ? null : "AI summary unavailable. No content returned."
-      };
-    }
+    const raw = data.choices?.[0]?.message?.content || "";
+
+const cleaned = raw
+  .replace(/```json/gi, "")
+  .replace(/```/g, "")
+  .trim();
+
+let parsed;
+
+try {
+  parsed = JSON.parse(cleaned);
+} catch (e) {
+  console.warn("AI response not valid JSON, fallback to text", cleaned);
+  return {
+    summary: cleaned || null,
+    icebreakers: [],
+    error: null
+  };
+}
+
+return {
+  summary: parsed.summary || null,
+  icebreakers: Array.isArray(parsed.icebreakers)
+    ? parsed.icebreakers.slice(0, 3)
+    : [],
+  error: null
+};
+
 
     return {
       summary: parsed?.summary || null,
@@ -835,6 +951,21 @@ async function getAISummary(name) {
   }
 }
 
+function renderCard(cardElement, data) {
+  if (!data || data.error) {
+    cardElement.innerHTML = `
+      <div class="card-error">
+        <span class="error-icon"></span>
+        <p>Something went wrong</p>
+      </div>
+    `;
+    cardElement.classList.add('error-state');
+    return;
+  }
+  // Normal rendering...
+}
+
+
 async function getApolloContact(name, company) {
   if (!APOLLO_API_KEY) {
     // Return placeholder structure
@@ -847,40 +978,17 @@ async function getApolloContact(name, company) {
   }
   
   try {
-    const res = await fetch(`https://api.apollo.io/v1/mixed_people/search`, {
-      method: 'POST',
+    const res = await fetch('/api/apollo', {
       headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache',
-        'X-Api-Key': APOLLO_API_KEY
-      },
-      body: JSON.stringify({
-        q_keywords: `${name} ${company}`,
-        page: 1,
-        per_page: 1
-      })
+        'Content-Type': 'application/json'},
     });
     
-    const data = await res.json();
-    if (data.people && data.people.length > 0) {
-      const person = data.people[0];
-      return {
-        email: person.email || null,
-        linkedin: person.linkedin_url || null,
-        twitter: person.twitter_url || null,
-        phone: person.phone_numbers?.[0]?.raw_number || null
-      };
-    }
-  } catch (err) {
-    console.error("Apollo API error:", err);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } catch (error) {
+    console.error('Apollo fetch failed:', error);
+    return { error: true, message: error.message };
   }
-  
-  return {
-    email: null,
-    linkedin: null,
-    twitter: null,
-    phone: null
-  };
 }
 
 async function draftIntro(targetName) {
@@ -924,7 +1032,7 @@ async function draftIntro(targetName) {
     navigator.clipboard.writeText(draft);
     showToast("Draft intro copied to clipboard!");
     
-    showToast(`Draft Introduction:\n\n${draft}`, "success", 6000);
+    showToast(`Draft Introduction:\n\n${draft}`, "success", 8000);
   } catch (err) {
     console.error("Draft intro error:", err);
     showToast("Failed to generate draft intro.", true);
@@ -955,6 +1063,10 @@ function processLinkedIn(items) {
   }));
 }
 
+function copycard(){
+  document.getElementById("copy-btn").textContent = "Copied";
+}
+
 // Render results
 function renderResults() {
   const isHome = !searchResults.profile;
@@ -964,7 +1076,7 @@ function renderResults() {
   document.getElementById("searchView").style.display = "none";
   if (!searchResults) return;
   
-  const { profile, news, xPosts, linkedin, aiSummary } = searchResults;
+  const { profile, news, xPosts, linkedin, aiSummary, socialProfiles } = searchResults;
   
   const grid = document.getElementById("bentoGrid");
   if (!grid) return;
@@ -1001,11 +1113,12 @@ function renderResults() {
             <i data-lucide="mail"></i>
           </button>
 
-          <button class="social-btn linkedinb" onclick="openSocial('linkedin','${profile.name}','${contacts.linkedin}')">
+          <button class="social-btn linkedinb" onclick="openSocial('linkedin','${profile.name}','${socialProfiles.linkedin}')">
             <i data-lucide="linkedin"></i>
           </button>
 
-          <button class="social-btn xb" onclick="openSocial('x','${profile.name}','${contacts.twitter}')">
+          <button class="social-btn xb" onclick="openSocial('x','${profile.name}','${socialProfiles.x}')">
+
             <i data-lucide="twitter"></i>
           </button>
 
@@ -1040,7 +1153,9 @@ html += `
   </div>
 
   <div class="draft-stack">
-    ${(aiSummary?.icebreakers || []).slice(0,3).map((d, i) => `
+    ${(aiSummary?.icebreakers || []).slice(0,3).map((d, i) => `<div class="icebreaker-actions">
+    <button class="copy-btn" id="copy-btn" onclick="copycard()">Copy</button>
+  </div>  
       <div class="draft-card">
         <div class="draft-index">${i + 1}</div>
         <p>${d}</p>
@@ -1062,7 +1177,7 @@ html += `
           ${n.image ? `<img src="${n.image}" class="news-img" alt="${n.title}">` : ''}
           <h3 class="news-title">${n.title}</h3>
           <p class="news-source">${n.source}</p>
-          <a href="${n.link}" target="_blank" style="color: inherit; text-decoration: none;">View →</a>
+          <a href="${n.link}" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
         </div>
       `;
     });
@@ -1093,7 +1208,7 @@ html += `
       html += `
         <div class="linkedin-card">
           <div class="card-title">
-            <i data-lucide="linkedin"></i>
+            <i data-lucide="linkedin" class="lucide-linkedin1"></i>
             LinkedIn
           </div>
           <p>${li.title}</p>
@@ -1117,6 +1232,34 @@ html += `
       resultsView.classList.add('visible');
     }
   });
+}
+
+function parseAIResponse(raw) {
+  if (!raw) return { summary: "", icebreakers: [] };
+
+  // Remove markdown code fences if present
+  const cleaned = raw
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .trim();
+
+  // Try JSON parse
+  try {
+    const parsed = JSON.parse(cleaned);
+
+    return {
+      summary: parsed.summary || "",
+      icebreakers: Array.isArray(parsed.icebreakers)
+        ? parsed.icebreakers
+        : []
+    };
+  } catch {
+    // Fallback: treat as plain summary text
+    return {
+      summary: raw,
+      icebreakers: []
+    };
+  }
 }
 
 function getRandomBentoColor(index = null) {

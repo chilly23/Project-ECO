@@ -12,12 +12,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <link rel="stylesheet" href="css/searchstyle.css">
   <link rel="stylesheet" href="css/bento.css">
-  <link rel="stylesheet" href="css/loaders.css">
   <link rel="stylesheet" href="css/stye.css">
-  <link rel="stylesheet" href="css/themecss.css">
   <link rel="stylesheet" href="css/footer.css">
   <link rel="stylesheet" href="css/hand.css">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)">
+
 
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,7 +29,7 @@
       --card-1: #07525E;
       --card-2: #1E3E62;
       --card-3: #0B192C;
-      --card-4: #EB7300;
+      --card-4: #1e5c1e;
       --card-5: #702006;
 
       --light-bg: #EEE9DF;
@@ -1051,12 +1051,17 @@ main,
       background: transparent
     }
 
+    .linkedin-card{
+      background-color: #0077B5;
+      border: solid 1px white;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+
     /* News Card Specific */
     .news-card {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      padding: 14px;
       border-radius: 14px;
     }
 
@@ -1073,6 +1078,7 @@ main,
     .news-title {
       font-size: 0.95rem;
       line-height: 1.35;
+      padding: 14px;
     }
 
 
@@ -1325,7 +1331,403 @@ body.is-loading .static-suggestions {
   }
 }
 
+.card-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #ff6b6b;
+  opacity: 0.8;
+}
 
+.lucide-linkedin1{
+  background-color: white;
+  padding: 2px;
+  color: #0077B5;
+}
+
+
+/* .news-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.news-card img {
+  transition: transform 0.5s ease;
+}
+
+.news-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Stagger animation on load */
+/* .news-card:nth-child(1) { animation-delay: 0.1s; }
+.news-card:nth-child(2) { animation-delay: 0.2s; }
+.news-card:nth-child(3) { animation-delay: 0.3s; } */
+
+/* mobile.css - FINAL, SAFE VERSION */
+@media (max-width: 768px) {
+
+/* =============================
+   ROOT LAYOUT FIX
+   ============================= */
+
+     
+.context-badge{
+  display: none;
+}
+.dashboard-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.profile-card,
+.ai-summary-card,
+.draft-card,
+.twitter-card,
+.linkedin-card,
+.news-card {
+  width: 100%;
+  max-width: 100%;
+} */
+
+/* =============================
+   PROFILE CARD (FIXED)
+   ============================= */
+/* 
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.profile-name {
+  font-size: 1.1rem;
+}
+
+.profile-title {
+  font-size: 0.85rem;
+  opacity: 0.8;
+} */
+
+
+
+.social-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.social-btn {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+}
+
+.action-btns {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.action-btns button {
+  flex: 1;
+  font-size: 0.85rem;
+  padding: 10px;
+}
+
+/* =============================
+   SETTINGS BUTTON (ICON ONLY)
+   ============================= */
+
+.settings-btn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  padding: 8px;
+}
+
+.settings-btn span {
+  display: none;
+}
+
+.settings-panel {
+  width: 100vw;
+  left: 100%;
+}
+
+/* =============================
+   AI SUMMARY (BELOW PROFILE)
+   ============================= */
+
+.ai-summary-card {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  padding: 14px;
+}
+
+.ai-summary-card .card-title {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+/* =============================
+   DRAFT / ICEBREAKERS
+   ============================= */
+
+.draft-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.draft-card {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.draft-index {
+  min-width: 26px;
+  height: 26px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.draft-card p {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.icebreaker-actions {
+  text-align: right;
+  padding-right: 8px;
+}
+
+/* =============================
+   NEWS / X / LINKEDIN (RESTORED)
+   ============================= */
+
+/* .news-grid,
+.twitter-card,
+.linkedin-card {
+  display: block;
+  width: 100%;
+}
+
+.news-img {
+  border-radius: 0;
+}
+
+.news-title {
+  font-size: 0.85rem;
+}
+
+.news-source,
+.news-source-view {
+  padding: 10px;
+  font-size: 0.75rem;
+} */
+
+/* =============================
+   SEARCH INPUT (UNCHANGED)
+   ============================= */
+
+#poda {
+  max-width: 300px;
+  margin-left: 10px;
+  margin-right: 15px;
+  overflow: hidden;
+}
+
+#main,
+#input {
+  max-width: 300px;
+  font-size: small;
+  overflow: hidden;
+}
+
+#suggestionsDropdown {
+  width: 300px;
+}
+
+.vanta-bg {
+  position: fixed;
+  z-index: -1;
+}
+
+/* =============================
+   VISUAL EFFECTS (UNCHANGED)
+   ============================= */
+
+.white,
+.border,
+.darkBorderBg,
+.glow {
+  max-height: 100px;
+  max-width: 350px;
+  position: absolute;
+  z-index: -1;
+  border-radius: 12px;
+  filter: blur(3px);
+}
+
+.input {
+  background-color: #010201;
+  width: 300px;
+  height: 56px;
+  border-radius: 10px;
+  padding-left: 26px;
+  padding-right: 24px;
+  font-size: 18px;
+  color: white;
+}
+
+/* =============================
+   LOADER (YOUR LOGIC KEPT)
+   ============================= */
+
+.loading-card,
+.loading-container,
+#loading,
+#loader {
+  position: fixed !important;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9998;
+}
+
+
+
+.ai-summary-card{
+  font-size: small;
+}
+
+.bento-card {
+  padding: 0px;
+  border-radius: 0px;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.news-img{
+  border-radius: 0px;
+}
+
+.news-title{
+  font-size: small;
+}
+
+.news-source{
+  padding: 10px;
+  font-size: small;
+}
+
+.news-source-view{
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: small;
+}
+
+#poda{
+  max-width: 300px;
+  margin-right: 15px;
+  margin-left: 10px;
+  overflow: hidden;
+}
+
+#main, #input{
+  max-width: 300px;
+  font-size: small;
+  overflow: hidden;
+}
+
+#suggestionsDropdown{
+  width: 300px;
+}
+
+
+.vanta-bg {
+  position: fixed;
+  z-index: -1;
+}
+
+.ai-summary-card{
+  padding: 14px;
+}
+
+
+.social-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .social-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+  }
+
+  .action-btns {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .action-btns button {
+    flex: 1;
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+
+  /* =============================
+     SETTINGS BUTTON (ICON ONLY)
+     ============================= */
+
+  .settings-btn {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 9999;
+    padding: 8px;
+  }
+
+  .settings-btn span {
+    display: none;
+  }
+
+  .settings-panel {
+    width: 100vw;
+    left: 100%;
+  }
+
+
+}
 
   </style>
 </head>
@@ -1354,7 +1756,7 @@ body.is-loading .static-suggestions {
 
   <!-- Settings Button -->
   <button class="settings-btn" id="settingsBtn">
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20" fill="none" class="svg-icon"><g stroke-width="1.5" stroke-linecap="round" stroke="#fff"><circle r="2.5" cy="10" cx="10"></circle><path fill-rule="evenodd" d="m8.39079 2.80235c.53842-1.51424 2.67991-1.51424 3.21831-.00001.3392.95358 1.4284 1.40477 2.3425.97027 1.4514-.68995 2.9657.82427 2.2758 2.27575-.4345.91407.0166 2.00334.9702 2.34248 1.5143.53842 1.5143 2.67996 0 3.21836-.9536.3391-1.4047 1.4284-.9702 2.3425.6899 1.4514-.8244 2.9656-2.2758 2.2757-.9141-.4345-2.0033.0167-2.3425.9703-.5384 1.5142-2.67989 1.5142-3.21831 0-.33914-.9536-1.4284-1.4048-2.34247-.9703-1.45148.6899-2.96571-.8243-2.27575-2.2757.43449-.9141-.01669-2.0034-.97028-2.3425-1.51422-.5384-1.51422-2.67994.00001-3.21836.95358-.33914 1.40476-1.42841.97027-2.34248-.68996-1.45148.82427-2.9657 2.27575-2.27575.91407.4345 2.00333-.01669 2.34247-.97026z" clip-rule="evenodd"></path></g></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20" fill="none" class="svg-icon"><g stroke-width="1.5" stroke-linecap="round" stroke="#fff"><circle r="2.5" cy="10" cx="10"></circle><path fill-rule="evenodd" d="m8.39079 2.80235c.53842-1.51424 2.67991-1.51424 3.21831-.00001.3392.95358 1.4284 1.40477 2.3425.97027 1.4514-.68995 2.9657.82427 2.2758 2.27575-.4345.91407.0166 2.00334.9702 2.34248 1.5143.53842 1.5143 2.67996 0 3.21836-.9536.3391-1.4047 1.4284-.9702 2.3425.6899 1.4514-.8244 2.9656-2.2758 2.2757-.9141-.4345-2.0033.0167-2.3425.9703-.5384 1.5142-2.67989 1.5142-3.21831 0-.33914-.9536-1.4284-1.4048-2.34247-.9703-1.45148.6899-2.96571-.8243-2.27575-2.2757.43449-.9141-.01669-2.0034-.97028-2.3425-1.51422-.5384-1.51422-2.67994.00001-3.21836.95358-.33914 1.40476-1.42841.97027-2.34248-.68996-1.45148.82427-2.9657 2.27575-2.27575.91407.4345 2.00333-.01669 2.34247-.97026z" clip-rule="evenodd" id="rotationsettings"></path></g></svg>
   <span>Settings</span>
 </button>
 
@@ -1377,6 +1779,15 @@ body.is-loading .static-suggestions {
       View Network Graph
     </button>
     <button id="showDataBtn" class="theme-btn">Show my data</button>
+    <div class="setting-group">
+      <label class="setting-label">Demo Mode</label>
+      <label class="network-toggle-label">
+        <input type="checkbox" id="demoModeToggle" />
+        <span class="toggle-slider"></span>
+        <span class="toggle-text">Use cached demo results</span>
+      </label>
+    </div>
+    
 
     
 
@@ -1417,6 +1828,8 @@ body.is-loading .static-suggestions {
         <button class="theme-btn1" data-bg="dots">Dots</button>
         <button class="theme-btn1" data-bg="fog">Fog</button>
         <button class="theme-btn1" data-bg="net">Net</button>
+        <!-- <button class="theme-btn1" data-bg="cells">Cells</button>
+        <button class="theme-btn1" data-bg="topo">Topo</button> -->
       </div>
     </div>
 
@@ -1560,18 +1973,35 @@ body.is-loading .static-suggestions {
         <div id="bentoGrid" class="bento-container">
           <div class="bento-left">
             <div class="profile-card"></div>
+            <div class="ai-stack">
+            
+                <div class="ai-summary-card">
+                  <h4>AI Synthesis</h4>
+                  <p id="aiSummaryText"></p>
+                </div> 
+            
+                <div class="draft-card">
+                  <div class="draft-header">
+                    <span class="draft-title">Draft Messages</span>
+                    <span class="draft-subtitle">AI-generated warm intros</span>
+                  </div>
+            
+                  <div id="icebreakers" class="icebreaker-list"></div>
+
+                </div>
+            
+              </div>
+            </div>
           </div>
         
           <div class="bento-right">
-            <div class="ai-summary-card"></div>
-            <div class="icebreakers"></div>
+            
           </div>
           
         </div>
         
       </div>
       
-      <!-- <div class="results-layout">
 
         <!-- ROW 1 -->
         <div class="row-top">
@@ -1591,7 +2021,7 @@ body.is-loading .static-suggestions {
           <div class="social-column"></div>
         </div>
       
-      </div> -->
+      </div>
       </div>
 
       <!-- Toast Container -->
@@ -1625,9 +2055,7 @@ body.is-loading .static-suggestions {
     <div class="network-feed-loader hidden" id="networkFeedLoader">
       <p>Loading</p>
       <div class="words">
-        <span class="word">Network</span>
         <span class="word">Feed</span>
-        <span class="word">Loading</span>
       </div>
     </div>
     <div id="networkFeedContent" class="network-feed-content"></div>
@@ -1686,12 +2114,19 @@ body.is-loading .static-suggestions {
   
 
   <script src="scripts/main.js"></script>
+  <script src="scripts/demoresults.js"></script>
+
   <script src="https://d3js.org/d3.v7.min.js"></script>
 
 
   <!-- Load Vanta.js backgrounds -->
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+  <!-- Add scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.cells.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.topology.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+
 </body>
 </html>
