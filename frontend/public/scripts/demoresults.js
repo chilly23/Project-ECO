@@ -6,31 +6,53 @@ window.DEMO_RESULTS = {
     "Tim Cook": "/demo/tim.html"
   };
   
-  window.handleDemoResult = async function (name) {
-    const demoPage = window.DEMO_RESULTS[name];
-    if (!demoPage) {
-      showError("Demo mode supports only suggested profiles.");
-      return;
-    }
   
-    // Wait one frame so UI state settles
-    await new Promise(requestAnimationFrame);
-  
-    const searchView = document.getElementById("searchView");
-    const { resultsView, results } = ensureResultsView();
-  
-    if (!resultsView || !results || !searchView) {
-      console.error("Demo DOM still not available");
-      return;
-    }
-  
-    resultsView.classList.remove("hidden");
-    searchView.classList.add("fade-out");
-  
+  // demoresults.js - Replace lines 19-25:
+
+window.handleDemoResult = async function (name) {
+  const demoPage = window.DEMO_RESULTS[name];
+  if (!demoPage) {
+    showError("Demo mode supports only suggested profiles.");
+    return;
+  }
+
+  // Wait for DOM to be ready
+  await new Promise(requestAnimationFrame);
+  await new Promise(resolve => setTimeout(resolve, 100)); // extra safety
+
+  const searchView = document.getElementById("searchView");
+  const resultsView = document.getElementById("resultsView");
+  const results = document.getElementById("results");
+
+  if (!resultsView || !results) {
+    console.error("Demo DOM still not available");
+    return;
+  }
+
+  // Show results view, hide search
+  resultsView.style.display = "block";
+  resultsView.classList.remove("hidden");
+  if (searchView) searchView.classList.add("fade-out");
+
+  // Hide loader and greeting
+  const loader = document.getElementById("loader");
+  const greeting = document.getElementById("greeting");
+  if (loader) loader.classList.add("hidden");
+  if (greeting) greeting.style.display = "none";
+
+  // Fetch and inject demo HTML
+  try {
     const res = await fetch(demoPage);
     const html = await res.text();
     results.innerHTML = html;
-  };
+    resultsView.classList.add("visible");
+  } catch (err) {
+    console.error("Failed to load demo page:", err);
+    showError("Failed to load demo content.");
+  }
+};
+
+  
   
 
   function ensureResultsView() {
