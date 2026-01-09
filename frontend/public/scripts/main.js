@@ -466,7 +466,7 @@ if (!OPENROUTER_KEY) {
   console.warn("Gen AI API key missing");
 }
 
-if (!APOLLO_API) {
+if (!APOLLO_KEY) {
   console.warn("Apollo API key missing");
 }
 
