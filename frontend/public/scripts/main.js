@@ -1,9 +1,10 @@
-const API_KEY = process.env.PUBLIC_GOOGLE_API_KEY;
-const CX = process.env.PUBLIC_GOOGLE_CX;
-const API_KEY_2 = process.env.PUBLIC_GOOGLE_API_KEY_2;
-const CX_2 = process.env.PUBLIC_GOOGLE_CX_2;
-const OPENROUTER_KEY = process.env.PUBLIC_OPENROUTER_KEY;
-const APOLLO_KEY = process.env.PUBLIC_APOLLO_KEY;
+const API_KEY        = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+const CX             = process.env.NEXT_PUBLIC_GOOGLE_CX;
+const API_KEY_2       = process.env.NEXT_PUBLIC_GOOGLE_API_KEY_2;
+const CX_2            = process.env.NEXT_PUBLIC_GOOGLE_CX_2;
+const OPENROUTER_KEY  = process.env.NEXT_PUBLIC_OPENROUTER_KEY;
+const APOLLO_KEY      = process.env.NEXT_PUBLIC_APOLLO_KEY;
+
 
 
 
