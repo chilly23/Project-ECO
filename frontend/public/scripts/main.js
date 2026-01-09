@@ -1,9 +1,9 @@
-const GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
-const GOOGLE_CX: process.env.GOOGLE_CX,
-const GOOGLE_API_KEY_2: process.env.GOOGLE_API_KEY_2,
-const GOOGLE_CX_2: process.env.GOOGLE_CX_2,
-const OPENROUTER_KEY: process.env.OPENROUTER_KEY,
-const APOLLO_KEY: process.env.APOLLO_KEY
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const GOOGLE_CX = process.env.GOOGLE_CX;
+const GOOGLE_API_KEY_2 = process.env.GOOGLE_API_KEY_2;
+const GOOGLE_CX_2 = process.env.GOOGLE_CX_2;
+const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
+const APOLLO_KEY = process.env.APOLLO_KEY;
 
 // import { handleDemoResult } from "demoresults.js";
 
