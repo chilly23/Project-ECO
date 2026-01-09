@@ -1,19 +1,9 @@
-let API_KEY, CX, OPENROUTER_KEY, APOLLO_API_KEY, API_KEY2, CX2;
-
-async function loadEnvConfig() {
-  try {
-    const res = await fetch('/api/config');
-    const env = await res.json();
-    API_KEY = env.GOOGLE_API_KEY;
-    CX = env.GOOGLE_CX;
-    API_KEY2 = env.GOOGLE_API_KEY_2;
-    CX2 = env.GOOGLE_CX_2;
-    OPENROUTER_KEY = env.OPENROUTER_KEY;
-    APOLLO_API_KEY = env.APOLLO_KEY;
-  } catch {
-    console.warn('Using localStorage fallbacks');
-  }
-}
+const GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+const GOOGLE_CX: process.env.GOOGLE_CX,
+const GOOGLE_API_KEY_2: process.env.GOOGLE_API_KEY_2,
+const GOOGLE_CX_2: process.env.GOOGLE_CX_2,
+const OPENROUTER_KEY: process.env.OPENROUTER_KEY,
+const APOLLO_KEY: process.env.APOLLO_KEY
 
 // import { handleDemoResult } from "demoresults.js";
 
