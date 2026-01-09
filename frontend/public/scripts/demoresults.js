@@ -1,9 +1,9 @@
 window.DEMO_RESULTS = {
-    "Satya Nadella": "/demo/satya.html",
-    "Jensen Huang": "/demo/jensen.html",
-    "Sundar Pichai": "/demo/sundar.html",
-    "Elon Musk": "/demo/elon.html",
-    "Tim Cook": "/demo/tim.html"
+    "Satya Nadella": "/satya.html",
+    "Jensen Huang": "/jensen.html",
+    "Sundar Pichai": "/sundar.html",
+    "Elon Musk": "/elon.html",
+    "Tim Cook": "/tim.html"
   };
   
   
