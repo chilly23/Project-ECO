@@ -1,7 +1,7 @@
 // Configuration
 const API_KEY = "AIzaSyDObv6ZowtHDhU1zmhDSwalW_b-gZn5-j4";
 const CX = "3144ca98089234e28";
-const OPENROUTER_KEY = "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";
+const OPENROUTER_KEY = "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";
 const APOLLO_API_KEY = "0qjcfFpnIhph5hh380cgww"; // Add your Apollo API key here
 
 
