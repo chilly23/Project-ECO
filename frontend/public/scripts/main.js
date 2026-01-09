@@ -1,11 +1,20 @@
-const API_KEY        = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
-const CX             = process.env.NEXT_PUBLIC_GOOGLE_CX;
-const API_KEY_2       = process.env.NEXT_PUBLIC_GOOGLE_API_KEY_2;
-const CX_2            = process.env.NEXT_PUBLIC_GOOGLE_CX_2;
-const OPENROUTER_KEY  = process.env.NEXT_PUBLIC_OPENROUTER_KEY;
-const APOLLO_KEY      = process.env.NEXT_PUBLIC_APOLLO_KEY;
+let API_KEY, CX, API_KEY2, CX2, OPENROUTER_KEY, APOLLO_KEY;
 
+async function loadConfig() {
+  const res = await fetch('/api/config');
+  const cfg = await res.json();
 
+  API_KEY        = cfg.GOOGLE_API_KEY;
+  CX             = cfg.GOOGLE_CX;
+  API_KEY2       = cfg.GOOGLE_API_KEY_2;
+  CX2            = cfg.GOOGLE_CX_2;
+  OPENROUTER_KEY = cfg.OPENROUTER_KEY;
+  APOLLO_KEY     = cfg.APOLLO_KEY;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadConfig();
+});
 
 
 // import { handleDemoResult } from "demoresults.js";
