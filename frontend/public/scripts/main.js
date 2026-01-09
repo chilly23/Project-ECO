@@ -1,9 +1,11 @@
-const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
-const GOOGLE_CX = process.env.GOOGLE_CX;
-const GOOGLE_API_KEY_2 = process.env.GOOGLE_API_KEY_2;
-const GOOGLE_CX_2 = process.env.GOOGLE_CX_2;
-const OPENROUTER_KEY = process.env.OPENROUTER_KEY;
-const APOLLO_KEY = process.env.APOLLO_KEY;
+const API_KEY = process.env.PUBLIC_GOOGLE_API_KEY;
+const CX = process.env.PUBLIC_GOOGLE_CX;
+const API_KEY_2 = process.env.PUBLIC_GOOGLE_API_KEY_2;
+const CX_2 = process.env.PUBLIC_GOOGLE_CX_2;
+const OPENROUTER_KEY = process.env.PUBLIC_OPENROUTER_KEY;
+const APOLLO_KEY = process.env.PUBLIC_APOLLO_KEY;
+
+
 
 // import { handleDemoResult } from "demoresults.js";
 
@@ -19,9 +21,9 @@ function sleep(ms) {
 
 function getGoogleConfigs() {
   const primaryKey = localStorage.getItem('eco_google_api') || API_KEY;
-  const primaryCx = localStorage.getItem('eco_google_cx') || CX;
+  const primaryCx = localStorage.getItem('eco_CX') || CX;
   const secondaryKey = localStorage.getItem('eco_google_api_2') || API_KEY2;
-  const secondaryCx = localStorage.getItem('eco_google_cx_2') || CX2;
+  const secondaryCx = localStorage.getItem('eco_CX_2') || CX2;
 
   const configs = [];
   if (primaryKey && primaryCx) configs.push({ key: primaryKey, cx: primaryCx });
@@ -101,9 +103,9 @@ function loadSettings() {
   if (aboutMeInput) aboutMeInput.value = aboutMe;
 
   if (googleKeyInput) googleKeyInput.value = localStorage.getItem('eco_google_api') || '';
-  if (googleCxInput) googleCxInput.value = localStorage.getItem('eco_google_cx') || '';
+  if (googleCxInput) googleCxInput.value = localStorage.getItem('eco_CX') || '';
   if (googleKey2Input) googleKey2Input.value = localStorage.getItem('eco_google_api_2') || '';
-  if (googleCx2Input) googleCx2Input.value = localStorage.getItem('eco_google_cx_2') || '';
+  if (googleCx2Input) googleCx2Input.value = localStorage.getItem('eco_CX_2') || '';
   if (openrouterKeyInput) openrouterKeyInput.value = localStorage.getItem('eco_openrouter_api') || '';
   if (apolloKeyInput) apolloKeyInput.value = localStorage.getItem('eco_apollo_api') || '';
 
@@ -214,7 +216,7 @@ if (themeSwitch) {
   const googleCx2Input = document.getElementById('googleCX2');
   if (googleCx2Input) {
     googleCx2Input.addEventListener('change', (e) => {
-      localStorage.setItem('eco_google_cx_2', e.target.value.trim());
+      localStorage.setItem('eco_CX_2', e.target.value.trim());
     });
   }
 
@@ -439,6 +441,22 @@ function setupEventListeners() {
       dropdown.classList.remove('visible');
     }
   });
+}
+
+if (!API_KEY || !CX) {
+  console.warn("Primary Google API key or CX missing");
+}
+
+if (!API_KEY_2 || !CX_2) {
+  console.warn("Backup Google API key or CX missing");
+}
+
+if (!OPENROUTER_API) {
+  console.warn("Gen AI API key missing");
+}
+
+if (!APOLLO_API) {
+  console.warn("Apollo API key missing");
 }
 
 function handleKeyDown(e) {
@@ -1425,7 +1443,7 @@ function saveKey(type) {
   // Store user-provided keys under eco_* names so they can be reused
   const map = {
     google: "eco_google_api",
-    cx: "eco_google_cx",
+    cx: "eco_CX",
     or: "eco_openrouter_api"
   };
   const el = document.getElementById(
