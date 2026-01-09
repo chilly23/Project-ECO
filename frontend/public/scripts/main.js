@@ -12,9 +12,7 @@ async function loadConfig() {
   APOLLO_KEY     = cfg.APOLLO_KEY;
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadConfig();
-});
+
 
 
 // import { handleDemoResult } from "demoresults.js";
@@ -53,7 +51,7 @@ let searchResults = null;
 let results, searchInput, searchView, resultsView, suggestionsList, backBtn, toast, toastMessage;
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // Initialize DOM references
   results = document.getElementById("results");
   searchInput = document.getElementById('searchInput');
@@ -63,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
   backBtn = document.getElementById('backBtn');
   toast = document.getElementById('toast');
   toastMessage = document.getElementById('toastMessage');
+  await loadConfig();
   init();
   loadSettings();
   setupNetworkFeed();
@@ -121,10 +120,12 @@ function loadSettings() {
 
 }
 
-const GOOGLE_CONFIGS = [
-  { key: API_KEY, cx: CX },
-  { key: API_KEY2, cx: CX2 }
-];
+function getGoogleConfigs() {
+  return [
+    { key: API_KEY, cx: CX },
+    { key: API_KEY2, cx: CX2 }
+  ].filter(c => c.key && c.cx);
+}
 
 
 
@@ -261,7 +262,7 @@ document.getElementById('googleKey2').value = API_KEY2;
 document.getElementById('googleCX').value = CX;
 document.getElementById('googleCX2').value = CX2;
 document.getElementById('openrouterKey').value = OPENROUTER_KEY;
-document.getElementById('apolloKey').value = APOLLO_API_KEY;
+document.getElementById('apolloKey').value = APOLLO_KEY;
   // ... other keys
 
 
@@ -461,7 +462,7 @@ if (!API_KEY_2 || !CX_2) {
   console.warn("Backup Google API key or CX missing");
 }
 
-if (!OPENROUTER_API) {
+if (!OPENROUTER_KEY) {
   console.warn("Gen AI API key missing");
 }
 
@@ -781,7 +782,7 @@ const liResults = await fetchGoogleResults(
 // API Functions
 async function fetchGoogleResults(query, pages = 2, { recentDays = null } = {}) {
   const allResults = [];
-  const configs = GOOGLE_CONFIGS;
+  const configs = getGoogleConfigs();
 
   if (!configs.length) return allResults;
 
@@ -1004,7 +1005,7 @@ function renderCard(cardElement, data) {
 
 
 async function getApolloContact(name, company) {
-  if (!APOLLO_API_KEY) {
+  if (!APOLLO_KEY) {
     // Return placeholder structure
     return {
       email: null,
@@ -1088,7 +1089,7 @@ function processNews(items) {
 }
 
 async function fetchApolloData(name) {
-  const apolloKey = localStorage.getItem('eco_apollo_api') || APOLLO_API_KEY;
+  const apolloKey = localStorage.getItem('eco_apollo_api') || APOLLO_KEY;
   if (!apolloKey) return null;
 
   try {
