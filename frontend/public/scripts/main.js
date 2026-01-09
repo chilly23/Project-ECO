@@ -1,12 +1,19 @@
-// Configuration
-const API_KEY = "AIzaSyDObv6ZowtHDhU1zmhDSwalW_b-gZn5-j4";
-const CX = "3144ca98089234e28";
-const OPENROUTER_KEY = "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";
-const APOLLO_API_KEY = "0qjcfFpnIhph5hh380cgww"; // Add your Apollo API key here
+let API_KEY, CX, OPENROUTER_KEY, APOLLO_API_KEY, API_KEY2, CX2;
 
-
-const API_KEY2 = "AIzaSyD7nM0cQm1zF4wOtUMiwWAIFhkkm490A2s";
-const CX2 = "70b3250e0d4e740a9";
+async function loadEnvConfig() {
+  try {
+    const res = await fetch('/api/config');
+    const env = await res.json();
+    API_KEY = env.GOOGLE_API_KEY;
+    CX = env.GOOGLE_CX;
+    API_KEY2 = env.GOOGLE_API_KEY_2;
+    CX2 = env.GOOGLE_CX_2;
+    OPENROUTER_KEY = env.OPENROUTER_KEY;
+    APOLLO_API_KEY = env.APOLLO_KEY;
+  } catch {
+    console.warn('Using localStorage fallbacks');
+  }
+}
 
 // import { handleDemoResult } from "demoresults.js";
 
@@ -79,6 +86,19 @@ function loadSettings() {
   const userNameEl = document.getElementById('userName');
   const usernameInput = document.getElementById('usernameInput');
   const aboutMeInput = document.getElementById('aboutMeInput');
+
+  applyTheme(theme);
+  const themeSwitch = document.getElementById('switch');
+  if (themeSwitch) {
+    themeSwitch.checked = theme === 'dark';
+  }
+
+  setBackground(bg);
+
+  document.querySelectorAll('[data-bg]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.bg === bg);
+  });
+
   const googleKeyInput = document.getElementById('googleKey');
   const googleCxInput = document.getElementById('googleCX');
   const googleKey2Input = document.getElementById('googleKey2');
@@ -97,17 +117,6 @@ function loadSettings() {
   if (openrouterKeyInput) openrouterKeyInput.value = localStorage.getItem('eco_openrouter_api') || '';
   if (apolloKeyInput) apolloKeyInput.value = localStorage.getItem('eco_apollo_api') || '';
 
-  applyTheme(theme);
-  const themeSwitch = document.getElementById('switch');
-  if (themeSwitch) {
-    themeSwitch.checked = theme === 'dark';
-  }
-
-  setBackground(bg);
-
-  document.querySelectorAll('[data-bg]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.bg === bg);
-  });
 }
 
 const GOOGLE_CONFIGS = [
@@ -315,6 +324,13 @@ function destroyVanta() {
 // Network Feed
 function setupNetworkFeed() {
   const networkToggle = document.getElementById("networkToggle");
+  const network = JSON.parse(localStorage.getItem("eco_network") || "[]");
+  
+  // Auto-show if user has network
+  if (network.length > 0) {
+    loadNetworkFeed();
+    if (networkToggle) networkToggle.classList.add('active');
+  }
   
   if (networkToggle) {
     networkToggle.addEventListener("click", () => {
@@ -328,6 +344,7 @@ function setupNetworkFeed() {
     });
   }
 }
+
 
 async function loadNetworkFeed() {
   const networkFeed = document.getElementById("networkFeed");
@@ -656,9 +673,11 @@ async function startSearchFlow() {
   showLoader();
 
   if (isDemoMode()) {
-    handleDemoResult(query);
+    await handleDemoResult(query);
+    hideLoader();
     return;
   }
+  
 
   try {
     // 1. Non-rate-limited calls can stay parallel
@@ -1049,6 +1068,30 @@ function processNews(items) {
     source: new URL(item.link).hostname.replace('www.', '')
   }));
 }
+
+async function fetchApolloData(name) {
+  const apolloKey = localStorage.getItem('eco_apollo_api') || APOLLO_API_KEY;
+  if (!apolloKey) return null;
+
+  try {
+    const res = await fetch('/api/apollo', {  // Your serverless endpoint
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        person_titles: [],
+        q_keywords: name,
+        page: 1,
+        per_page: 1
+      })
+    });
+    const data = await res.json();
+    return data.people?.[0] || null;
+  } catch (err) {
+    console.error('Apollo fetch failed:', err);
+    return null;
+  }
+}
+
 
 function processXPosts(items) {
   return items

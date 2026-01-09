@@ -1,7 +1,11 @@
-export const SERP_API_KEY = "1ad782632695faabec325a992c1d5f2b890665ff0499bffe2ab88764bed301d6";
-export const OPENROUTER_KEY = "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";
-const API_KEY = "AIzaSyDObv6ZowtHDhU1zmhDSwalW_b-gZn5-j4";
-const CX = "3144ca98089234e28";
-
-const API_KEY2 = "AIzaSyD7nM0cQm1zF4wOtUMiwWAIFhkkm490A2s";
-const CX2 = "70b3250e0d4e740a9";
+export default function handler(req, res) {
+    res.status(200).json({
+      GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
+      GOOGLE_CX: process.env.GOOGLE_CX,
+      GOOGLE_API_KEY_2: process.env.GOOGLE_API_KEY_2,
+      GOOGLE_CX_2: process.env.GOOGLE_CX_2,
+      OPENROUTER_KEY: process.env.OPENROUTER_KEY,
+      APOLLO_KEY: process.env.APOLLO_KEY
+    });
+  }
+  

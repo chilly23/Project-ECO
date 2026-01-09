@@ -66,11 +66,19 @@
   opacity: 0.9;
 }
 
-/* News Grid - Pinterest Style */
 .news-grid {
   column-count: 3;
   column-gap: 16px;
+  column-fill: balance;  /* Add this */
 }
+
+.news-card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  display: inline-block;  /* Add this */
+  width: 100%;            /* Add this */
+}
+
 
 @media (max-width: 1024px) {
   .news-grid { column-count: 2; }
@@ -78,11 +86,6 @@
 
 @media (max-width: 640px) {
   .news-grid { column-count: 1; }
-}
-
-.news-card {
-  break-inside: avoid;
-  margin-bottom: 16px;
 }
 
 
@@ -415,10 +418,6 @@
   column-gap: 16px;
 }
 
-.news-card {
-  break-inside: avoid;
-  margin-bottom: 16px;
-}
 
 
 .bento-left {

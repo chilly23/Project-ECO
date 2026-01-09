@@ -501,6 +501,18 @@ main,
       color: var(--primary-foreground);
     }
 
+    /* Force theme buttons text to stay white in settings panel */
+.settings-panel .theme-btn1 {
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.25) !important;
+}
+
+body.light-mode .settings-panel .theme-btn1 {
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.25) !important;
+}
+
+
     /* Main Content */
     main {
       position: relative;
@@ -1466,9 +1478,11 @@ body.is-loading .static-suggestions {
   display: none;
 }
 
+/* To this: */
 .settings-panel {
   width: 100vw;
-  left: 100%;
+  right: -100vw;
+  left: auto;
 }
 
 /* =============================
