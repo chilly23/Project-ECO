@@ -3,7 +3,7 @@ let API_KEY, CX, API_KEY2, CX2, OPENROUTER_KEY, APOLLO_KEY;
 async function loadConfig() {
   const res = await fetch('/api/config');
   const cfg = await res.json();
-
+  
   API_KEY        = cfg.GOOGLE_API_KEY;
   CX             = cfg.GOOGLE_CX;
   API_KEY2       = cfg.GOOGLE_API_KEY_2;
@@ -458,7 +458,7 @@ if (!API_KEY || !CX) {
   console.warn("Primary Google API key or CX missing");
 }
 
-if (!API_KEY_2 || !CX_2) {
+if (!API_KEY2 || !CX_2) {
   console.warn("Backup Google API key or CX missing");
 }
 
