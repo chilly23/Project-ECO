@@ -1,13 +1,12 @@
+// demoresults.js - Fixed version
+
 window.DEMO_RESULTS = {
-    "Satya Nadella": "/satya.html",
-    "Jensen Huang": "/jensen.html",
-    "Sundar Pichai": "/sundar.html",
-    "Elon Musk": "/elon.html",
-    "Tim Cook": "/tim.html"
-  };
-  
-  
-  // demoresults.js - Replace lines 19-25:
+  "Satya Nadella": "/satya.html",
+  "Jensen Huang": "/jensen.html",
+  "Sundar Pichai": "/sundar.html",
+  "Elon Musk": "/elon.html",
+  "Tim Cook": "/tim.html"
+};
 
 window.handleDemoResult = async function (name) {
   const demoPage = window.DEMO_RESULTS[name];
@@ -16,17 +15,26 @@ window.handleDemoResult = async function (name) {
     return;
   }
 
-  // Wait for DOM to be ready
+  // Wait for next frame + buffer
   await new Promise(requestAnimationFrame);
-  await new Promise(resolve => setTimeout(resolve, 100)); // extra safety
+  await new Promise(resolve => setTimeout(resolve, 150));
 
   const searchView = document.getElementById("searchView");
-  const resultsView = document.getElementById("resultsView");
-  const results = document.getElementById("results");
+  let resultsView = document.getElementById("resultsView");
+  let results = document.getElementById("results");
 
-  if (!resultsView || !results) {
-    console.error("Demo DOM still not available");
-    return;
+  // CREATE elements if they don't exist
+  if (!resultsView) {
+    resultsView = document.createElement("div");
+    resultsView.id = "resultsView";
+    resultsView.className = "results-view";
+    document.body.appendChild(resultsView);
+  }
+
+  if (!results) {
+    results = document.createElement("div");
+    results.id = "results";
+    resultsView.appendChild(results);
   }
 
   // Show results view, hide search
@@ -46,27 +54,9 @@ window.handleDemoResult = async function (name) {
     const html = await res.text();
     results.innerHTML = html;
     resultsView.classList.add("visible");
+    hideLoader(); // ensure loader is hidden
   } catch (err) {
     console.error("Failed to load demo page:", err);
     showError("Failed to load demo content.");
   }
 };
-
-  
-  
-
-  function ensureResultsView() {
-    let resultsView = document.getElementById("resultsView");
-    let results = document.getElementById("results");
-  
-    if (!resultsView || !results) {
-      // Force results view visible
-      document.body.classList.remove("is-loading");
-  
-      resultsView = document.getElementById("resultsView");
-      results = document.getElementById("results");
-    }
-  
-    return { resultsView, results };
-  }
-  
