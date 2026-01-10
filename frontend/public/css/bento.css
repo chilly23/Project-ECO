@@ -479,3 +479,22 @@
   height: 100% !important;
 } */
 
+/* Fix X embed container to prevent layout shifts */
+.x-embed {
+  min-height: 400px;
+  max-height: 500px;
+  overflow: hidden;
+  contain: layout style;
+}
+
+/* Make bento-right independent from bento-left row heights */
+.bento-right {
+  align-content: start;
+}
+
+/* Prevent X embed resize from affecting parent grid */
+.bento-container {
+  align-items: start;
+}
+
+
