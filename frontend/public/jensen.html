@@ -1421,18 +1421,6 @@
       </button>
       <button id="showDataBtn" class="theme-btn">Show my data</button>
       <div class="setting-group">
-        <label class="setting-label">Demo Mode</label>
-        <label class="network-toggle-label">
-          <input type="checkbox" id="demoModeToggle">
-          <span class="toggle-slider"></span>
-          <span class="toggle-text">Use cached demo results</span>
-        </label>
-      </div>
-      
-  
-      
-  
-      <div class="setting-group">
         <label class="setting-label">Theme</label>
         <input id="switch" type="checkbox">
       <div class="app">
@@ -1472,6 +1460,15 @@
           <!-- <button class="theme-btn1" data-bg="cells">Cells</button>
           <button class="theme-btn1" data-bg="topo">Topo</button> -->
         </div>
+      </div>
+
+    <div class="setting-group">
+        <label class="setting-label">Demo Mode</label>
+        <label class="network-toggle-label">
+          <input type="checkbox" id="demoModeToggle">
+          <span class="toggle-slider"></span>
+          <span class="toggle-text">Use cached demo results</span>
+        </label>
       </div>
   
       <div class="setting-group">
@@ -1948,6 +1945,27 @@
   
   <!-- Code injected by live-server -->
   <script>
+
+      function openSocial(platform) {
+  const links = {
+    whatsapp: "https://wa.me/?text=" + encodeURIComponent(
+      "Hello Jensen, your journey from a small startup to a tech titan is truly inspiring—can we chat about the leadership lessons you’ve learned along the way?"
+    ),
+
+    linkedin: "https://www.linkedin.com/in/jenhsunhuang/",
+
+    x: "https://x.com/nvidia",
+
+    mail: "mailto:jensenhuang@nvidia.com"
+      + "?subject=" + encodeURIComponent("Quick chat")
+      + "&body=" + encodeURIComponent(
+        "Hello Jensen, your journey from a small startup to a tech titan is truly inspiring—can we chat about the leadership lessons you’ve learned along the way?"
+      )
+  };
+
+  window.open(links[platform], "_blank");
+}
+
       // <![CDATA[  <-- For SVG support
       if ('WebSocket' in window) {
           (function () {
