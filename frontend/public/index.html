@@ -1980,7 +1980,26 @@ body.is-loading .static-suggestions {
       </div>
       <div id="jumper" style="height: 50px;"></div>
 
-      <div id="fakeChatBar" class="fake-chat-bar hidden"></div>
+      <!-- Fake Chat Bar -->
+<div id="fakeChatSection" class="fake-chat-section hidden">
+  <div id="fakeChatBar" class="fake-chat-bar"></div>
+</div>
+
+<!-- Fake Chat Modal -->
+<div id="fakeChatModal" class="fake-chat-modal hidden">
+  <div class="chat-header">
+    <img id="chatAvatar" />
+    <span id="chatName"></span>
+    <button onclick="closeFakeChat()">✕</button>
+  </div>
+
+  <div id="chatMessages" class="chat-messages"></div>
+
+  <div class="chat-input">
+    <input type="text" placeholder="Type a message…" disabled />
+  </div>
+</div>
+
 
       <!-- Results View -->
        <div class="results-view" id="resultsView">
