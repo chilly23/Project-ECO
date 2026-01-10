@@ -193,6 +193,78 @@ if (themeSwitch) {
     });
   }
 
+  const fakeChats = [
+  {
+    name: "Alia Bhatt",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRce7IDauYwRLmVlTH5sfC7C3OEGOCL9quRcw&s",
+    message: "Hello Alia, we would love to explore a brand collaboration with you for an upcoming campaign aligned with purpose and impact. It would be great to discuss this briefly if you are open."
+  },
+  {
+    name: "Jensen Huang",
+    avatar: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Jen-Hsun_Huang_2025.jpg/250px-Jen-Hsun_Huang_2025.jpg",
+    message: "Hello Jensen, your journey from a small startup to a tech titan is truly inspiring—can we chat about the leadership lessons you’ve learned along the way?"
+  },
+  {
+    name: "Dr. BR Shetty",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0129YvFVrowEhvcoKY4V7oLdulLHgez4nNA&s",
+    message: "Hi"
+  },
+  {
+    name: "Ahmed bin Saeed Al Maktoum",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSuE-Q711uNkMhzoKP09PGVRMNjnwUkeDKaJ0MRfxEWv5hmaRbZ_gGCYxJ7nF3s1G8P7DV1WO6BdRCNb1ilR6HiBOBD23R-HSCwrjmN2Q&s=10",
+    message: "We would be honored to have you at our conference to share insights and engage with leaders shaping the future. Your perspective would add strong value to the discussion."
+  }
+];
+
+function renderFakeChats() {
+  const bar = document.getElementById("fakeChatBar");
+  bar.innerHTML = fakeChats.map(c => `
+    <div class="chat-avatar" onclick="openFakeChat('${c.name}')">
+      <img src="${c.avatar}">
+      <span>${c.name.split(" ")[0]}</span>
+    </div>
+  `).join("");
+}
+
+function openFakeChat(name) {
+  const chat = fakeChats.find(c => c.name === name);
+  if (!chat) return;
+
+  document.getElementById("chatAvatar").src = chat.avatar;
+  document.getElementById("chatName").textContent = chat.name;
+
+  document.getElementById("chatMessages").innerHTML = `
+    <div class="chat-bubble">${chat.message}</div>
+  `;
+
+  document.getElementById("fakeChatModal").classList.remove("hidden");
+}
+
+function closeFakeChat() {
+  document.getElementById("fakeChatModal").classList.add("hidden");
+}
+
+/* Toggle from Settings */
+function toggleFakeChats(enabled) {
+  document.getElementById("fakeChatSection")
+    .classList.toggle("hidden", !enabled);
+}
+
+/* Init */
+document.addEventListener("DOMContentLoaded", () => {
+  renderFakeChats();
+});
+
+
+  document.getElementById("toggleFakeChat").addEventListener("change", e => {
+  document.getElementById("fakeChatBar")
+    .classList.toggle("hidden", !e.target.checked);
+});
+document.getElementById("settingsBtn").addEventListener("click", () => {
+  document.getElementById("settingsPanel").classList.add("open");
+});
+
+
   // Username
   const usernameInput = document.getElementById('usernameInput');
   if (usernameInput) {
