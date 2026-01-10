@@ -315,4 +315,23 @@
     position: fixed;
     z-index: -1;
   }
+  .bento-container {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  .bento-left,
+  .bento-right {
+    width: 100%;
+  }
+
+  .x-embed,
+  .linkedin-card {
+    width: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
 }
