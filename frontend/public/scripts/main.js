@@ -613,12 +613,19 @@ if (demoToggle) {
   demoToggle.checked = isDemoMode();
 
   demoToggle.addEventListener("change", () => {
-    localStorage.setItem(
-      "eco_demo_mode",
-      demoToggle.checked ? "true" : "false"
-    );
+    const isDemo = demoToggle.checked;
+    localStorage.setItem("eco_demo_mode", isDemo ? "true" : "false");
+    
+    if (isDemo) {
+      // When enabling demo mode, redirect to Jensen page
+      window.location.href = "/jensen.html";
+    } else {
+      // When disabling demo mode, go back to main search
+      window.location.href = "/";
+    }
   });
 }
+
 
 
 function showLoader() {
