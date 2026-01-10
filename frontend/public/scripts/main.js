@@ -691,12 +691,14 @@ async function startSearchFlow() {
 
   showLoader();
 
-  if (isDemoMode()) {
-    await handleDemoResult(query);
-    hideLoader();
-    return;
-  }
-  
+// Replace the isDemoMode check in startSearchFlow (around line 694-698) with:
+
+if (isDemoMode()) {
+  // Simply redirect to the Jensen Huang demo page
+  window.location.href = "/jensen.html";
+  return;
+}
+
 
   try {
     // 1. Non-rate-limited calls can stay parallel
