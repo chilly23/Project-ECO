@@ -738,7 +738,7 @@ const liResults = await fetchGoogleResults(
 );
 
 
-    const news = processNews(newsResults).slice(0, 16);
+    const news = processNews(newsResults).slice(0, 20);
     const xPosts = processXPosts(xResults).slice(0, 6);
     const linkedin = processLinkedIn(liResults).slice(0, 6);
     const socialProfiles = extractProfileLinksFromResults(xResults, liResults);
