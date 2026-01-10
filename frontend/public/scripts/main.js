@@ -796,7 +796,7 @@ async function fetchGoogleResults(query, pages = 2, { recentDays = null } = {}) 
   if (!configs.length) return allResults;
 
   for (let page = 0; page < pages; page++) {
-    const start = 1 + page * 10;
+    const start = 1 + page * 20;
     let pageFetched = false;
 
     // Try each config ONCE per page, cyclically
@@ -810,7 +810,7 @@ async function fetchGoogleResults(query, pages = 2, { recentDays = null } = {}) 
         const base = "https://www.googleapis.com/customsearch/v1";
         const params = new URLSearchParams({
           q: query,
-          num: "10",
+          num: "20",
           start: String(start),
           key,
           cx
