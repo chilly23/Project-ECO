@@ -462,14 +462,13 @@ function renderNetworkFeed(data) {
   networkFeedContent.innerHTML = data.map(({ person, news }) => `
     <div class="network-person-section">
       <div class="network-news-grid">
-        ${news.map(n => `
-        <div class="network-news-card bento-card" style="color: #000; background-color: #D3DAD9">
-        <!-- <div class="network-news-card bento-card" style="background-color: ${getRandomBentoColor()}"> -->
-            ${n.image ? `<img src="${n.image}" alt="${n.title}" />` : ""}
-            <a href="${n.link}" target="_blank" style="color: #000;">${n.title}</a>
-            <div class="meta">${n.source}</div>
-          </div>
-        `).join("")}
+      ${news.filter(n => n.image).map(n => `
+      <div class="network-news-card bento-card" style="color: #000; background-color: #D3DAD9">
+        <img src="${n.image}" alt="${n.title}" onerror="this.closest('.network-news-card').remove()" />
+        <a href="${n.link}" target="_blank" style="color: #000;">${n.title}</a>
+        <div class="meta">${n.source}</div>
+      </div>
+    `).join("")}
       </div>
     </div>
   `).join("");
@@ -625,16 +624,53 @@ document.addEventListener("click", (e) => {
 });
 
 
+// REPLACE fetchSuggestions with DuckDuckGo Instant Answer API (no rate limit)
 async function fetchSuggestions(query) {
   const dropdown = document.getElementById('suggestionsDropdown');
   if (!dropdown) return;
   
   try {
+    // Use DuckDuckGo Instant Answer API (no API key required, no rate limit)
     const res = await fetch(
-      `https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=6&namespace=0&format=json&origin=*`
+      `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_redirect=1&no_html=1`
     );
     const data = await res.json();
-    const names = [...new Set(data[1] || [])].slice(0, 6);
+    
+    // Collect related topics and results
+    let names = [];
+    
+    // Add main result if exists
+    if (data.Heading) names.push(data.Heading);
+    
+    // Add related topics
+    if (data.RelatedTopics) {
+      data.RelatedTopics.forEach(topic => {
+        if (topic.Text) {
+          const name = topic.Text.split(' - ')[0].trim();
+          if (name && name.length < 60) names.push(name);
+        }
+        // Handle nested topics
+        if (topic.Topics) {
+          topic.Topics.forEach(t => {
+            if (t.Text) {
+              const n = t.Text.split(' - ')[0].trim();
+              if (n && n.length < 60) names.push(n);
+            }
+          });
+        }
+      });
+    }
+    
+    names = [...new Set(names)].slice(0, 6);
+    
+    if (names.length === 0) {
+      // Fallback to Wikipedia if DuckDuckGo returns nothing
+      const wikiRes = await fetch(
+        `https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=6&namespace=0&format=json&origin=*`
+      );
+      const wikiData = await wikiRes.json();
+      names = [...new Set(wikiData[1] || [])].slice(0, 6);
+    }
 
     if (names.length === 0) {
       dropdown.classList.remove('visible');
@@ -675,6 +711,7 @@ async function fetchSuggestions(query) {
   }
 }
 
+
 function isDemoMode() {
   return localStorage.getItem("eco_demo_mode") === "true";
 }
@@ -704,13 +741,27 @@ function showLoader() {
   const loaderEl = document.getElementById("loader");
   if (loaderEl) loaderEl.classList.remove("hidden");
   document.getElementById("static-suggestions").style.display = "None";
-  // document.body.classList.add("is-loading");
+  
+  // Disable search input
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.disabled = true;
+    searchInput.style.opacity = "0.5";
+    searchInput.style.cursor = "not-allowed";
+  }
 }
 
 function hideLoader() {
   const loaderEl = document.getElementById("loader");
   if (loaderEl) loaderEl.classList.add("hidden");
-  // document.body.classList.remove("is-loading");
+  
+  // Re-enable search input
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.disabled = false;
+    searchInput.style.opacity = "1";
+    searchInput.style.cursor = "text";
+  }
 }
 
 function extractProfileLinksFromResults(xItems, liItems) {
@@ -761,16 +812,24 @@ async function startSearchFlow() {
 
   currentQuery = query;
 
+  // Reset UI state for new search
+  const resultsView = document.getElementById("resultsView");
+  const bentoGrid = document.getElementById("bentoGrid");
   
-
-  const MIN_LOADING_TIME = 4000; // 4 seconds
+  // Clear previous results
+  if (bentoGrid) bentoGrid.innerHTML = '';
+  if (resultsView) resultsView.classList.remove("visible");
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  const MIN_LOADING_TIME = 4000;
   const startTime = Date.now();
 
   document.getElementById("resultsView").style.display = "block";
 
   showLoader();
-
-// Replace the isDemoMode check in startSearchFlow (around line 694-698) with:
+  
 
 if (isDemoMode()) {
   // Simply redirect to the Jensen Huang demo page
@@ -781,10 +840,7 @@ if (isDemoMode()) {
 
   try {
     // 1. Non-rate-limited calls can stay parallel
-const [profile, aiSummaryResult] = await Promise.all([
-  getWikiProfile(query),
-  getAISummary(query)
-]);
+    const profile = await getWikiProfile(query);
 
 // 2. Google calls MUST be serial
 const newsResults = await fetchGoogleResults(
@@ -798,7 +854,7 @@ await sleep(400);
 const xResults = await fetchGoogleResults(
   `site:x.com OR site:twitter.com ${query}`,
   1,
-  { recentDays: 14 }
+  { recentDays: 30 }
 );
 
 await sleep(400);
@@ -811,6 +867,8 @@ const liResults = await fetchGoogleResults(
 
 
     const news = processNews(newsResults).slice(0, 20);
+    const newsContext = news.slice(0, 5).map(n => `- ${n.title}: ${n.snippet}`).join('\n');
+    const aiSummaryResult = await getAISummaryWithContext(query, newsContext);
     const xPosts = processXPosts(xResults).slice(0, 6);
     const linkedin = processLinkedIn(liResults).slice(0, 6);
     const socialProfiles = extractProfileLinksFromResults(xResults, liResults);
@@ -1070,6 +1128,66 @@ return {
   }
 }
 
+async function getAISummaryWithContext(name, newsContext) {
+  const key = getOpenRouterKey();
+  if (!key) {
+    return {
+      summary: null,
+      icebreakers: [],
+      error: "AI key missing. Add your OpenRouter key in settings to enable AI cards."
+    };
+  }
+
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${key}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': window.location.origin,
+        'X-Title': 'ECO Platform'
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-oss-20b:free',
+        messages: [{
+          role: 'user',
+          content: `You are helping with executive research. For "${name}", here is the latest news:
+
+${newsContext || 'No recent news available.'}
+
+Based on this context, return strict JSON with two fields: "summary" (2-3 sentence overview focusing on recent developments) and "icebreakers" (array of 3 short-medium, warm intro messages that reference recent news). No extra text.`
+        }],
+        "reasoning": {"enabled": true}
+      })
+    });
+    
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      console.error("AI summary API error:", data.error || res.statusText);
+      return { summary: null, icebreakers: [], error: "AI summary unavailable." };
+    }
+
+    const raw = data.choices?.[0]?.message?.content || "";
+    const cleaned = raw.replace(/```json/gi, "").replace(/```/g, "").trim();
+
+    try {
+      const parsed = JSON.parse(cleaned);
+      return {
+        summary: parsed.summary || null,
+        icebreakers: Array.isArray(parsed.icebreakers) ? parsed.icebreakers.slice(0, 3) : [],
+        error: null
+      };
+    } catch {
+      return { summary: cleaned || null, icebreakers: [], error: null };
+    }
+  } catch (err) {
+    console.error("AI summary network error:", err);
+    return { summary: null, icebreakers: [], error: "AI summary unavailable." };
+  }
+}
+
+
 function renderCard(cardElement, data) {
   if (!data || data.error) {
     cardElement.innerHTML = `
@@ -1313,11 +1431,11 @@ html += `
 
     // News Cards
     let lastColor = getNextColor();
-    news.forEach(n => {
+    news.filter(n => n.image).forEach(n => {
       lastColor = getNextColor(lastColor);
       html += `
         <div class="bento-card ${lastColor}">
-          ${n.image ? `<img src="${n.image}" class="news-img" alt="${n.title}">` : ''}
+          <img src="${n.image}" class="news-img" alt="${n.title}" onerror="this.closest('.bento-card').remove()">
           <h3 class="news-title">${n.title}</h3>
           <p class="news-source">${n.source}</p>
           <a href="${n.link}" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
