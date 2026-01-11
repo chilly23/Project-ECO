@@ -1344,6 +1344,22 @@
     padding: 2px;
     color: #0077B5;
   }
+
+  /* Demo mode tag */
+.demo-tag {
+  position: fixed;
+  top: 70px;
+  left: 20px;
+  background: #ff6b35;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 1000;
+  animation: pulse 2s infinite;
+}
+
   
   
   /* .news-card {
@@ -1881,6 +1897,8 @@
       <p>API failed or key missing. Check settings.</p>
     </div>
   
+    <div class="demo-tag">DEMO MODE</div>
+
     
     
     <footer class="bp-footer">
@@ -2000,6 +2018,13 @@
       else {
           console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
       }
+
+      // Ensure background works in demo mode
+document.addEventListener('DOMContentLoaded', () => {
+  const bg = localStorage.getItem('eco_bg') || 'net';
+  setBackground(bg);
+});
+
       // ]]>
   </script>
   
