@@ -113,6 +113,57 @@
       border: solid 1px white;
     }
 
+    /* Animation for "Follow" state (non-following) */
+.follow-btn:not(.following) {
+  position: relative;
+  transition: all 1s;
+  overflow: hidden;
+}
+
+.follow-btn:not(.following)::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  top: 0;
+  left: -40px;
+  transform: skewX(45deg);
+  background-color: #00cb4b;
+  z-index: -1;
+  transition: all 1s;
+}
+
+.follow-btn:not(.following):hover::before {
+  width: 160%;
+}
+
+.follow-btn:not(.following):hover {
+  color: #000;
+}
+
+/* Animation for "Following" state */
+.follow-btn.following::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  top: 0;
+  left: -40px;
+  transform: skewX(45deg);
+  background-color: white;
+  z-index: -1;
+  transition: all 1s;
+}
+
+.follow-btn.following:hover::before {
+  width: 160%;
+}
+
+.follow-btn.following:hover {
+  color: #000;
+}
+
+
     /* Utility Classes */
     .container {
       max-width: 1200px;
@@ -489,6 +540,43 @@ body.light-mode .settings-panel .settings-close {
   font-size: 20px;
   cursor: pointer;
 }
+
+    /* Add to your main CSS file (stye.css or index.html inline styles) */
+
+.icebreaker-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 15px;
+  margin-top: 10px;
+}
+
+.copy-btn {
+  background: var(--accent-color, #4a9eff);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: var(--accent-hover, #3a8eef);
+  transform: scale(1.02);
+}
+
+/* For light mode */
+body.light-mode .copy-btn {
+  background: #333;
+  color: white;
+}
+
+body.light-mode .copy-btn:hover {
+  background: #555;
+}
+
 
     .theme-options {
       display: flex;
