@@ -752,7 +752,7 @@ function showLoader() {
   }
 
   if (searchmask) {
-    searchmask.style.backgroundColor = "rgb(30, 30, 30)";
+    searchmask.style.display = "none";
   }
 }
 
@@ -769,7 +769,7 @@ function hideLoader() {
     searchInput.style.cursor = "text";
   }
   if (searchmask) {
-    searchmask.style.backgroundColor = "rgb(0, 0, 0)";
+    searchmask.style.display = "block";
   }
 }
 
