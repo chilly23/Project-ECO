@@ -329,17 +329,17 @@
     }
 
     .context-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 2rem;
-      border-radius: 20px;
-      background: rgba(23, 162, 184, 0.1);
-      color: #58d3e6;
-      font-size: 0.875rem;
-      font-weight: 500;
-      margin-right: 60px;
-    }
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 2rem;
+  border-radius: 20px;
+  background: rgba(23, 162, 184, 0.1);
+  color: #58d3e6;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-right: 120px; /* Increased from 60px */
+}
 
     body.light-mode .context-badge {
       background: var(--light-card-2);
@@ -390,9 +390,26 @@ main,
 
     /* Settings panel stays dark in both themes */
     body.light-mode .settings-panel {
-      background: #0b0b0e;
-      border-left-color: rgba(255,255,255,0.1);
-    }
+  background: #f5f5f5;
+  border-left-color: rgba(0,0,0,0.1);
+  color: #000;
+}
+
+body.light-mode .settings-panel h3,
+body.light-mode .settings-panel label,
+body.light-mode .settings-panel .setting-label {
+  color: #000;
+}
+
+body.light-mode .settings-panel .setting-input {
+  background: #e0e0e0;
+  color: #000;
+  border-color: #ccc;
+}
+
+body.light-mode .settings-panel .settings-close {
+  color: #000;
+}
 
     .settings-panel.open {
       right: 0;
@@ -879,13 +896,14 @@ body.light-mode .settings-panel .theme-btn1 {
 
 
 
-    .profile-avatar {
-      width: 180px;
-      height: 180px;
-      border-radius: 2px;
-      object-fit: cover;
-      margin-bottom: 1.3rem;
-    }
+.profile-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 2px;
+  object-fit: contain;  /* Changed from cover */
+  background-color: white;  /* White bg for transparent images */
+  margin-bottom: 1.3rem;
+}
 
     .profile-name {
       font-size: 1.75rem;
@@ -1753,13 +1771,13 @@ body.is-loading .static-suggestions {
   <header class="header">
     <div class="container">
       <div class="header-content">
-        <div class="logo">
+        <a href="/" class="logo" style="text-decoration: none; cursor: pointer;">
           <div class="logo-icon">
             <i data-lucide="sparkles" style="width: 20px; height: 20px; color: var(--primary-foreground);"></i>
           </div>
           <span class="logo-text">ECO</span>
           <span class="logo-badge">Beta</span>
-        </div>
+        </a>
         <div class="context-badge">
           <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i>
           <span>Context-First Networking</span>
@@ -2151,7 +2169,6 @@ body.is-loading .static-suggestions {
   
 
   <script src="scripts/main.js"></script>
-  <script src="scripts/demoresults.js"></script>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
 
