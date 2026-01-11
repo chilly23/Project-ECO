@@ -744,10 +744,15 @@ function showLoader() {
   
   // Disable search input
   const searchInput = document.getElementById("searchInput");
+  const searchmask = document.getElementById("input-mask");
   if (searchInput) {
     searchInput.disabled = true;
-    searchInput.style.opacity = "0.5";
+    searchInput.style.backgroundColor = "rgb(30, 30, 30)";
     searchInput.style.cursor = "not-allowed";
+  }
+
+  if (searchmask) {
+    searchmask.style.backgroundColor = "rgb(30, 30, 30)";
   }
 }
 
@@ -757,10 +762,14 @@ function hideLoader() {
   
   // Re-enable search input
   const searchInput = document.getElementById("searchInput");
+  const searchmask = document.getElementById("input-mask");
   if (searchInput) {
     searchInput.disabled = false;
-    searchInput.style.opacity = "1";
+    searchInput.style.backgroundColor = "rgb(0, 0, 0)";
     searchInput.style.cursor = "text";
+  }
+  if (searchmask) {
+    searchmask.style.backgroundColor = "rgb(0, 0, 0)";
   }
 }
 
