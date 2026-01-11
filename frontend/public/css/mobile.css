@@ -59,14 +59,13 @@
   }
 
   .social-btn {
-    width: 38px;
-    height: 38px;
-    padding: 0;
+    width: 42px;
+    height: 42px;
+    padding: 10px;
   }
 
   .action-btns {
     display: flex;
-    gap: 10px;
     width: 100%;
     margin-top: 10px;
   }
@@ -333,5 +332,20 @@
   body {
     overflow-x: hidden;
   }
+
+  .follow-btn, 
+  .draft-btn {
+    margin: 15px;
+  }
+
+  .news-title {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    padding: 14px;
+}
+  .network-news-card a, .meta {
+    padding: 14px;
+}
+
 
 }
