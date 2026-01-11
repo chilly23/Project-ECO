@@ -445,7 +445,11 @@ async function loadNetworkFeed() {
         fetchGoogleResults(`recent news on ${person.name}`, 1)
       ]);
       
-      const news = processNews(newsResults).slice(0, 4);
+      const allNews = processNews(newsResults).filter(n => n.image);
+      // Shuffle and pick 4 random cards
+      const shuffled = allNews.sort(() => Math.random() - 0.5);
+      const news = shuffled.slice(0, 4);
+
       allResults.push({ person: person.name, news });
     }
     
@@ -459,7 +463,7 @@ async function loadNetworkFeed() {
 
 function renderNetworkFeed(data) {
   const networkFeedContent = document.getElementById("networkFeedContent");
-  networkFeedContent.innerHTML = data.map(({ person, news }) => `
+  networkFeedContent.innerHTML = `<h3 class="network-heading">Recent activity on your network</h3>` + data.map(({ person, news }) => `
     <div class="network-person-section">
       <div class="network-news-grid">
       ${news.filter(n => n.image).map(n => `
