@@ -244,11 +244,6 @@ function closeFakeChat() {
   document.getElementById("fakeChatModal").classList.add("hidden");
 }
 
-/* Toggle from Settings */
-function toggleFakeChats(enabled) {
-  document.getElementById("fakeChatSection")
-    .classList.toggle("hidden", !enabled);
-}
 
 /* Init */
 document.addEventListener("DOMContentLoaded", () => {
@@ -256,10 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-  document.getElementById("toggleFakeChat").addEventListener("change", e => {
-  document.getElementById("fakeChatBar")
-    .classList.toggle("hidden", !e.target.checked);
-});
 document.getElementById("settingsBtn").addEventListener("click", () => {
   document.getElementById("settingsPanel").classList.add("open");
 });
