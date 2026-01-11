@@ -229,11 +229,17 @@
     }
 
     .loading-card {
-      width: 100%;
-      max-width: 560px;
-      padding: 2rem;
-      border-radius: 1rem;
-    }
+  width: 100%;
+  max-width: 560px;
+  padding: 2rem;
+  border-radius: 1rem;
+  position: fixed;
+  top: 75%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
 
     .loading-header {
       text-align: center;
@@ -941,6 +947,12 @@
     .toast.error .toast-icon {
       color: hsl(0, 84%, 60%);
     }
+
+.suggestion-img {
+  object-fit: contain;
+  background-color: white;
+}
+
 
 .meta{
     overflow: hidden;
