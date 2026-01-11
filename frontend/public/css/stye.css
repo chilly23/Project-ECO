@@ -941,3 +941,7 @@
     .toast.error .toast-icon {
       color: hsl(0, 84%, 60%);
     }
+
+.meta{
+    overflow: hidden;
+}
