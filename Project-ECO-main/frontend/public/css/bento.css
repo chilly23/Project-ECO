@@ -1,0 +1,616 @@
+/* Bento Grid Layout - Clean Implementation */
+
+.bento-container {
+  display: grid;
+  grid-template-columns: 65% 35%;
+  gap: 24px;
+  margin-top: 2rem;
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bento-left {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bento-right {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 20px;
+}
+
+/* Bento Cards */
+.bento-card {
+  padding: 20px;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Profile Card - Fixed */
+/* .profile-card-fixed {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+} */
+
+
+
+/* AI Summary Card - Fixed */
+.ai-summary-card {
+  min-height: 200px;
+  padding: 24px;
+}
+
+.ai-summary-card h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.ai-summary-card p {
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.news-grid {
+  column-count: 3;
+  column-gap: 16px;
+  column-fill: balance;  /* Add this */
+}
+
+.news-card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  display: inline-block;  /* Add this */
+  width: 100%;            /* Add this */
+}
+
+
+@media (max-width: 1024px) {
+  .news-grid { column-count: 2; }
+}
+
+@media (max-width: 640px) {
+  .news-grid { column-count: 1; }
+}
+
+
+.news-card {
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* .news-img {
+  width: 400px;
+  height: 120px;
+  object-fit: cover;
+  margin-bottom: 12px;
+  border-radius: 12px;
+} */
+
+.news-title {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  /* display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden; */
+}
+
+.news-card a:hover {
+  text-decoration: underline;
+}
+
+.news-source {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  margin-top: auto;
+}
+
+/* Right Side - X and LinkedIn Posts */
+.social-posts-section {
+  margin-bottom: 24px;
+}
+
+.social-posts-section h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.social-posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.x-post-card,
+.linkedin-post-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 16px;
+  min-height: 200px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.x-post-card {
+  background: transparent;
+  min-height: 300px;
+}
+
+.linkedin-post-card a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.linkedin-post-card a:hover {
+  text-decoration: underline;
+}
+
+.linkedin-post-card .meta {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.loading-post {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.875rem;
+}
+
+/* Network Feed */
+.network-feed-toggle-container {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.network-toggle-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.network-toggle-label input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-slider {
+  width: 50px;
+  height: 26px;
+  background: rgba(255, 255, 255, 0.1);
+  position: relative;
+  transition: background 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.toggle-slider::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.3s ease;
+}
+
+.network-toggle-label input[type="checkbox"]:checked + .toggle-slider {
+  background: #402fb5;
+}
+
+.network-toggle-label input[type="checkbox"]:checked + .toggle-slider::before {
+  transform: translateX(24px);
+}
+
+.toggle-text {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.network-feed {
+  margin-top: 2rem;
+  transition: opacity 0.3s ease;
+}
+
+.network-feed.hidden {
+  display: none;
+}
+
+.network-feed-loader {
+  text-align: center;
+  padding: 2rem;
+}
+
+.network-feed-content {
+  margin-top: 1rem;
+}
+
+.network-person-section {
+  margin-bottom: 2rem;
+}
+
+.network-person-section h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: white;
+}
+
+.network-news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.network-news-card {
+  min-height: 180px;
+  padding: 16px;
+}
+
+.network-card {
+  background: #ffffff;
+  color: #000000;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+.network-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.ai-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ai-summary-card {
+  background: linear-gradient(135deg, #5B4FE9, #3E36B6);
+  color: #fff;
+}
+
+.ai-text {
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.draft-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.draft-header {
+  margin-bottom: 12px;
+}
+
+.draft-title {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+
+.draft-subtitle {
+  display: block;
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-top: 2px;
+}
+
+
+
+.network-news-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  margin-bottom: 8px;
+}
+
+.network-news-card a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.875rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.network-news-card a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .bento-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .bento-right {
+    margin-top: 24px;
+  }
+  
+}
+
+@media (max-width: 768px) {
+  
+  .profile-card-fixed {
+    min-height: 300px;
+  }
+  
+  .profile-avatar {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+
+
+/* Light Mode Support */
+[data-theme="light"] .bento-card {
+  color: #000;
+}
+
+[data-theme="light"] .bento-card {
+  background-color: #A35139;
+  color: white;
+}
+
+[data-theme="light"] .bento-card[style*="#402fb5"],
+[data-theme="light"] .bento-card[style*="#1E3E62"],
+[data-theme="light"] .bento-card[style*="#0B192C"] {
+  color: white;
+}
+
+[data-theme="light"] .bento-card[style*="#EEE9DF"],
+[data-theme="light"] .bento-card[style*="#C9C1B1"],
+[data-theme="light"] .bento-card[style*="#FFB162"] {
+  color: #000;
+}
+
+[data-theme="light"] .social-btn {
+  background: rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+[data-theme="light"] .follow-btn,
+[data-theme="light"] .draft-intro-btn {
+  background: rgba(0, 0, 0, 0.15);
+  color: white;
+}
+
+.news-grid {
+  column-count: 3;
+  column-gap: 16px;
+}
+
+
+
+.bento-left {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 16px; 
+  align-items: start;
+}
+
+
+.news-grid {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px; 
+ }
+
+ .icebreaker-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+
+ /* .dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+} */
+
+/* First row items */
+/* .profile-card,
+.ai-synthesis-card,
+.draft-card {
+  grid-row: 1;
+} */
+
+/* Twitter/LinkedIn start from row 2 */
+ /* .twitter-card,
+.linkedin-card {
+  grid-row: 2;
+}
+
+
+/* Add fixed dimensions to prevent resizing */
+/* .twitter-card, .linkedin-card {
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  min-height: 200px;
+  box-sizing: border-box;
+} */
+
+/* Prevent iframe/embed resize */
+/* .twitter-card iframe,
+.linkedin-card iframe {
+  width: 100% !important;
+  height: 100% !important;
+} */
+
+/* Fix X embed container to prevent layout shifts */
+.x-embed {
+  width: 100%;
+}
+
+
+/* Make bento-right independent from bento-left row heights */
+.bento-right {
+  align-content: start;
+}
+
+.bento-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  align-items: start;
+}
+.bento-left,
+.bento-right {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fake-chat-section {
+  margin-bottom: 20px;
+}
+
+.fake-chat-bar {
+  display: flex;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 10px 6px;
+}
+
+.chat-avatar {
+  text-align: center;
+  cursor: pointer;
+  min-width: 64px;
+}
+
+.chat-avatar img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.chat-avatar span {
+  font-size: 12px;
+  color: #aaa;
+}
+
+/* Modal */
+.fake-chat-modal {
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  width: 340px;
+  height: 420px;
+  background: #0f0f0f;
+  border-radius: 14px 14px 0 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  z-index: 9999;
+}
+
+.fake-chat-modal.hidden,
+.fake-chat-section.hidden {
+  display: none;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #1a1a1a;
+}
+
+.chat-header img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.chat-header button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+.chat-bubble {
+  background: #1f6feb;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 80%;
+}
+
+.chat-input {
+  padding: 10px;
+  background: #1a1a1a;
+}
+
+.chat-input input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: none;
+  background: #222;
+  color: #aaa;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .fake-chat-modal {
+    right: 0;
+    width: 100%;
+  }
+}
+
+
+
+
+

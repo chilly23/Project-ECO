@@ -1,0 +1,2186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECO - Executive Context Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script async src="https://platform.twitter.com/widgets.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <link rel="stylesheet" href="css/searchstyle.css">
+  <link rel="stylesheet" href="css/bento.css">
+  <link rel="stylesheet" href="css/stye.css">
+  <link rel="stylesheet" href="css/footer.css">
+  <link rel="stylesheet" href="css/hand.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/mobile.css" media="(max-width: 768px)">
+
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg: #000;
+      --fg: #fff;
+      --primary: #17A2B8;
+      --card-1: #07525E;
+      --card-2: #1E3E62;
+      --card-3: #0B192C;
+      --card-4: #1e5c1e;
+      --card-5: #702006;
+
+      --light-bg: #EEE9DF;
+      --light-search: #C9C1B1;
+      --light-accent: #FFB162;
+      --light-card-1: #A35139;
+      --light-card-2: #1B2632;
+      --light-card-3: #2C3B4D;
+      --light-card-4: #0B192C;
+      --light-card-5: #EB7300;
+      --light-card-6: #702006;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Legacy support */
+      --background: hsl(222, 47%, 5%);
+      --foreground: hsl(210, 40%, 98%);
+      --card: hsl(222, 47%, 8%);
+      --card-foreground: hsl(210, 40%, 98%);
+      --primary-old: hsl(199, 89%, 48%);
+      --primary-foreground: hsl(222, 47%, 5%);
+      --secondary: hsl(222, 30%, 14%);
+      --secondary-foreground: hsl(210, 40%, 98%);
+      --muted: hsl(222, 30%, 12%);
+      --muted-foreground: hsl(215, 20%, 55%);
+      --border: hsl(222, 30%, 18%);
+      --radius: 0.75rem;
+      --gradient-primary: linear-gradient(135deg, hsl(199, 89%, 48%), hsl(180, 70%, 45%));
+      --shadow-glow: 0 0 60px hsla(199, 89%, 48%, 0.15);
+      --shadow-card: 0 4px 24px hsla(222, 47%, 2%, 0.4);
+
+      --profile-bg: #000;
+      --profile-text: #C9C1B1;
+    }
+
+    body {
+      font-family: "Sora", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      min-height: 45vh;
+      overflow-x: hidden;
+      transition: var(--transition);
+    }
+
+    body.light-mode {
+      --bg: #EEE9DF;
+      --fg: #000;
+      
+  --profile-bg: #C9C1B1;
+  --profile-text: #000;
+    }
+
+
+    /* Vanta Background */
+    #vanta-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      opacity: 0.05;
+      background-image: 
+        linear-gradient(var(--fg) 1px, transparent 1px),
+        linear-gradient(90deg, var(--fg) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 0.5s;
+    }
+
+    body.vanta-active .bg-grid {
+      opacity: 0;
+    }
+    
+    .follow-btn.following {
+      background: #00cb4b;
+      color: #000000;
+      border: solid 1px white;
+    }
+
+    /* Utility Classes */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .glass {
+      background: hsla(222, 47%, 8%, 0.6);
+      backdrop-filter: blur(24px);
+      border: 1px solid hsla(222, 30%, 18%, 0.5);
+    }
+
+    .glass-strong {
+      background: hsla(222, 47%, 8%, 0.8);
+      backdrop-filter: blur(40px);
+      border: 1px solid hsla(222, 30%, 18%, 0.6);
+    }
+
+    .card-shadow {
+      box-shadow: var(--shadow-card);
+    }
+
+    .gradient-text {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      /* -webkit-text-fill-color: #E9762B; */
+      background-clip: text;
+    }
+
+    .glow {
+      box-shadow: var(--shadow-glow);
+    }
+
+
+    
+
+    /* .greet-prefix {
+      font-size: 1rem; 1x */
+      /* color: rgb(215, 90, 1);
+      opacity: 0.55;
+      font-weight: 500;
+      margin-right: 6px;
+    }
+
+    
+    
+    .greet-main {
+      font-size: 3rem; /* 3x */
+      /* font-weight: 700;
+      color: rgb(215, 90, 1);
+    }
+    
+    .greet-name {
+      font-size: 2rem; /* 2x */
+      /* color: white;
+      font-weight: 600;
+      margin-left: 6px;
+    } */
+
+    /* Settings Button */
+    .settings-btn {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 200;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--fg);
+      padding: 8px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    .settings-btn:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    /* body.light-mode .settings-btn {
+      border-color: rgba(0,0,0,0.2);
+    }
+
+    body.light-mode .settings-btn:hover {
+      background: rgba(0,0,0,0.05);
+    } */
+
+.lable {
+  line-height: 20px;
+  font-size: 17px;
+  color: #e0daff;
+  font-family: sans-serif;
+  letter-spacing: 1px;
+}
+
+
+.svg-icon {
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+    
+    #network-btn {
+      position: fixed;
+      top: 20px;
+      right: 100px;
+    }
+
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(16px);
+    }
+
+    body.light-mode .header {
+      border-bottom-color: rgba(0,0,0,0.1);
+      background: rgba(238,233,223,0.96);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #17A2B8, #138496);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* body.light-mode .logo-icon {
+      background: var(--light-card-2);
+    } */
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    body.light-mode .logo-text {
+      color: rgba(0,0,0);
+    }
+
+    .logo-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      font-size: 0.75rem;
+    }
+
+    body.light-mode .logo-badge {
+      background: rgba(0,0,0,0.1);
+    }
+
+    
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    /* Track */
+    ::-webkit-scrollbar-track {
+      background-color: rgba(0,0,0,0.05); 
+    }
+     
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+    
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+      background: #b4b4b4; 
+    }
+
+    .context-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 2rem;
+  border-radius: 20px;
+  background: rgba(23, 162, 184, 0.1);
+  color: #58d3e6;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-right: 120px; /* Increased from 60px */
+}
+
+    body.light-mode .context-badge {
+      background: var(--light-card-2);
+      color: #fff;
+    }
+
+.svg-icon {
+  animation: spin 2s linear infinite;
+}
+
+
+.search-container {
+  position: relative;
+  overflow: visible;
+}
+
+main,
+.container {
+  overflow: visible !important;
+  transform: none !important;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+    /* Settings Panel */
+    .settings-panel {
+      position: fixed;
+      top: 0;
+      right: -360px;
+      width: 340px;
+      height: 100vh;
+      background: rgba(10, 10, 10, 0.98);
+      backdrop-filter: blur(20px);
+      padding: 24px;
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 999;
+      overflow-y: auto;
+      border-left: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Settings panel stays dark in both themes */
+    body.light-mode .settings-panel {
+  background: #f5f5f5;
+  border-left-color: rgba(0,0,0,0.1);
+  color: #000;
+}
+
+body.light-mode .settings-panel h3,
+body.light-mode .settings-panel label,
+body.light-mode .settings-panel .setting-label {
+  color: #000;
+}
+
+body.light-mode .settings-panel .setting-input {
+  background: #e0e0e0;
+  color: #000;
+  border-color: #ccc;
+}
+
+body.light-mode .settings-panel .settings-close {
+  color: #000;
+}
+
+    .settings-panel.open {
+      right: 0;
+    }
+
+    .settings-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: var(--transition);
+    }
+
+    .settings-close:hover {
+      opacity: 1;
+      transform: rotate(90deg);
+    }
+
+    .settings-panel h3 {
+      color: #e6e6eb;
+      margin-bottom: 24px;
+      font-size: 1.25rem;
+    }
+
+    .setting-group {
+      margin-bottom: 24px;
+    }
+
+    .setting-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      opacity: 0.8;
+      font-weight: 500;
+    }
+
+    .setting-input {
+      width: 100%;
+      padding: 10px 12px;
+      background: #151518;
+      border: 1px solid #26262b;
+      border-radius: 8px;
+      color: #ffffff;
+      font-size: 14px;
+      font-family: inherit;
+      transition: var(--transition);
+    }
+
+    .setting-input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .setting-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    
+#settings-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: #c0b9c0;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+    .theme-options {
+      display: flex;
+      gap: 8px;
+    }
+
+    .theme-btn1 {
+      flex: 1;
+      padding: 8px 10px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      color: var(--fg);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      transition: var(--transition);
+    }
+
+    body.light-mode .theme-btn1 {
+      border-color: rgba(0,0,0,0.3);
+    }
+
+    .theme-btn1:hover {
+      background: rgba(255,255,255,0.08);
+      transform: translateY(-1px);
+    }
+
+    .theme-btn1.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--primary-foreground);
+    }
+
+    /* Force theme buttons text to stay white in settings panel */
+.settings-panel .theme-btn1 {
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.25) !important;
+}
+
+body.light-mode .settings-panel .theme-btn1 {
+  color: #ffffff !important;
+  border-color: rgba(255,255,255,0.25) !important;
+}
+
+
+    /* Main Content */
+    main {
+      position: relative;
+      z-index: 10;
+      padding: 7rem 0 3rem;
+      min-height: 80vh;
+    }
+
+    /* Search View */
+    .search-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 45vh;
+      padding-top: 40px;
+      opacity: 1;
+      transition: opacity 0.4s ease;
+    }
+
+    .greeting {
+      margin-top: 1rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .greeting-text {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .greeting-accent {
+      color: var(--primary);
+    }
+
+    body.light-mode .greeting-accent {
+      color: var(--light-card-1);
+    }
+
+    /* Search Box */
+    .search-container {
+      width: 100%;
+      max-width: 600px;
+      position: relative;
+    }
+
+    .search-wrapper {
+      position: relative;
+      /* background: rgba(255,255,255,0.05);
+      border: 2px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 16px 20px;
+      transition: var(--transition); */
+    }
+/* 
+    body.light-mode .search-wrapper {
+      background: var(--light-search);
+      border-color: rgba(0,0,0,0.1);
+    }
+
+    .search-wrapper:focus-within {
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(23, 162, 184, 0.3);
+    } */
+
+    .search-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--fg);
+      font-size: 1.125rem;
+      font-family: inherit;
+      outline: none;
+    }
+
+    .search-input::placeholder {
+      opacity: 0.5;
+    }
+
+    /* Suggestions Dropdown */
+    .suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+
+  background: #1B2632;
+  border-radius: 12px;
+  z-index: 1000;
+
+  max-height: 280px;
+  overflow-y: auto;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.suggestions.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+
+    /* body.light-mode .suggestions {
+      background: black;
+      border-color: rgba(0,0,0,0.1);
+    } */
+
+    .suggestion-item {
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .suggestion-item:hover,
+    .suggestion-item.active {
+      background: rgba(255,255,255,0.1);
+    }
+
+    body.light-mode .suggestion-item:hover,
+    body.light-mode .suggestion-item.active {
+      background: rgba(0,0,0,0.05);
+    }
+
+    .suggestion-img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    #suggestions li {
+      list-style: none;
+      padding: 10px 16px;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    
+    #suggestions li:hover,
+    #suggestions li.active {
+      background: #e0e0e0;
+    }
+
+    .suggestion-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .suggestion-row img {
+      width: 28px;
+      height: 28px;
+      /* border-radius: 50%; */
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    
+    #suggestionblock {
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    
+    #suggestionblock.fade-out {
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+    }
+
+    /* Static Suggestions */
+    .static-suggestions {
+      margin-top: 2rem;
+      text-align: center;
+    }
+
+    .static-label {
+      font-size: 0.875rem;
+      opacity: 0.7;
+      margin-bottom: 1rem;
+    }
+
+    .suggestion-chips {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .error-box {
+  padding: 24px;
+  border-radius: 16px;
+  background: #2A1F1F;
+  color: #FFB4A2;
+}
+
+
+    .chip {
+      padding: 0.5rem 1rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    body.light-mode .chip {
+      background: rgba(0,0,0,0.05);
+      border-color: rgba(0,0,0,0.1);
+    }
+
+    .chip:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    /* Network Feed Toggle */
+    .network-toggle {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 26px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .toggle-switch.active {
+      background: var(--primary);
+    }
+
+    .toggle-knob {
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 22px;
+      background: #fff;
+      border-radius: 50%;
+      transition: var(--transition);
+    }
+
+    .toggle-switch.active .toggle-knob {
+      left: 26px;
+    }
+
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.95); }
+    }
+
+    /* Results View */
+    .results-view {
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .results-view.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: var(--fg);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 2rem;
+      font-family: inherit;
+      font-size: 0.875rem;
+    }
+
+    body.light-mode .back-btn {
+      background: rgba(0,0,0,0.05);
+      border-color: rgba(0,0,0,0.1);
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateX(-4px);
+    }
+
+    /* Bento Grid Layout */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    /* Left Column (News) */
+
+    .bento-card {
+      padding: 1.5rem;
+      border-radius: 16px;
+      color: #fff;
+      transition: var(--transition);
+      break-inside: avoid;
+    }
+
+    .bento-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .card-color-1 { background: var(--card-1); }
+    .card-color-2 { background: var(--card-2); }
+    .card-color-3 { background: var(--card-3); }
+    .card-color-4 { background: var(--card-4); }
+    .card-color-5 { background: var(--card-5); }
+
+    body.light-mode .card-color-1 { background: var(--light-card-1); }
+    body.light-mode .card-color-2 { background: var(--light-card-2); }
+    body.light-mode .card-color-3 { background: var(--light-card-3); }
+    body.light-mode .card-color-4 { background: var(--light-card-4); }
+    body.light-mode .card-color-5 { background: var(--light-card-5); }
+
+    /* Fixed Cards */
+    .profile-card {
+  grid-column: span 2;
+  height: 450px;
+  width: 350px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  position: relative;
+
+  background-color: var(--profile-bg);
+  color: var(--profile-text);
+
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.profile-card * {
+  color: inherit;
+}
+
+
+
+
+.profile-avatar {
+  width: 180px;
+  height: 180px;
+  border-radius: 2px;
+  object-fit: contain;  /* Changed from cover */
+  background-color: white;  /* White bg for transparent images */
+  margin-bottom: 1.3rem;
+}
+
+    .profile-name {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-title {
+      opacity: 0.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .social-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .social-btn {
+      width: 44px;
+      height: 44px;
+      /* border-radius: 10px; */
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      font-weight: 600;
+    }
+
+    body.light-mode .social-btn { background: #0B192C; }
+
+    .social-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    
+    .mailb:hover{
+      background-color: red;
+    } 
+    
+    .linkedinb:hover{
+      background-color: #0072b1;
+    } 
+    
+    .wb:hover{
+      background-color: #25D366;
+    } 
+    
+    .xb:hover{
+      background-color: #000;
+    }
+
+    .action-btns {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .follow-btn, .draft-btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 2px;
+      border: none;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      width: 150px;
+      transition: var(--transition);
+    }
+
+    .follow-btn {
+      background: #fff;
+      color: #000;
+    }
+
+    .draft-btn {
+      background: var(--card-3);
+      color: #fff;
+      border: solid 1px white;
+    }
+
+    .follow-btn:hover, .draft-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .draft-btn {
+  flex: 1;
+  position: relative;
+  transition: all 1s;
+  overflow: hidden;
+}
+
+.draft-btn::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  top: 0;
+  left: -40px;
+  transform: skewX(45deg);
+  background-color: rgb(0, 0, 0);
+  z-index: -1;
+  transition: all 1s;
+}
+
+.draft-btn:hover::before {
+  width: 160%;
+}
+    .follow-btn {
+  flex: 1;
+  text-decoration: none;
+  border: 2px solid white;
+  
+  position: relative;
+  transition: all 1s;
+  overflow: hidden;
+}
+
+.follow-btn::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 0%;
+  top: 0;
+  left: -40px;
+  transform: skewX(45deg);
+  background-color: white;
+  z-index: -1;
+  transition: all 1s;
+}
+
+.follow-btn:hover::before {
+  width: 160%;
+}
+
+    .ai-card {
+      min-height: 300px;
+    }
+
+    .card-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .card-content {
+      line-height: 1.6;
+      opacity: 0.9;
+    }
+
+
+    .x-embed, .linkedin-card {
+      padding: 1.5rem;
+      border-radius: 16px;
+      background: var(--card-2);
+      color: #fff;
+      max-width: 100%;
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+    }
+
+    body.light-mode .x-embed,
+    body.light-mode .linkedin-card {
+      background: var(--light-card-2);
+    }
+
+    body.light-mode .x-embed, .x-embed {
+      background: transparent
+    }
+
+    .linkedin-card{
+      background-color: #0077B5;
+      border: solid 1px white;
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    }
+
+    /* News Card Specific */
+    .news-card {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-radius: 14px;
+    }
+
+    .news-card img,
+    .news-img {
+      width: 100%;
+      height: auto;
+      max-height: none;
+      object-fit: contain;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .news-title {
+      font-size: 0.95rem;
+      line-height: 1.35;
+      padding: 14px;
+    }
+
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .bento-left {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+    }
+
+    /* Utilities */
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.5s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+  .bento-left {
+    column-count: 1;
+  }
+  .settings-panel {
+    width: 100%;
+  }
+}
+/* Loader state: hide greeting/suggestions while loading and center loader */
+body.is-loading .greeting,
+body.is-loading .static-suggestions {
+  display: none;
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  justify-content: center;
+  align-items: center;
+}
+
+.network-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+}
+
+.network-modal.hidden {
+  display: none;
+}
+
+.network-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.network-panel {
+  position: relative;
+  width: min(900px, 92vw);
+  height: min(600px, 80vh);
+  margin: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #141414;
+  border-radius: 18px;
+  padding: 16px 20px 20px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+
+.network-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.network-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.network-header button {
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#networkSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#resultsView{
+  display: none;
+}
+/* From Uiverse.io by kennyotsu */ 
+.card {
+  /* color used to softly clip top and bottom of the .words container */
+  --bg-color: #111;
+  background-color: var(--bg-color);
+  padding: 1rem 2rem;
+  border-radius: 1.25rem;
+}
+.loader {
+  color: rgb(124, 124, 124);
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-size: 45px;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 65px;
+  padding: 10px 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-radius: 8px;
+}
+
+#suggestionsDropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 401px;
+  /* Centering properties */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.words {
+  overflow: hidden;
+  position: relative;
+}
+.words::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    var(--bg-color) 10%,
+    transparent 30%,
+    transparent 70%,
+    var(--bg-color) 90%
+  );
+  z-index: 20;
+}
+
+.word {
+  display: block;
+  height: 100%;
+  padding-left: 6px;
+  color: #956afa;
+  animation: spin_4991 7s infinite;
+}
+
+@keyframes spin_4991 {
+  10% {
+    -webkit-transform: translateY(-102%);
+    transform: translateY(-102%);
+  }
+
+  25% {
+    -webkit-transform: translateY(-100%);
+    transform: translateY(-100%);
+  }
+
+  35% {
+    -webkit-transform: translateY(-202%);
+    transform: translateY(-202%);
+  }
+
+  50% {
+    -webkit-transform: translateY(-200%);
+    transform: translateY(-200%);
+  }
+
+  60% {
+    -webkit-transform: translateY(-302%);
+    transform: translateY(-302%);
+  }
+
+  75% {
+    -webkit-transform: translateY(-300%);
+    transform: translateY(-300%);
+  }
+
+  85% {
+    -webkit-transform: translateY(-402%);
+    transform: translateY(-402%);
+  }
+
+  100% {
+    -webkit-transform: translateY(-400%);
+    transform: translateY(-400%);
+  }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.settings-btn.spinning .icon {
+  animation: spin 1.2s linear infinite;
+}
+
+.results-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.row-top {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1fr;
+  gap: 1rem;
+  align-items: stretch;
+}
+
+.drafts-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.row-bottom {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.row-top > div,
+.row-bottom > div {
+  height: 100%;
+}
+
+@media (max-width: 900px) {
+  .row-top,
+  .row-bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #ff6b6b;
+  opacity: 0.8;
+}
+
+.lucide-linkedin1{
+  background-color: white;
+  padding: 2px;
+  color: #0077B5;
+}
+
+
+/* .news-card {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s ease;
+}
+
+.news-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.news-card img {
+  transition: transform 0.5s ease;
+}
+
+.news-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Stagger animation on load */
+/* .news-card:nth-child(1) { animation-delay: 0.1s; }
+.news-card:nth-child(2) { animation-delay: 0.2s; }
+.news-card:nth-child(3) { animation-delay: 0.3s; } */
+
+/* mobile.css - FINAL, SAFE VERSION */
+@media (max-width: 768px) {
+
+/* =============================
+   ROOT LAYOUT FIX
+   ============================= */
+
+     
+.context-badge{
+  display: none;
+}
+.dashboard-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.profile-card,
+.ai-summary-card,
+.draft-card,
+.twitter-card,
+.linkedin-card,
+.news-card {
+  width: 100%;
+  max-width: 100%;
+} */
+
+/* =============================
+   PROFILE CARD (FIXED)
+   ============================= */
+/* 
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.profile-name {
+  font-size: 1.1rem;
+}
+
+.profile-title {
+  font-size: 0.85rem;
+  opacity: 0.8;
+} */
+
+
+
+.social-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.social-btn {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+}
+
+.action-btns {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.action-btns button {
+  flex: 1;
+  font-size: 0.85rem;
+  padding: 10px;
+}
+
+/* =============================
+   SETTINGS BUTTON (ICON ONLY)
+   ============================= */
+
+.settings-btn {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+  padding: 8px;
+}
+
+.settings-btn span {
+  display: none;
+}
+
+/* To this: */
+.settings-panel {
+  width: 100vw;
+  right: -100vw;
+  left: auto;
+}
+
+/* =============================
+   AI SUMMARY (BELOW PROFILE)
+   ============================= */
+
+.ai-summary-card {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  padding: 14px;
+}
+
+.ai-summary-card .card-title {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+/* =============================
+   DRAFT / ICEBREAKERS
+   ============================= */
+
+.draft-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.draft-card {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+}
+
+.draft-index {
+  min-width: 26px;
+  height: 26px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.draft-card p {
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.icebreaker-actions {
+  text-align: right;
+  padding-right: 8px;
+}
+
+/* =============================
+   NEWS / X / LINKEDIN (RESTORED)
+   ============================= */
+
+/* .news-grid,
+.twitter-card,
+.linkedin-card {
+  display: block;
+  width: 100%;
+}
+
+.news-img {
+  border-radius: 0;
+}
+
+.news-title {
+  font-size: 0.85rem;
+}
+
+.news-source,
+.news-source-view {
+  padding: 10px;
+  font-size: 0.75rem;
+} */
+
+/* =============================
+   SEARCH INPUT (UNCHANGED)
+   ============================= */
+
+#poda {
+  max-width: 300px;
+  margin-left: 10px;
+  margin-right: 15px;
+  overflow: hidden;
+}
+
+#main,
+#input {
+  max-width: 300px;
+  font-size: small;
+  overflow: hidden;
+}
+
+#suggestionsDropdown {
+  width: 300px;
+}
+
+.vanta-bg {
+  position: fixed;
+  z-index: -1;
+}
+
+/* =============================
+   VISUAL EFFECTS (UNCHANGED)
+   ============================= */
+
+.white,
+.border,
+.darkBorderBg,
+.glow {
+  max-height: 100px;
+  max-width: 350px;
+  position: absolute;
+  z-index: -1;
+  border-radius: 12px;
+  filter: blur(3px);
+}
+
+.input {
+  background-color: #010201;
+  width: 300px;
+  height: 56px;
+  border-radius: 10px;
+  padding-left: 26px;
+  padding-right: 24px;
+  font-size: 18px;
+  color: white;
+}
+
+/* =============================
+   LOADER (YOUR LOGIC KEPT)
+   ============================= */
+
+.loading-card,
+.loading-container,
+#loading,
+#loader {
+  position: fixed !important;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9998;
+}
+
+
+
+.ai-summary-card{
+  font-size: small;
+}
+
+.bento-card {
+  padding: 0px;
+  border-radius: 0px;
+  color: white;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.news-img{
+  border-radius: 0px;
+}
+
+.news-title{
+  font-size: small;
+}
+
+.news-source{
+  padding: 10px;
+  font-size: small;
+}
+
+.news-source-view{
+  padding: 10px;
+  margin-bottom: 20px;
+  font-size: small;
+}
+
+#poda{
+  max-width: 300px;
+  margin-right: 15px;
+  margin-left: 10px;
+  overflow: hidden;
+}
+
+#main, #input{
+  max-width: 300px;
+  font-size: small;
+  overflow: hidden;
+}
+
+#suggestionsDropdown{
+  width: 300px;
+}
+
+
+.vanta-bg {
+  position: fixed;
+  z-index: -1;
+}
+
+.ai-summary-card{
+  padding: 14px;
+}
+
+
+.social-row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .social-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+  }
+
+  .action-btns {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .action-btns button {
+    flex: 1;
+    font-size: 0.85rem;
+    padding: 10px;
+  }
+
+  /* =============================
+     SETTINGS BUTTON (ICON ONLY)
+     ============================= */
+
+  .settings-btn {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 9999;
+    padding: 8px;
+  }
+
+  .settings-btn span {
+    display: none;
+  }
+
+  .settings-panel {
+    width: 100vw;
+    left: 100%;
+  }
+
+
+}
+
+  </style>
+</head>
+<body>
+  <div id="vanta-bg"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="/" class="logo" style="text-decoration: none; cursor: pointer;">
+          <div class="logo-icon">
+            <i data-lucide="sparkles" style="width: 20px; height: 20px; color: var(--primary-foreground);"></i>
+          </div>
+          <span class="logo-text">ECO</span>
+          <span class="logo-badge">Beta</span>
+        </a>
+        <div class="context-badge">
+          <i data-lucide="sparkles" style="width: 16px; height: 16px;"></i>
+          <span>Context-First Networking</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Settings Button -->
+  <button class="settings-btn" id="settingsBtn">
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20" fill="none" class="svg-icon"><g stroke-width="1.5" stroke-linecap="round" stroke="#fff"><circle r="2.5" cy="10" cx="10"></circle><path fill-rule="evenodd" d="m8.39079 2.80235c.53842-1.51424 2.67991-1.51424 3.21831-.00001.3392.95358 1.4284 1.40477 2.3425.97027 1.4514-.68995 2.9657.82427 2.2758 2.27575-.4345.91407.0166 2.00334.9702 2.34248 1.5143.53842 1.5143 2.67996 0 3.21836-.9536.3391-1.4047 1.4284-.9702 2.3425.6899 1.4514-.8244 2.9656-2.2758 2.2757-.9141-.4345-2.0033.0167-2.3425.9703-.5384 1.5142-2.67989 1.5142-3.21831 0-.33914-.9536-1.4284-1.4048-2.34247-.9703-1.45148.6899-2.96571-.8243-2.27575-2.2757.43449-.9141-.01669-2.0034-.97028-2.3425-1.51422-.5384-1.51422-2.67994.00001-3.21836.95358-.33914 1.40476-1.42841.97027-2.34248-.68996-1.45148.82427-2.9657 2.27575-2.27575.91407.4345 2.00333-.01669 2.34247-.97026z" clip-rule="evenodd" id="rotationsettings"></path></g></svg>
+  <span>Settings</span>
+</button>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel">
+    <button class="settings-close" id="settingsClose"><i data-lucide="x" style="width: 16px; height: 16px;"></i></button>
+    <h3>Settings</h3>
+    
+    <div class="setting-group">
+      <label class="setting-label">Username</label>
+      <input type="text" class="setting-input" id="usernameInput" placeholder="Enter your name">
+    </div>
+
+    <div class="setting-group">
+      <label class="setting-label">About Me</label>
+      <textarea class="setting-input setting-textarea" id="aboutMeInput" placeholder="Write a brief description about yourself..."></textarea>
+    </div>
+
+    <button onclick="openNetwork()" class="theme-btn">
+      View Network Graph
+    </button>
+    <button id="showDataBtn" class="theme-btn">Show my data</button>  
+
+    <div class="setting-group">
+      <label class="setting-label">Theme</label>
+      <input id="switch" type="checkbox">
+    <div class="app">
+      <div class="body">
+        
+        <div class="phone"><br>
+        
+          <div class="content">
+            <div class="circle">
+              <div class="crescent"></div>
+            </div>
+          
+            <label for="switch">
+              <div class="toggle"></div>
+              <div class="names">
+                <p class="light">Light</p>
+                <p class="dark">Dark</p>
+              </div>
+            </label>
+            
+          
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+    </div>
+
+    <div class="setting-group">
+      <label class="setting-label">Background</label>
+      <div class="theme-options">
+        <button class="theme-btn1 active" data-bg="grid">Grid</button>
+        <button class="theme-btn1" data-bg="dots">Dots</button>
+        <button class="theme-btn1" data-bg="fog">Fog</button>
+        <button class="theme-btn1" data-bg="net">Net</button>
+        <!-- <button class="theme-btn1" data-bg="cells">Cells</button>
+        <button class="theme-btn1" data-bg="topo">Topo</button> -->
+      </div>
+    </div>
+    <div class="setting-group">
+      <label class="setting-label">Demo Mode</label>
+      <label class="network-toggle-label">
+        <input type="checkbox" id="demoModeToggle" />
+        <span class="toggle-slider"></span>
+        <span class="toggle-text">Use cached demo results</span>
+      </label>
+      <label>
+  <input class="setting-label" type="checkbox" id="toggleFakeChat" onchange="toggleFakeChats(this.checked)">
+  Show Messages
+</label>
+
+    </div>
+
+    <div class="setting-group">
+      <label class="setting-label">Show Network Feed</label>
+      <div class="network-toggle">
+        <span>Show Network Feed</span>
+        <div class="toggle-switch" id="networkToggle">
+          <div class="toggle-knob"></div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="setting-group">
+      <label class="setting-label">Google API Key</label>
+      <input id="googleKey" class="setting-input" />
+      <button onclick="saveKey('google')" class="theme-btn">Save Google API</button>
+    </div>
+    
+    <div class="setting-group">
+      <label class="setting-label">Google CX ID</label>
+      <input id="googleCX" class="setting-input" />
+      <button onclick="saveKey('cx')" class="theme-btn">Save Google CX</button>
+    </div>
+    
+    <div class="setting-group">
+      <label class="setting-label">Google API Key 2 (fallback)</label>
+      <input id="googleKey2" class="setting-input" />
+      <button onclick="saveKey('googleKey2')" class="theme-btn">Save Google API 2</button>
+    </div>
+
+    <div class="setting-group">
+      <label class="setting-label">Google CX ID 2 (fallback)</label>
+      <input id="googleCX2" class="setting-input" />
+      <button onclick="saveKey('googleCX2')" class="theme-btn">Save Google CX 2</button>
+    </div>
+    
+    <div class="setting-group">
+      <label class="setting-label">OpenRouter API Key</label>
+      <input id="openrouterKey" class="setting-input" />
+      <button onclick="saveKey('or')" class="theme-btn">Save OpenRouter API</button>
+    </div>
+
+    <div class="setting-group">
+      <label class="setting-label">Apollo API Key</label>
+      <input id="apolloKey" class="setting-input" />
+      <button onclick="saveKey('apolloKey')" class="theme-btn">Save Apollo API</button>
+    </div>
+    
+  </div>
+
+  <div id="toast-root"></div>
+
+
+  
+  <!-- Main Content -->
+
+  
+  <main>
+    <div class="container">
+      <!-- Search View -->
+      <div class="search-view" id="searchView">
+        <div class="greeting" id="greeting">
+          <h1 class="greeting-text">
+            Good <span class="greeting-accent" id="greetingTime">Morning</span>, 
+            <span id="userName">Guest</span>
+          </h1>
+        </div>
+
+        <div class="search-container">
+        <div id="poda" class="search-wrapper">
+          <div class="glow"></div>
+          <div class="darkBorderBg"></div>
+          <div class="darkBorderBg"></div>
+          <div class="darkBorderBg"></div>
+          <div class="white"></div>
+          <div class="border"></div>
+        
+          <div id="main">
+            <input
+              id="searchInput"
+              class="input"
+              type="text"
+              placeholder="Enter name or company"
+              autocomplete="off"
+            />
+        
+        
+            <div id="input-mask"></div>
+            <div id="pink-mask"></div>
+        
+            <div id="search-icon">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#c0b9c0"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Suggestions Dropdown -->
+        <div class="suggestions" id="suggestionsDropdown"></div>
+      </div>
+
+        <div class="static-suggestions" id="static-suggestions">
+          <p class="static-label">Try searching for executives:</p>
+          <div class="suggestion-chips" id="suggestionChips"></div>
+        </div>
+
+      </div>
+
+      <div class="loader hidden" id="loader">
+        <div class="hand">
+          <span class="finger thumb"></span>
+          <span class="finger"></span>
+          <span class="finger"></span>
+          <span class="finger"></span>
+          <span class="finger"></span>
+          <span class="palm"></span>
+        </div>
+      </div>
+      <div id="jumper" style="height: 50px;"></div>
+
+      <!-- Fake Chat Bar -->
+<div id="fakeChatSection" class="fake-chat-section hidden">
+  <div id="fakeChatBar" class="fake-chat-bar"></div>
+</div>
+
+<!-- Fake Chat Modal -->
+<div id="fakeChatModal" class="fake-chat-modal hidden">
+  <div class="chat-header">
+    <img id="chatAvatar" />
+    <span id="chatName"></span>
+    <button onclick="closeFakeChat()">✕</button>
+  </div>
+
+  <div id="chatMessages" class="chat-messages"></div>
+
+  <div class="chat-input">
+    <input type="text" placeholder="Type a message…" disabled />
+  </div>
+</div>
+
+
+      <!-- Results View -->
+       <div class="results-view" id="resultsView">
+        <button class="back-btn" id="backBtn">
+          <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+          <span>New Search</span>
+        </button>
+        <div id="bentoGrid" class="bento-container">
+          <div class="bento-left">
+            <div class="profile-card"></div>
+            <div class="ai-stack">
+            
+                <div class="ai-summary-card">
+                  <h4>AI Synthesis</h4>
+                  <p id="aiSummaryText"></p>
+                </div> 
+            
+                <div class="draft-card">
+                  <div class="draft-header">
+                    <span class="draft-title">Draft Messages</span>
+                    <span class="draft-subtitle">AI-generated warm intros</span>
+                  </div>
+            
+                  <div id="icebreakers" class="icebreaker-list"></div>
+
+                </div>
+            
+              </div>
+            </div>
+          </div>
+        
+          <div class="bento-right">
+            
+          </div>
+          
+        </div>
+        
+      </div>
+      
+
+        <!-- ROW 1 -->
+        <div class="row-top">
+          <div id="profileCard"></div>
+          <div id="aiSummaryCard"></div>
+      
+          <div class="drafts-column">
+            <div id="draft1"></div>
+            <div id="draft2"></div>
+            <div id="draft3"></div>
+          </div>
+        </div>
+      
+        <!-- ROW 2+ -->
+        <div class="row-bottom">
+          <div class="news-column"></div>
+          <div class="social-column"></div>
+        </div>
+      
+      </div>
+      </div>
+
+      <!-- Toast Container -->
+      <div class="toast-container">
+        <div class="toast" id="toast">
+          <i data-lucide="check-circle" class="toast-icon" style="width: 20px; height: 20px;"></i>
+          <span class="toast-message" id="toastMessage">Copied to clipboard!</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Network Graph Popup -->
+<div id="networkModal" class="network-modal hidden">
+  <div class="network-backdrop" onclick="closeNetwork()"></div>
+
+  <div class="network-panel">
+    <div class="network-header">
+      <h3>Network Graph</h3>
+      <button onclick="closeNetwork()">✕</button>
+    </div>
+
+
+    <svg id="networkSvg"></svg>
+  </div>
+</div>
+
+
+  <!-- Network Feed Section -->
+  <div id="networkFeed" class="network-feed hidden">
+    <div class="network-feed-loader hidden" id="networkFeedLoader">
+      <p>Loading</p>
+      <div class="words">
+        <span class="word">Feed</span>
+      </div>
+    </div>
+    <div id="networkFeedContent" class="network-feed-content"></div>
+  </div>
+
+  <div id="errorBox" class="error-box hidden">
+    <h3>Something broke</h3>
+    <p>API failed or key missing. Check settings.</p>
+  </div>
+
+  
+  
+  <footer class="bp-footer">
+    <div class="bp-footer-inner">
+      <div class="bp-top-row">
+        <div class="bp-brand-col">
+          <div class="bp-brand-top">
+            <span class="bp-small">&copy; 2025 ECO                | All rights reserved.         | PoC by Velan</span>
+            <span class="bp-small"></span>
+            <span class="bp-small">Branding + Network</span>
+          </div>
+          <div class="bp-newsletter">
+            <p class="bp-newsletter-title">صُممت للإشارة،<br> وليس للضوضاء</p>
+            <div class="bp-input-row">
+              <span class="bp-input-label">Adresse mail</span>
+              <span class="bp-input-arrow">↗</span>
+            </div>
+            <div class="bp-input-line"></div>
+          </div>
+        </div>
+
+        <div class="bp-contact-col">
+          <p class="bp-small">contact@eco.com</p>
+          <p class="bp-small">+971 99999999</p>
+        </div>
+
+        <div class="bp-address-col">
+          <p class="bp-small">99 XXX Street XXXX City</p>
+          <p class="bp-small">987 123 Abu Dhabi</p>
+          <p class="bp-small">UAE</p>
+        </div>
+
+        <div class="bp-links-col">
+          <p class="bp-small">↗ Instagram</p>
+          <p class="bp-small">↗ Linkedin</p>
+          <p class="bp-small">↗ Behance</p>
+        </div>
+      </div>
+
+      <div class="bp-bottom-row">
+        <h2 class="bp-cta">Built for signal, not noise.</h2>
+      </div>
+    </div>
+  </footer>
+
+  
+
+  <script src="scripts/main.js"></script>
+
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+
+
+  <!-- Load Vanta.js backgrounds -->
+  <!-- Add scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.cells.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.topology.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+
+</body>
+</html>
