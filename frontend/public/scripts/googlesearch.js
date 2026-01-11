@@ -70,4 +70,3 @@ export async function draftIntro(name, aboutMe) {
     `Here's about me: ${aboutMe}. Now write a draft intro mail for ${name}.`
   );
 }
-
