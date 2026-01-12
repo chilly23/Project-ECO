@@ -517,8 +517,17 @@ function clearSuggestionsAndExtras() {
   if (dropdown) dropdown.classList.remove('visible');
   activeIndex = -1;
 }
+function renderFallbackSuggestion(query) {
+  return `
+    <div class="suggestion-item fallback">
+      <span>Can’t find someone? Just enter and search”</span>
+    </div>
+  `;
+}
+
 
 function selectSuggestion(value) {
+  if (!value) return;
   if (searchInput) searchInput.value = value;
   const dropdown = document.getElementById('suggestionsDropdown');
   if (dropdown) dropdown.classList.remove('visible');
@@ -559,45 +568,49 @@ document.addEventListener("click", (e) => {
 
 // REPLACE fetchSuggestions with DuckDuckGo Instant Answer API (no rate limit)
 async function fetchSuggestions(query) {
-  const dropdown = document.getElementById('suggestionsDropdown');
+  const dropdown = document.getElementById("suggestionsDropdown");
   if (!dropdown) return;
-  
+
+  // Always show fallback row first
+  dropdown.innerHTML = `
+    <div class="suggestion-item guidance-row" style="opacity:0.7;font-size:13px;">
+      <span>Can’t find someone? Press Enter to search “${query}”</span>
+    </div>
+  `;
+  dropdown.classList.add("visible");
+
   try {
-    // Use DuckDuckGo Instant Answer API (no API key required, no rate limit)
+    let names = [];
+
+    // ---- 1. DuckDuckGo ----
     const res = await fetch(
       `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_redirect=1&no_html=1`
     );
     const data = await res.json();
-    
-    // Collect related topics and results
-    let names = [];
-    
-    // Add main result if exists
+
     if (data.Heading) names.push(data.Heading);
-    
-    // Add related topics
-    if (data.RelatedTopics) {
-      data.RelatedTopics.forEach(topic => {
-        if (topic.Text) {
-          const name = topic.Text.split(' - ')[0].trim();
-          if (name && name.length < 60) names.push(name);
+
+    if (Array.isArray(data.RelatedTopics)) {
+      data.RelatedTopics.forEach(t => {
+        if (t.Text) {
+          const n = t.Text.split(" - ")[0].trim();
+          if (n.length && n.length < 60) names.push(n);
         }
-        // Handle nested topics
-        if (topic.Topics) {
-          topic.Topics.forEach(t => {
-            if (t.Text) {
-              const n = t.Text.split(' - ')[0].trim();
-              if (n && n.length < 60) names.push(n);
+        if (Array.isArray(t.Topics)) {
+          t.Topics.forEach(x => {
+            if (x.Text) {
+              const n = x.Text.split(" - ")[0].trim();
+              if (n.length && n.length < 60) names.push(n);
             }
           });
         }
       });
     }
-    
+
     names = [...new Set(names)].slice(0, 6);
-    
+
+    // ---- 2. Wikipedia fallback ----
     if (names.length === 0) {
-      // Fallback to Wikipedia if DuckDuckGo returns nothing
       const wikiRes = await fetch(
         `https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=6&namespace=0&format=json&origin=*`
       );
@@ -605,48 +618,51 @@ async function fetchSuggestions(query) {
       names = [...new Set(wikiData[1] || [])].slice(0, 6);
     }
 
-    if (names.length === 0) {
-      dropdown.classList.remove('visible');
-      return;
-    }
+    // If still nothing, keep only fallback row
+    if (names.length === 0) return;
 
-    const items = await Promise.all(names.map(async (name) => {
-      let img = 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
-      try {
-        const imgRes = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
-        const imgData = await imgRes.json();
-        if (imgData.thumbnail?.source) img = imgData.thumbnail.source;
-      } catch {}
-      return { name, img };
-    }));
+    // ---- 3. Build suggestion rows ----
+    const items = await Promise.all(
+      names.map(async name => {
+        let img =
+          "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+        try {
+          const imgRes = await fetch(
+            `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
+          );
+          const imgData = await imgRes.json();
+          if (imgData.thumbnail?.source) img = imgData.thumbnail.source;
+        } catch {}
+        return { name, img };
+      })
+    );
 
-    const guidanceRow = `
-  <div class="suggestion-item guidance-row" style="opacity: 0.7; font-size: 13px;">
-    <span>Can't find someone? Just enter and search</span>
-  </div>
-`;
+    dropdown.innerHTML += items
+      .map(
+        (item, i) => `
+        <div class="suggestion-item ${i === 0 ? "active" : ""}" data-name="${item.name}">
+          <img src="${item.img}" class="suggestion-img" alt="${item.name}">
+          <span>${item.name}</span>
+        </div>
+      `
+      )
+      .join("");
 
-    dropdown.innerHTML = guidanceRow + items.map((item, i) => `
-      <div class="suggestion-item ${i === 0 ? 'active' : ''}" data-name="${item.name}">
-        <img src="${item.img}" class="suggestion-img" alt="${item.name}">
-        <span>${item.name}</span>
-      </div>
-    `).join('');
-
-    dropdown.classList.add('visible');
     suggestionIndex = 0;
 
-    dropdown.querySelectorAll('.suggestion-item').forEach((item, i) => {
-      item.addEventListener('click', () => selectSuggestion(item.dataset.name));
-      item.addEventListener('mouseenter', () => {
-        dropdown.querySelectorAll('.suggestion-item').forEach(el => el.classList.remove('active'));
-        item.classList.add('active');
+    // ---- 4. Events ----
+    dropdown.querySelectorAll(".suggestion-item[data-name]").forEach((el, i) => {
+      el.addEventListener("click", () => selectSuggestion(el.dataset.name));
+      el.addEventListener("mouseenter", () => {
+        dropdown
+          .querySelectorAll(".suggestion-item")
+          .forEach(x => x.classList.remove("active"));
+        el.classList.add("active");
         suggestionIndex = i;
       });
     });
-
   } catch (err) {
-    console.error('Search error:', err);
+    console.error("Suggestion fetch failed:", err);
   }
 }
 
