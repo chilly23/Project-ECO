@@ -983,7 +983,7 @@ body.light-mode .theme-btn {
 }
 
 body.light-mode .setting-label{
-    background-color: #000;
+    background-color: #fff;
 }
 
 body.light-mode .network-toggle{
@@ -1041,8 +1041,13 @@ body.light-mode .help-icon {
   color: #000;
 }
 body.light-mode .network-news-card {
-  background-color: #87CEEB !important; /* sky blue */
+  background-color: #6171bb !important; /* sky blue */
   color: #fff !important;
+}
+
+body.light-mode .settings-btn{
+ background-color: #6171bb;
+    color: #fff;
 }
 
 body.light-mode .network-news-card a,
