@@ -781,9 +781,7 @@ function extractProfileLinksFromResults(xItems, liItems) {
 
 // Search Flow
 async function startSearchFlow() {
-  const query =
-    queryOverride ||
-    (searchInput && searchInput.value ? searchInput.value.trim() : "");
+  const query = searchInput && searchInput.value ? searchInput.value.trim() : "";
 
   if (!query) return;
 
