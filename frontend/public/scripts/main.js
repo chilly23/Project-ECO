@@ -1372,14 +1372,17 @@ html += `
     </p>
   </div>
 
+  <div class="draft-stack">
+    ${(aiSummary?.icebreakers || []).map((d, i) => `
       <div class="draft-card">
         <div class="draft-index">${i + 1}</div>
         <p>${d}</p>
       </div>
-    `.join("")
+    `).join("")}
   </div>
 </div>
 `;
+
 
 html += `<div class="linkedin-grid">`;
 linkedin.forEach(li => {
