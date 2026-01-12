@@ -395,11 +395,6 @@
   color-scheme: dark;
 }
 
-.settings-panel {
-  background: #0b0b0e !important;
-  color: #e6e6eb !important;
-}
-
 
     /* Bento Grid */
     .bento-grid {
@@ -973,6 +968,7 @@ body.light-mode .settings-panel .setting-label {
   color: #000;
 }
 
+
 body.light-mode .settings-panel input,
 body.light-mode .settings-panel textarea,
 body.light-mode .settings-panel select {
@@ -984,6 +980,18 @@ body.light-mode .settings-panel select {
 body.light-mode .theme-btn {
   border-color: #000;
   color: #000;
+}
+
+body.light-mode .setting-label{
+    background-color: #000;
+}
+
+body.light-mode .network-toggle{
+    color: #000;
+}
+
+body.light-mode .network-toggle-label, .theme-btn1{
+     background-color: #000;
 }
 
 body.light-mode .theme-btn::before {
