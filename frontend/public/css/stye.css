@@ -1037,8 +1037,11 @@ body.light-mode .theme-btn:hover {
   font-size: 12px;
   line-height: 1.35;
 
-  max-width: 220px;          /* key */
-  white-space: normal;       /* key */
+  max-width: 220px;
+  max-height: 120px;          /* key */
+  overflow-y: auto;           /* key */
+
+  white-space: normal;
   word-wrap: break-word;
   text-align: left;
 
