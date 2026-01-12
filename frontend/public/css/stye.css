@@ -1039,7 +1039,7 @@ body.light-mode .theme-btn:hover {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
-  z-index: 20;
+  z-index: 9999;
 }
 
 /* Tooltip arrow */
