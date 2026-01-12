@@ -1000,46 +1000,86 @@ body.light-mode .theme-btn::before {
 
 body.light-mode .theme-btn:hover {
   color: #fff;
-}
-.help-icon {
+}.help-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 16px;
   height: 16px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.2);
-  font-size: 10px;
-  cursor: help;
   margin-left: 6px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: help;
   position: relative;
+
+  background: rgba(255, 255, 255, 0.18);
+  color: #d0d0d0;
 }
 
+.help-icon:hover {
+  background: rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+/* Tooltip bubble */
 .help-icon::after {
   content: attr(data-tooltip);
   position: absolute;
-  bottom: 100%;
+  bottom: 130%;
   left: 50%;
   transform: translateX(-50%);
-  background: #222;
+  background: #111;
   color: #fff;
-  padding: 6px 10px;
+  padding: 6px 8px;
   border-radius: 6px;
-  font-size: 11px;
+  font-size: 12px;
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s;
+  transition: opacity 0.15s ease;
+  z-index: 20;
 }
 
-.help-icon:hover::after {
+/* Tooltip arrow */
+.help-icon::before {
+  content: "";
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #111;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  z-index: 19;
+}
+
+.help-icon:hover::after,
+.help-icon:hover::before {
   opacity: 1;
 }
 
+/* Light mode */
 body.light-mode .help-icon {
-  background: rgba(0,0,0,0.15);
+  background: rgba(0, 0, 0, 0.15);
+  color: #111;
+}
+
+body.light-mode .help-icon:hover {
+  background: rgba(0, 0, 0, 0.25);
   color: #000;
 }
+
+body.light-mode .help-icon::after {
+  background: #222;
+}
+
+body.light-mode .help-icon::before {
+  border-top-color: #222;
+}
+
 body.light-mode .network-news-card {
   background-color: #6171bb !important; /* sky blue */
   color: #fff !important;
