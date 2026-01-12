@@ -1028,19 +1028,26 @@ body.light-mode .theme-btn:hover {
   content: attr(data-tooltip);
   position: absolute;
   bottom: 130%;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 90%;
+  transform: translateX(0);
   background: #111;
   color: #fff;
-  padding: 6px 8px;
+  padding: 8px 10px;
   border-radius: 6px;
   font-size: 12px;
-  white-space: nowrap;
+  line-height: 1.35;
+
+  max-width: 220px;          /* key */
+  white-space: normal;       /* key */
+  word-wrap: break-word;
+  text-align: left;
+
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.15s ease;
   z-index: 9999;
 }
+
 
 /* Tooltip arrow */
 .help-icon::before {
