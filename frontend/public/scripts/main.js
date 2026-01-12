@@ -625,7 +625,13 @@ async function fetchSuggestions(query) {
       return { name, img };
     }));
 
-    dropdown.innerHTML = items.map((item, i) => `
+    const guidanceRow = `
+  <div class="suggestion-item guidance-row" style="opacity: 0.7; font-size: 13px;">
+    <span>Can't find someone? Just enter and search</span>
+  </div>
+`;
+
+    dropdown.innerHTML = guidanceRow + items.map((item, i) => `
       <div class="suggestion-item ${i === 0 ? 'active' : ''}" data-name="${item.name}">
         <img src="${item.img}" class="suggestion-img" alt="${item.name}">
         <span>${item.name}</span>
@@ -1150,40 +1156,46 @@ function renderCard(cardElement, data) {
 }
 
 
-async function getApolloContact(name, company) {
-  if (!APOLLO_KEY) {
-    // Return placeholder structure
-    return {
-      email: null,
-      linkedin: null,
-      twitter: null,
-      phone: null
-    };
-  }
-  
+async function getApolloContact(name) {
+  const apolloKey = localStorage.getItem('eco_apollo_api') || APOLLO_KEY;
+  if (!apolloKey) return { email: null, linkedin: null, twitter: null, phone: null };
+
   try {
     const res = await fetch('/api/apollo', {
-      headers: {
-        'Content-Type': 'application/json'},
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        q_keywords: name,
+        page: 1,
+        per_page: 1
+      })
     });
-    
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json();
-  } catch (error) {
-    console.error('Apollo fetch failed:', error);
-    return { error: true, message: error.message };
+    const data = await res.json();
+    const person = data.people?.[0];
+    return {
+      email: person?.email || null,
+      linkedin: person?.linkedin_url || null,
+      twitter: person?.twitter_url || null,
+      phone: person?.phone_numbers?.[0]?.sanitized_number || null
+    };
+  } catch (err) {
+    console.error('Apollo fetch failed:', err);
+    return { email: null, linkedin: null, twitter: null, phone: null };
   }
 }
 
 async function draftIntro(targetName) {
-  const aboutMe = localStorage.getItem('eco_about') || localStorage.getItem("aboutMe") || 'a professional';
+  const aboutMe = localStorage.getItem('eco_about') || localStorage.getItem("aboutMe") || '';
+  const key = getOpenRouterKey();
   
-  if (!aboutMe || aboutMe === 'a professional') {
+  if (!aboutMe) {
     showToast("Please set 'About me' in settings first.", true);
+    const panel = document.getElementById("settingsPanel");
+    if (panel) panel.classList.add("open");
     return;
   }
   
-  const key = getOpenRouterKey();
   if (!key) {
     showToast("Please add an OpenRouter key in settings first.", true);
     return;
@@ -1369,6 +1381,21 @@ html += `
 </div>
 `;
 
+html += `<div class="linkedin-grid">`;
+linkedin.forEach(li => {
+  html += `
+    <div class="linkedin-card">
+      <div class="card-title">
+        <i data-lucide="linkedin" class="lucide-linkedin1"></i>
+        LinkedIn
+      </div>
+      <p>${li.title}</p>
+      <a href="${li.link}" target="_blank" style="color: #fff;">View post</a>
+    </div>
+  `;
+});
+html += `</div>`;
+
 
     html += `<div class="news-grid">`; 
 
@@ -1407,21 +1434,6 @@ html += `
       `;
     });
 
-    // LinkedIn
-    linkedin.forEach(li => {
-      html += `
-        <div class="linkedin-card">
-          <div class="card-title">
-            <i data-lucide="linkedin" class="lucide-linkedin1"></i>
-            LinkedIn
-          </div>
-          <p>${li.title}</p>
-          <a href="${li.link}" target="_blank" style="color: #fff;">View post</a>
-        </div>
-      `;
-    });
-
-    html += '</div>';
 
     grid.innerHTML = html;
     lucide.createIcons();
@@ -1555,24 +1567,21 @@ function showToast(message, isError = false) {
 }
 
 // Open social links
-function openSocial(platform, name, url) {
-  if (!url) {
-    const urls = {
-      x: `https://x.com/search?q=${encodeURIComponent(name)}`,
-      linkedin: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`,
-      whatsapp: `https://wa.me/?text=${encodeURIComponent('Check out ' + name)}`,
-      mail: `mailto:?subject=${encodeURIComponent('Introduction to ' + name)}`
-    };
-    window.open(urls[platform], '_blank');
-  } else {
-    if (platform === 'whatsapp') {
-      window.open(`https://wa.me/${url.replace(/\D/g, '')}`, '_blank');
-    } else if (platform === 'mail') {
-      window.open(`mailto:${url}`, '_blank');
-    } else {
-      window.open(url, '_blank');
-    }
-  }
+
+async function openSocial(platform, name, fallbackUrl) {
+  // Show loading indicator
+  showToast(`Fetching ${platform} contact...`);
+  
+  const contacts = await getApolloContact(name);
+  
+  const urls = {
+    x: contacts.twitter || fallbackUrl || `https://x.com/search?q=${encodeURIComponent(name)}`,
+    linkedin: contacts.linkedin || fallbackUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`,
+    whatsapp: contacts.phone ? `https://wa.me/${contacts.phone.replace(/\D/g, '')}` : `https://wa.me/?text=${encodeURIComponent('Check out ' + name)}`,
+    mail: contacts.email ? `mailto:${contacts.email}` : `mailto:?subject=${encodeURIComponent('Introduction to ' + name)}`
+  };
+  
+  window.open(urls[platform], '_blank');
 }
 
 // Expose functions globally
