@@ -1553,7 +1553,7 @@ async function loadXEmbed(tweetUrl) {
       }
     }
   } catch (err) {
-    container.innerHTML = `<a href="${tweetUrl}" target="_blank" style="color: white; background-color: black;">View post on X</a>`;
+    container.innerHTML = `<a href="${tweetUrl}" target="_blank" style="color: white; background-color: black; padding: 15px; border-radius: 5px; border: solid 1px white;">Unable to render X post! View post on X</a>`;
   }
 }
 
