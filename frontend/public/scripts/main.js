@@ -477,28 +477,24 @@ if (!OPENROUTER_KEY) {
 
 if (!APOLLO_KEY) {
   console.warn("Apollo API key missing");
-}function handleKeyDown(e) {
+}
+
+function handleKeyDown(e) {
   const dropdown = document.getElementById("suggestionsDropdown");
   const items = dropdown
     ? dropdown.querySelectorAll(".suggestion-item[data-name]")
     : [];
 
-  // ENTER → ALWAYS SEARCH WHAT IS TYPED
-  if (e.key === "Enter") {
+    if (e.key === "Enter") {
     e.preventDefault();
 
     const query = searchInput.value.trim();
     if (!query) return;
 
     clearSuggestionsAndExtras();
-    if (dropdown) dropdown.classList.remove("visible");
-
-    startSearchFlow(); // MUST read from searchInput.value
-    return;
+    startSearchFlow();   // reads input directly
   }
 
-  // If no suggestions, stop here
-  if (!items.length) return;
 
   // Arrow navigation
   if (e.key === "ArrowDown") {
