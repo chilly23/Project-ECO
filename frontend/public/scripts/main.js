@@ -1405,7 +1405,7 @@ html += `
       <div class="draft-card">
         <div class="draft-index">${i + 1}</div>
         <p>${d}</p>
-      </div><br><br>
+      </div><br>
     `).join("")}
   </div>
 </div>
@@ -1425,7 +1425,7 @@ linkedin.forEach(li => {
     </div>
   `;
 });
-html += `</div>`;
+html += `</div><br>`;
 
 
     html += `<div class="news-grid">`; 
