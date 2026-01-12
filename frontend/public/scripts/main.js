@@ -1376,7 +1376,7 @@ html += `
         <div class="draft-index">${i + 1}</div>
         <p>${d}</p>
       </div>
-    `.join("")}
+    `.join("")
   </div>
 </div>
 `;
