@@ -1360,10 +1360,6 @@ html += `
     </p>
   </div>
 
-  <div class="draft-stack">
-    ${(aiSummary?.icebreakers || []).slice(0,3).map((d, i) => `<div class="icebreaker-actions">
-    <button class="copy-btn" id="copy-btn" onclick="copycard()">Copy</button>
-  </div>  
       <div class="draft-card">
         <div class="draft-index">${i + 1}</div>
         <p>${d}</p>
