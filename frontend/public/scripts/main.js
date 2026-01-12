@@ -477,33 +477,47 @@ if (!OPENROUTER_KEY) {
 
 if (!APOLLO_KEY) {
   console.warn("Apollo API key missing");
-}
-function handleKeyDown(e) {
-  const dropdown = document.getElementById('suggestionsDropdown');
-  const items = dropdown ? dropdown.querySelectorAll('.suggestion-item') : [];
+}function handleKeyDown(e) {
+  const dropdown = document.getElementById("suggestionsDropdown");
+  const items = dropdown
+    ? dropdown.querySelectorAll(".suggestion-item[data-name]")
+    : [];
 
-  if (e.key === 'ArrowDown' && items.length) {
+  // ENTER → ALWAYS SEARCH WHAT IS TYPED
+  if (e.key === "Enter") {
+    e.preventDefault();
+
+    const query = searchInput.value.trim();
+    if (!query) return;
+
+    clearSuggestionsAndExtras();
+    if (dropdown) dropdown.classList.remove("visible");
+
+    startSearchFlow(); // MUST read from searchInput.value
+    return;
+  }
+
+  // If no suggestions, stop here
+  if (!items.length) return;
+
+  // Arrow navigation
+  if (e.key === "ArrowDown") {
     e.preventDefault();
     suggestionIndex = (suggestionIndex + 1) % items.length;
     updateActiveItem(items);
-  } else if (e.key === 'ArrowUp' && items.length) {
+  } 
+  else if (e.key === "ArrowUp") {
     e.preventDefault();
-    suggestionIndex = (suggestionIndex - 1 + items.length) % items.length;
+    suggestionIndex =
+      (suggestionIndex - 1 + items.length) % items.length;
     updateActiveItem(items);
-  } else if (e.key === 'Enter') {
-    e.preventDefault();
-    // If a suggestion is highlighted, use it; otherwise use raw input
-    if (suggestionIndex >= 0 && items.length > 0 && items[suggestionIndex]) {
-      selectSuggestion(items[suggestionIndex].dataset.name);
-    } else {
-      const query = searchInput.value.trim();
-      if (query) startSearchFlow();
-    }
-    if (dropdown) dropdown.classList.remove('visible');
-  } else if (e.key === 'Escape') {
-    if (dropdown) dropdown.classList.remove('visible');
+  } 
+  else if (e.key === "Escape") {
+    if (dropdown) dropdown.classList.remove("visible");
+    suggestionIndex = -1;
   }
 }
+
 
 function updateActiveItem(items) {
   items.forEach((item, i) => {
