@@ -1405,7 +1405,7 @@ html += `
       <div class="draft-card">
         <div class="draft-index">${i + 1}</div>
         <p>${d}</p>
-      </div>
+      </div><br><br>
     `).join("")}
   </div>
 </div>
