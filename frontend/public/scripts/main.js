@@ -478,33 +478,28 @@ if (!OPENROUTER_KEY) {
 if (!APOLLO_KEY) {
   console.warn("Apollo API key missing");
 }
-
 function handleKeyDown(e) {
   const dropdown = document.getElementById('suggestionsDropdown');
   const items = dropdown ? dropdown.querySelectorAll('.suggestion-item') : [];
 
-
-  if (!items.length) {
-    if (e.key === 'Enter') {
-      const query = searchInput.value.trim();
-      if (query) startSearchFlow();
-    }
-    return;
-  }
-
-  if (e.key === 'ArrowDown') {
+  if (e.key === 'ArrowDown' && items.length) {
     e.preventDefault();
     suggestionIndex = (suggestionIndex + 1) % items.length;
     updateActiveItem(items);
-  } else if (e.key === 'ArrowUp') {
+  } else if (e.key === 'ArrowUp' && items.length) {
     e.preventDefault();
     suggestionIndex = (suggestionIndex - 1 + items.length) % items.length;
     updateActiveItem(items);
   } else if (e.key === 'Enter') {
     e.preventDefault();
-    if (suggestionIndex >= 0) {
+    // If a suggestion is highlighted, use it; otherwise use raw input
+    if (suggestionIndex >= 0 && items.length > 0 && items[suggestionIndex]) {
       selectSuggestion(items[suggestionIndex].dataset.name);
+    } else {
+      const query = searchInput.value.trim();
+      if (query) startSearchFlow();
     }
+    if (dropdown) dropdown.classList.remove('visible');
   } else if (e.key === 'Escape') {
     if (dropdown) dropdown.classList.remove('visible');
   }
@@ -1156,34 +1151,40 @@ function renderCard(cardElement, data) {
 }
 
 
-async function getApolloContact(name) {
+async function getApolloContact(name, company) {
   const apolloKey = localStorage.getItem('eco_apollo_api') || APOLLO_KEY;
-  if (!apolloKey) return { email: null, linkedin: null, twitter: null, phone: null };
+  if (!apolloKey) {
+    return { email: null, linkedin: null, twitter: null, phone: null };
+  }
 
   try {
     const res = await fetch('/api/apollo', {
-      method: 'POST',
+      method: 'POST',  // MUST be POST!
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         q_keywords: name,
+        q_organization_name: company || '',
         page: 1,
         per_page: 1
       })
     });
+
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const person = data.people?.[0];
+
     return {
       email: person?.email || null,
       linkedin: person?.linkedin_url || null,
       twitter: person?.twitter_url || null,
       phone: person?.phone_numbers?.[0]?.sanitized_number || null
     };
-  } catch (err) {
-    console.error('Apollo fetch failed:', err);
+  } catch (error) {
+    console.error('Apollo fetch failed:', error);
     return { email: null, linkedin: null, twitter: null, phone: null };
   }
 }
+
 
 async function draftIntro(targetName) {
   const aboutMe = localStorage.getItem('eco_about') || localStorage.getItem("aboutMe") || '';
@@ -1571,21 +1572,53 @@ function showToast(message, isError = false) {
 
 // Open social links
 
-async function openSocial(platform, name, fallbackUrl) {
-  // Show loading indicator
-  showToast(`Fetching ${platform} contact...`);
-  
-  const contacts = await getApolloContact(name);
-  
-  const urls = {
-    x: contacts.twitter || fallbackUrl || `https://x.com/search?q=${encodeURIComponent(name)}`,
-    linkedin: contacts.linkedin || fallbackUrl || `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`,
-    whatsapp: contacts.phone ? `https://wa.me/${contacts.phone.replace(/\D/g, '')}` : `https://wa.me/?text=${encodeURIComponent('Check out ' + name)}`,
-    mail: contacts.email ? `mailto:${contacts.email}` : `mailto:?subject=${encodeURIComponent('Introduction to ' + name)}`
+async function openSocial(platform, name, existingUrl) {
+  // If we have a URL already, use it
+  if (existingUrl && existingUrl !== 'null' && existingUrl !== 'undefined') {
+    if (platform === 'whatsapp') {
+      window.open(`https://wa.me/${existingUrl.replace(/\D/g, '')}`, '_blank');
+    } else if (platform === 'mail') {
+      window.open(`mailto:${existingUrl}`, '_blank');
+    } else {
+      window.open(existingUrl, '_blank');
+    }
+    return;
+  }
+
+  // Fetch from Apollo first
+  showToast(`Fetching ${platform} info...`);
+  const contacts = await getApolloContact(name, '');
+
+  const urlMap = {
+    x: contacts.twitter,
+    linkedin: contacts.linkedin,
+    whatsapp: contacts.phone,
+    mail: contacts.email
   };
-  
-  window.open(urls[platform], '_blank');
+
+  const url = urlMap[platform];
+
+  if (url) {
+    if (platform === 'whatsapp') {
+      window.open(`https://wa.me/${url.replace(/\D/g, '')}`, '_blank');
+    } else if (platform === 'mail') {
+      window.open(`mailto:${url}`, '_blank');
+    } else {
+      window.open(url, '_blank');
+    }
+  } else {
+    // Fallback to search
+    const fallbacks = {
+      x: `https://x.com/search?q=${encodeURIComponent(name)}`,
+      linkedin: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`,
+      whatsapp: `https://wa.me/?text=${encodeURIComponent('Check out ' + name)}`,
+      mail: `mailto:?subject=${encodeURIComponent('Introduction to ' + name)}`
+    };
+    window.open(fallbacks[platform], '_blank');
+    showToast(`No direct ${platform} found, opening search.`, true);
+  }
 }
+
 
 // Expose functions globally
 window.handleFollow = handleFollow;
