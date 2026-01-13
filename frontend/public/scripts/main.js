@@ -1506,9 +1506,9 @@ html += `
   <div class="draft-stack">
     ${(aiSummary?.icebreakers || []).map((d, i) => `
       <div class="draft-card">
-        <div class="draft-index">${i + 1}</div>
-        <p>${d}</p>
-      </div>
+        <div class="draft-index"></div>
+        <p>${i + 1}. ${d}</p>
+      </div><br>
     `).join("")}
   </div>
 </div>
