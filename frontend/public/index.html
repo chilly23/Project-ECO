@@ -511,10 +511,14 @@ body.light-mode .settings-panel .settings-close {
       opacity: 0.8;
       font-weight: 500;
     }
+    .input-wrap {
+  position: relative;
+  width: 100%;
+}
 
     .setting-input {
       width: 100%;
-      padding: 10px 12px;
+      padding: 10px 70px 10px 12px; /* space for button */
       background: #151518;
       border: 1px solid #26262b;
       border-radius: 8px;
@@ -1241,6 +1245,24 @@ body.is-loading .static-suggestions {
     "wdth" 100;
 }
 
+    
+.input-save-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: calc(100% - 12px);
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid #fff;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
 .loader {
   position: fixed;
   top: 80%;
@@ -1867,10 +1889,10 @@ body.is-loading .static-suggestions {
     </div>
     <div class="setting-group">
       <label class="setting-label">Demo Mode <span class="help-icon" data-tooltip="Demo mode for presentation (No APIs required)*">?</span></label>
-      <label class="network-toggle-label">
+      <div class="network-toggle-label">
         <span class="toggle-text">Use Cached Results</span>
         <input type="checkbox" id="demoModeToggle" />
-        <span class="toggle-slider"></span>
+        <span class="toggle-slider"></span></div>
       </label>
 
     </div>
@@ -1889,38 +1911,40 @@ body.is-loading .static-suggestions {
 
     <div class="setting-group">
       <label class="setting-label">Google API Key</label>
+      <div class="input-wrap">
       <input id="googleKey" class="setting-input" />
-      <button onclick="saveKey('google')" class="theme-btn">Save Google API</button>
+      <button onclick="saveKey('google')" class="theme-btn input-save-btn">Save</button></div>
     </div>
     
     <div class="setting-group">
       <label class="setting-label">Google CX ID</label>
+      <div class="input-wrap">
       <input id="googleCX" class="setting-input" />
-      <button onclick="saveKey('cx')" class="theme-btn">Save Google CX</button>
+      <button onclick="saveKey('cx')" class="theme-btn input-save-btn">Save</button></div>
     </div>
     
     <div class="setting-group">
-      <label class="setting-label">Google API Key 2 (fallback)</label>
+      <label class="setting-label">Google API Key 2 (fallback)</label><div class="input-wrap">
       <input id="googleKey2" class="setting-input" />
-      <button onclick="saveKey('googleKey2')" class="theme-btn">Save Google API 2</button>
+      <button onclick="saveKey('googleKey2')" class="theme-btn input-save-btn">Save</button></div>
     </div>
 
     <div class="setting-group">
-      <label class="setting-label">Google CX ID 2 (fallback)</label>
+      <label class="setting-label">Google CX ID 2 (fallback)</label><div class="input-wrap">
       <input id="googleCX2" class="setting-input" />
-      <button onclick="saveKey('googleCX2')" class="theme-btn">Save Google CX 2</button>
+      <button onclick="saveKey('googleCX2')" class="theme-btn input-save-btn">Save</button></div>
     </div>
     
     <div class="setting-group">
-      <label class="setting-label">OpenRouter API Key</label>
+      <label class="setting-label">OpenRouter API Key</label><div class="input-wrap">
       <input id="openrouterKey" class="setting-input" />
-      <button onclick="saveKey('or')" class="theme-btn">Save OpenRouter API</button>
+      <button onclick="saveKey('or')" class="theme-btn input-save-btn">Save</button></div>
     </div>
 
     <div class="setting-group">
-      <label class="setting-label">Apollo API Key</label>
+      <label class="setting-label">Apollo API Key</label><div class="input-wrap">
       <input id="apolloKey" class="setting-input" />
-      <button onclick="saveKey('apolloKey')" class="theme-btn">Save Apollo API</button>
+      <button onclick="saveKey('apolloKey')" class="theme-btn input-save-btn">Save</button></div>
     </div>
     
   </div>
