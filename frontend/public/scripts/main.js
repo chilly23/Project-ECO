@@ -77,7 +77,49 @@ function init() {
   setupBackground();
 
   showWelcomeIfFirstTime();
+
+  
 }
+
+// Smooth image loading
+document.addEventListener('DOMContentLoaded', () => {
+  // Handle all images
+  const images = document.querySelectorAll('img');
+  images.forEach(img => {
+    if (img.complete) {
+      img.classList.add('loaded');
+    } else {
+      img.addEventListener('load', () => {
+        img.classList.add('loaded');
+      });
+    }
+  });
+  
+  // Observer for dynamically added images
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        if (node.tagName === 'IMG') {
+          node.addEventListener('load', () => {
+            node.classList.add('loaded');
+          });
+        }
+        if (node.querySelectorAll) {
+          node.querySelectorAll('img').forEach(img => {
+            img.addEventListener('load', () => {
+              img.classList.add('loaded');
+            });
+          });
+        }
+      });
+    });
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+});
 
 function showWelcomeIfFirstTime() {
   const hasVisited = localStorage.getItem('eco_has_visited');
@@ -1530,6 +1572,13 @@ html += `</div><br>`;
     grid.innerHTML = html;
     lucide.createIcons();
 
+    setTimeout(() => {
+  const cards = document.querySelectorAll('.bento-card, .news-card, .draft-card');
+  cards.forEach((card, index) => {
+    card.classList.add('stagger-item');
+  });
+}, 50);
+    
     // Load X embeds
     xPosts.forEach(post => {
       loadXEmbed(post.link);
