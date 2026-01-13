@@ -1422,6 +1422,7 @@ function renderResults() {
   
 
     // AI summary + drafts (column 2 of bento-left)
+// AI summary + drafts (column 2 of bento-left)
 html += `
 <div class="ai-stack">
   <div class="bento-card ai-summary-card">
@@ -1439,7 +1440,7 @@ html += `
       <div class="draft-card">
         <div class="draft-index">${i + 1}</div>
         <p>${d}</p>
-      </div><br>
+      </div>
     `).join("")}
   </div>
 </div>
