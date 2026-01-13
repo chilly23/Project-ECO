@@ -1105,6 +1105,29 @@ body.light-mode .network-news-card .meta {
   color: #fff !important;
 }
 
+/* Fix 1: Ensure toast-root exists for draft-intro notifications */
+/* Add this element to your HTML if missing: <div id="toast-root"></div> */
+
+/* Fix 2: Add spacing between LinkedIn cards */
+.linkedin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px; /* ADD THIS - spacing between cards */
+}
+
+.linkedin-card {
+  margin-bottom: 0; /* Remove if you had margin-bottom, use gap instead */
+}
+
+/* Fix 3: Show full suggestion images without cropping */
+.suggestion-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain; /* Changed from 'cover' to 'contain' */
+  background-color: white; /* Shows full image on white bg */
+  border-radius: 6px;
+}
+
 
 
 .meta{
