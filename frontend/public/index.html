@@ -2144,7 +2144,40 @@ body.light-mode .network-header{
     <svg id="networkSvg"></svg>
   </div>
 </div>
-
+<!-- Welcome Modal -->
+<div id="welcomeModal" class="welcome-modal hidden">
+  <div class="welcome-backdrop"></div>
+  <div class="welcome-panel">
+    <button class="welcome-close" onclick="closeWelcome()">✕</button>
+    <div class="welcome-content">
+      <div class="welcome-icon">
+        <i data-lucide="sparkles" style="width: 48px; height: 48px; color: #17A2B8;"></i>
+      </div>
+      <h2 class="welcome-title">Welcome to ECO</h2>
+      <p class="welcome-subtitle">Executive Context Engine</p>
+      <p class="welcome-description">
+        ECO helps you research executives and build meaningful connections. 
+        Search for any business leader to get AI-powered insights, recent news, 
+        social media activity, and personalized conversation starters.
+      </p>
+      <div class="welcome-features">
+        <div class="welcome-feature">
+          <i data-lucide="search"></i>
+          <span>Deep executive research</span>
+        </div>
+        <div class="welcome-feature">
+          <i data-lucide="sparkles"></i>
+          <span>AI-generated intros</span>
+        </div>
+        <div class="welcome-feature">
+          <i data-lucide="users"></i>
+          <span>Network tracking</span>
+        </div>
+      </div>
+      <button class="welcome-cta" onclick="closeWelcome()">Get Started</button>
+    </div>
+  </div>
+</div>
 
   <!-- Network Feed Section -->
   <div id="networkFeed" class="network-feed hidden">
