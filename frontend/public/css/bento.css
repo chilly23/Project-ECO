@@ -221,7 +221,7 @@
 }
 
 .network-toggle-label input[type="checkbox"]:checked + .toggle-slider {
-  background: #402fb5;
+  background: #17A2B8;
 }
 
 .network-toggle-label input[type="checkbox"]:checked + .toggle-slider::before {
