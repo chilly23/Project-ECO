@@ -1059,7 +1059,7 @@ async function getAISummary(name) {
         'X-Title': 'ECO Platform'
       },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-20b:free',
+        model: 'openai/gpt-oss-120b:free',
         messages: [{
           role: 'user',
           content: `You are helping with executive research. For "${name}", return strict JSON with two fields: "summary" (2-3 sentence overview) and "icebreakers" (array of 3 short-medium, warm intro messages). No extra text.`
