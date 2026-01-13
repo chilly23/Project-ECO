@@ -478,35 +478,54 @@ if (!OPENROUTER_KEY) {
 if (!APOLLO_KEY) {
   console.warn("Apollo API key missing");
 }
-
 function handleKeyDown(e) {
   const dropdown = document.getElementById("suggestionsDropdown");
   const items = dropdown
     ? dropdown.querySelectorAll(".suggestion-item[data-name]")
     : [];
 
-    if (e.key === "Enter") {
+  if (e.key === "Enter") {
     e.preventDefault();
-
+    
+    // If user selected a suggestion via arrow keys, use that
+    if (suggestionIndex >= 0 && items[suggestionIndex]) {
+      const selectedName = items[suggestionIndex].dataset.name;
+      if (selectedName) {
+        searchInput.value = selectedName;
+      }
+    }
+    
+    // Now use whatever is in the input
     const query = searchInput.value.trim();
     if (!query) return;
 
     clearSuggestionsAndExtras();
-    startSearchFlow();   // reads input directly
+    startSearchFlow();
+    return;
   }
-
 
   // Arrow navigation
   if (e.key === "ArrowDown") {
     e.preventDefault();
-    suggestionIndex = (suggestionIndex + 1) % items.length;
-    updateActiveItem(items);
+    if (items.length > 0) {
+      suggestionIndex = (suggestionIndex + 1) % items.length;
+      updateActiveItem(items);
+      // Update input as user navigates
+      if (items[suggestionIndex]?.dataset.name) {
+        searchInput.value = items[suggestionIndex].dataset.name;
+      }
+    }
   } 
   else if (e.key === "ArrowUp") {
     e.preventDefault();
-    suggestionIndex =
-      (suggestionIndex - 1 + items.length) % items.length;
-    updateActiveItem(items);
+    if (items.length > 0) {
+      suggestionIndex = (suggestionIndex - 1 + items.length) % items.length;
+      updateActiveItem(items);
+      // Update input as user navigates
+      if (items[suggestionIndex]?.dataset.name) {
+        searchInput.value = items[suggestionIndex].dataset.name;
+      }
+    }
   } 
   else if (e.key === "Escape") {
     if (dropdown) dropdown.classList.remove("visible");
@@ -581,10 +600,13 @@ async function fetchSuggestions(query) {
   const dropdown = document.getElementById("suggestionsDropdown");
   if (!dropdown) return;
 
-  // Always show fallback row first
+  // Reset suggestion index so Enter uses raw input by default
+  suggestionIndex = -1;
+
+  // Always show guidance row first
   dropdown.innerHTML = `
-    <div class="suggestion-item guidance-row" style="opacity:0.7;font-size:13px;">
-      <span>Can’t find someone? Press Enter to search “${query}”</span>
+    <div class="suggestion-item guidance-row" style="opacity:0.7;font-size:13px;cursor:pointer;" onclick="startSearchFlow()">
+      <span>Can't find someone? Press Enter to search "${query}"</span>
     </div>
   `;
   dropdown.classList.add("visible");
@@ -592,7 +614,7 @@ async function fetchSuggestions(query) {
   try {
     let names = [];
 
-    // ---- 1. DuckDuckGo ----
+    // DuckDuckGo
     const res = await fetch(
       `https://api.duckduckgo.com/?q=${encodeURIComponent(query)}&format=json&no_redirect=1&no_html=1`
     );
@@ -619,7 +641,7 @@ async function fetchSuggestions(query) {
 
     names = [...new Set(names)].slice(0, 6);
 
-    // ---- 2. Wikipedia fallback ----
+    // Wikipedia fallback
     if (names.length === 0) {
       const wikiRes = await fetch(
         `https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=6&namespace=0&format=json&origin=*`
@@ -628,14 +650,13 @@ async function fetchSuggestions(query) {
       names = [...new Set(wikiData[1] || [])].slice(0, 6);
     }
 
-    // If still nothing, keep only fallback row
+    // If no suggestions, keep only guidance row (don't hide dropdown!)
     if (names.length === 0) return;
 
-    // ---- 3. Build suggestion rows ----
+    // Build suggestion rows
     const items = await Promise.all(
       names.map(async name => {
-        let img =
-          "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
+        let img = "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
         try {
           const imgRes = await fetch(
             `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`
@@ -647,10 +668,11 @@ async function fetchSuggestions(query) {
       })
     );
 
+    // Append suggestions AFTER guidance row
     dropdown.innerHTML += items
       .map(
-        (item, i) => `
-        <div class="suggestion-item ${i === 0 ? "active" : ""}" data-name="${item.name}">
+        (item) => `
+        <div class="suggestion-item" data-name="${item.name}">
           <img src="${item.img}" class="suggestion-img" alt="${item.name}">
           <span>${item.name}</span>
         </div>
@@ -658,15 +680,11 @@ async function fetchSuggestions(query) {
       )
       .join("");
 
-    suggestionIndex = 0;
-
-    // ---- 4. Events ----
+    // Events - don't set suggestionIndex until user interacts
     dropdown.querySelectorAll(".suggestion-item[data-name]").forEach((el, i) => {
       el.addEventListener("click", () => selectSuggestion(el.dataset.name));
       el.addEventListener("mouseenter", () => {
-        dropdown
-          .querySelectorAll(".suggestion-item")
-          .forEach(x => x.classList.remove("active"));
+        dropdown.querySelectorAll(".suggestion-item").forEach(x => x.classList.remove("active"));
         el.classList.add("active");
         suggestionIndex = i;
       });
@@ -675,6 +693,7 @@ async function fetchSuggestions(query) {
     console.error("Suggestion fetch failed:", err);
   }
 }
+
 
 
 function isDemoMode() {
