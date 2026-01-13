@@ -1249,7 +1249,7 @@ body.is-loading .static-suggestions {
 .input-save-btn {
   position: absolute;
   right: 6px;
-  top: 50%;
+  top: 25%;
   transform: translateY(-50%);
   height: calc(100% - 12px);
   padding: 0 14px;
@@ -1525,10 +1525,15 @@ body.is-loading .static-suggestions {
 
 /* To this: */
 .settings-panel {
-  width: 100vw;
-  right: -100vw;
+  width: 80vw;
+  right: -80vw;
   left: auto;
 }
+
+  body.light-mode .theme-btn{
+    font-size: smaller;
+    padding: 5px;
+  }
 
 /* =============================
    AI SUMMARY (BELOW PROFILE)
@@ -1844,7 +1849,7 @@ body.is-loading .static-suggestions {
 
     
     <button onclick="openNetwork()" class="theme-btn">View Network Graph</button>
-    <button id="showDataBtn" class="theme-btn">Show my data</button>  
+    <button id="showDataBtn" class="theme-btn">View my data</button>  
 
     <div class="setting-group">
       <label class="setting-label">Theme</label>
