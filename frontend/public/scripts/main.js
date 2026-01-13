@@ -300,8 +300,8 @@ function setBackground(bgType) {
   const config = { el: "#vanta-bg" };
 
   switch(bgType) {
-    case 'dots':
-      if (VANTA.DOTS) vantaEffect = VANTA.DOTS(config);
+    case 'cells':
+      if (VANTA.CELLS) vantaEffect = VANTA.CELLS(config);
       break;
     case 'fog':
       if (VANTA.FOG) vantaEffect = VANTA.FOG(config);
