@@ -1006,6 +1006,14 @@ body.light-mode .toggle-slider {
     background: rgba(0, 0, 0, 0.8);
 }
 
+body.light-mode .toggle-switch.active {
+    background: var(--primary);
+}
+
+body.light-mode .toggle-slider.active {
+    background: var(--primary);
+}
+
 /* body.light-mode .theme-btn::before {
   background-color: #fff;
 } */
