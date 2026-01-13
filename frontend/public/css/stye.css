@@ -992,7 +992,18 @@ body.light-mode .network-toggle{
 
 body.light-mode .network-toggle-label, .theme-btn1{
      background-color: #f5f5f5;
+    
+}
+
+body.light-mode .toggle-text{
     color: black;
+}
+
+body.light-mode .toggle-switch {
+    background: rgba(0, 0, 0, 0.8);
+}
+body.light-mode .toggle-slider {
+    background: rgba(0, 0, 0, 0.8);
 }
 
 body.light-mode .theme-btn::before {
