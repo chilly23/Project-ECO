@@ -1006,13 +1006,15 @@ body.light-mode .toggle-slider {
     background: rgba(0, 0, 0, 0.8);
 }
 
-body.light-mode .theme-btn::before {
+/* body.light-mode .theme-btn::before {
   background-color: #fff;
-}
+} */
 
-body.light-mode .theme-btn:hover {
+/* body.light-mode .theme-btn:hover {
   color: #fff;
-}.help-icon {
+} */
+
+.help-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
