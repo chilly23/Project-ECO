@@ -699,25 +699,33 @@ async function fetchSuggestions(query) {
 function isDemoMode() {
   return localStorage.getItem("eco_demo_mode") === "true";
 }
+// Wait for DOM to load before setting up demo toggle
+// Wait for DOM to load before setting up demo toggle
+document.addEventListener('DOMContentLoaded', () => {
+  const demoToggle = document.getElementById("demoModeToggle");
 
-const demoToggle = document.getElementById("demoModeToggle");
+  if (demoToggle) {
+    // Set initial state
+    demoToggle.checked = isDemoMode();
 
-if (demoToggle) {
-  demoToggle.checked = isDemoMode();
-
-  demoToggle.addEventListener("change", () => {
-    const isDemo = demoToggle.checked;
-    localStorage.setItem("eco_demo_mode", isDemo ? "true" : "false");
-    
-    if (isDemo) {
-      // When enabling demo mode, redirect to Jensen page
-      window.location.href = "/jensen.html";
-    } else {
-      // When disabling demo mode, go back to main search
-      window.location.href = "/";
-    }
-  });
-}
+    demoToggle.addEventListener("change", () => {
+      const isDemo = demoToggle.checked;
+      localStorage.setItem("eco_demo_mode", isDemo ? "true" : "false");
+      
+      if (isDemo) {
+        showToast("Demo mode enabled - redirecting...", "info");
+        setTimeout(() => {
+          window.location.href = "/jensen.html";
+        }, 500);
+      } else {
+        showToast("Demo mode disabled", "info");
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 500);
+      }
+    });
+  }
+});
 
 
 
@@ -1012,15 +1020,26 @@ async function getWikiProfile(name) {
     };
   }
 }
-
-function showToast(message, type = "info", duration = 8000) {
+function showToast(message, type = "info", duration = 3000) {
   const root = document.getElementById("toast-root");
-  if (!root) return;
+  if (!root) {
+    console.warn("Toast root not found");
+    return;
+  }
 
   const toast = document.createElement("div");
   toast.className = `toast toast-${type}`;
-  toast.textContent = message;
-
+  
+  const icon = document.createElement("span");
+  if (type === "success") icon.innerHTML = "✓";
+  else if (type === "error") icon.innerHTML = "✕";
+  else icon.innerHTML = "ℹ";
+  
+  const text = document.createElement("span");
+  text.textContent = message;
+  
+  toast.appendChild(icon);
+  toast.appendChild(text);
   root.appendChild(toast);
 
   requestAnimationFrame(() => {
@@ -1032,7 +1051,6 @@ function showToast(message, type = "info", duration = 8000) {
     setTimeout(() => toast.remove(), 300);
   }, duration);
 }
-
 
 function getOpenRouterKey() {
   // Prefer user-provided key from settings, fall back to baked-in key
@@ -1231,25 +1249,24 @@ async function getApolloContact(name, company) {
   }
 }
 
-
 async function draftIntro(targetName) {
   const aboutMe = localStorage.getItem('eco_about') || localStorage.getItem("aboutMe") || '';
   const key = getOpenRouterKey();
   
   if (!aboutMe) {
-    showToast("Please set 'About me' in settings first.", true);
+    showToast("Please set 'About me' in settings first.", "error");
     const panel = document.getElementById("settingsPanel");
     if (panel) panel.classList.add("open");
     return;
   }
   
   if (!key) {
-    showToast("Please add an OpenRouter key in settings first.", true);
+    showToast("Please add an OpenRouter key in settings first.", "error");
     return;
   }
 
   try {
-    showToast("Generating draft intro...");
+    showToast("Generating draft intro...", "info");
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -1272,16 +1289,14 @@ async function draftIntro(targetName) {
     const draft = data.choices?.[0]?.message?.content || "Failed to generate draft.";
     
     // Copy to clipboard
-    navigator.clipboard.writeText(draft);
-    showToast("Draft intro copied to clipboard!");
+    await navigator.clipboard.writeText(draft);
+    showToast("Draft intro copied to clipboard!", "success");
     
-    showToast(`Draft Introduction:\n\n${draft}`, "success", 8000);
   } catch (err) {
     console.error("Draft intro error:", err);
-    showToast("Failed to generate draft intro.", true);
+    showToast("Failed to generate draft intro.", "error");
   }
 }
-
 // Process results
 function processNews(items) {
   return items.map(item => ({
