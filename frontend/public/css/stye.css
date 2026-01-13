@@ -1152,6 +1152,58 @@ body.light-mode .network-news-card .meta {
   border-radius: 6px;
 }
 
+#toast-root {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.toast-success {
+  border-left: 3px solid #10b981;
+}
+
+.toast.toast-error {
+  border-left: 3px solid #ef4444;
+}
+
+.toast.toast-info {
+  border-left: 3px solid #3b82f6;
+}
+
+body.light-mode .toast {
+  background: rgba(255, 255, 255, 0.95);
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
 
 
 .meta{
