@@ -1139,6 +1139,8 @@ body.light-mode .network-news-card .meta {
 
 .linkedin-card {
   margin-bottom: 0; /* Remove if you had margin-bottom, use gap instead */
+    width: 900px;
+    font-size: medium;
 }
 
 /* Fix 3: Show full suggestion images without cropping */
