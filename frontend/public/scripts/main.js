@@ -75,7 +75,33 @@ function init() {
   setupSettings();
   setupTheme();
   setupBackground();
+
+  showWelcomeIfFirstTime();
 }
+
+function showWelcomeIfFirstTime() {
+  const hasVisited = localStorage.getItem('eco_has_visited');
+  if (!hasVisited) {
+    const modal = document.getElementById('welcomeModal');
+    if (modal) {
+      setTimeout(() => {
+        modal.classList.remove('hidden');
+        lucide.createIcons();
+      }, 500);
+    }
+    localStorage.setItem('eco_has_visited', 'true');
+  }
+}
+
+function closeWelcome() {
+  const modal = document.getElementById('welcomeModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+// Make closeWelcome globally accessible
+window.closeWelcome = closeWelcome;
 
 // Settings
 function loadSettings() {
