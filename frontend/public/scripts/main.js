@@ -12,6 +12,19 @@ async function loadConfig() {
   APOLLO_KEY     = cfg.APOLLO_KEY;
 }
 
+const DEMO_KEY = "demoMode";
+const isDemo = localStorage.getItem(DEMO_KEY) === "true";
+const page = location.pathname.split("/").pop();
+
+// Auto redirect based on demo state
+if (isDemo && page === "index.html") {
+  location.replace("jensen.html");
+}
+
+if (!isDemo && page === "jensen.html") {
+  location.replace("index.html");
+}
+
 
 
 
@@ -599,6 +612,16 @@ function handleKeyDown(e) {
   }
 }
 
+window.toggleDemoMode = function (enabled) {
+  localStorage.setItem(DEMO_KEY, enabled ? "true" : "false");
+  location.replace(enabled ? "jensen.html" : "index.html");
+};
+if (isDemo) {
+  const badge = document.createElement("div");
+  badge.id = "demo-indicator";
+  badge.textContent = "DEMO MODE";
+  document.body.appendChild(badge);
+}
 
 function updateActiveItem(items) {
   items.forEach((item, i) => {
