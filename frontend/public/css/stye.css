@@ -1390,7 +1390,6 @@ body.light-mode .simple-toast.info {
   color: white;
 }
 
-/* Spinning loader icon for buttons */
 .spinning-icon {
   display: inline-block;
   animation: spin-loader 1s linear infinite;
