@@ -818,6 +818,7 @@ function setupDemoMode() {
       }, 1000);
     } else {
       showToast("Demo mode disabled", "success");
+      window.location.href = "/index.html";
       // Don't redirect, just update state
     }
   });
