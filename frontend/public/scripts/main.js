@@ -817,10 +817,12 @@ function setupDemoMode() {
         window.location.href = "/jensen.html";
       }, 1000);
     } else {
-      showToast("Demo mode disabled", "success");
-      window.location.href = "/index.html";
-      // Don't redirect, just update state
-    }
+  showToast("Demo mode disabled - exiting demo", "success");
+  setTimeout(() => {
+    window.location.href = "/";
+  }, 600);
+}
+
   });
 }
 
