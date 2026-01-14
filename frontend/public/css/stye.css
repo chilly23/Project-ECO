@@ -1409,6 +1409,286 @@ body.light-mode .simple-toast.info {
   pointer-events: none;
 }
 
+/* ============================================
+   DRAFT INTRO MODAL - MODERN POPUP
+   ============================================ */
+
+.draft-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.draft-modal:not(.hidden) {
+  opacity: 1;
+  visibility: visible;
+}
+
+.draft-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.draft-panel {
+  position: relative;
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  border-radius: 16px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: slideUpModal 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+@keyframes slideUpModal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.draft-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.draft-header-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.draft-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+.draft-close {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.draft-close:hover {
+  color: white;
+}
+
+.draft-body {
+  padding: 1.5rem;
+}
+
+.draft-message {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: white;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.draft-footer {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.draft-copy-btn,
+.draft-done-btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  font-family: inherit;
+}
+
+.draft-copy-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.draft-copy-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.draft-done-btn {
+  background: linear-gradient(135deg, #17A2B8, #138496);
+  color: white;
+}
+
+.draft-done-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(23, 162, 184, 0.4);
+}
+
+/* Light Mode */
+body.light-mode .draft-panel {
+  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+}
+
+body.light-mode .draft-header h3,
+body.light-mode .draft-message {
+  color: #000;
+}
+
+body.light-mode .draft-message {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .draft-close {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+body.light-mode .draft-close:hover {
+  color: #000;
+}
+
+body.light-mode .draft-copy-btn {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-mode .draft-copy-btn:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Scrollbar for draft message */
+.draft-message::-webkit-scrollbar {
+  width: 8px;
+}
+
+.draft-message::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.draft-message::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.draft-message::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ============================================
+   SIMPLE TOAST SYSTEM - BOTTOM RIGHT CORNER
+   ============================================ */
+
+.simple-toast {
+  position: fixed;
+  bottom: -100px;
+  right: 32px; /* Changed from center to right */
+  transform: none; /* Remove translateX */
+  background: rgba(0, 0, 0, 0.95);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 99999;
+  transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 280px;
+  max-width: 400px;
+  text-align: left;
+}
+
+.simple-toast.show {
+  bottom: 32px;
+}
+
+.simple-toast.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.simple-toast.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.simple-toast.info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.light-mode .simple-toast {
+  background: rgba(255, 255, 255, 0.98);
+  color: #000;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+body.light-mode .simple-toast.success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+body.light-mode .simple-toast.error {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+body.light-mode .simple-toast.info {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+  .simple-toast {
+    right: 16px;
+    left: 16px;
+    min-width: auto;
+  }
+}
+
 .meta{
     overflow: hidden;
 }
