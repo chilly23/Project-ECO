@@ -16,14 +16,6 @@ const DEMO_KEY = "demoMode";
 const isDemo = localStorage.getItem(DEMO_KEY) === "true";
 const page = location.pathname.split("/").pop();
 
-// Auto redirect based on demo state
-if (isDemo && page === "index.html") {
-  location.replace("jensen.html");
-}
-
-if (!isDemo && page === "jensen.html") {
-  location.replace("index.html");
-}
 
 
 
@@ -612,10 +604,6 @@ function handleKeyDown(e) {
   }
 }
 
-window.toggleDemoMode = function (enabled) {
-  localStorage.setItem(DEMO_KEY, enabled ? "true" : "false");
-  location.replace(enabled ? "jensen.html" : "index.html");
-};
 if (isDemo) {
   const badge = document.createElement("div");
   badge.id = "demo-indicator";
