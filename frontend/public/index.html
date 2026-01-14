@@ -1897,14 +1897,15 @@ body.light-mode .network-header{
       </div>
     </div>
     <div class="setting-group">
-      <label class="setting-label">Demo Mode <span class="help-icon" data-tooltip="Demo mode for presentation (No APIs required)*">?</span></label>
-      <div class="network-toggle-label">
-        <span class="toggle-text">Use Cached Results</span>
-        <input type="checkbox" id="demoModeToggle" />
-        <span class="toggle-slider"></span></div>
-      </label>
-
+  <label class="setting-label">Demo Mode <span class="help-icon" data-tooltip="Demo mode for presentation (No APIs required)">?</span></label>
+  <div class="network-toggle">
+    <span>Use Cached Results</span>
+    <div class="toggle-switch" id="demoModeToggleSwitch">
+      <div class="toggle-knob"></div>
     </div>
+  </div>
+  <input type="checkbox" id="demoModeToggle" style="display: none;" />
+</div>
 
     <div class="setting-group">
       
