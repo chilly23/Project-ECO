@@ -1088,36 +1088,35 @@ async function getWikiProfile(name) {
     };
   }
 }
-function showToast(message, type = "info", duration = 3000) {
-  const root = document.getElementById("toast-root");
-  if (!root) {
-    console.warn("Toast root not found");
+function showToast(message, type = "info") {
+  const toast = document.getElementById('simpleToast');
+  const toastText = document.getElementById('toastText');
+  
+  if (!toast || !toastText) {
+    console.warn('Toast elements not found');
     return;
   }
 
-  const toast = document.createElement("div");
-  toast.className = `toast toast-${type}`;
+  // Remove previous classes
+  toast.classList.remove('show', 'success', 'error', 'info');
   
-  const icon = document.createElement("span");
-  if (type === "success") icon.innerHTML = "✓";
-  else if (type === "error") icon.innerHTML = "✕";
-  else icon.innerHTML = "ℹ";
+  // Set message
+  toastText.textContent = message;
   
-  const text = document.createElement("span");
-  text.textContent = message;
+  // Add type class
+  if (type === 'success' || type === 'error' || type === 'info') {
+    toast.classList.add(type);
+  }
   
-  toast.appendChild(icon);
-  toast.appendChild(text);
-  root.appendChild(toast);
-
-  requestAnimationFrame(() => {
-    toast.classList.add("visible");
-  });
-
+  // Show toast
   setTimeout(() => {
-    toast.classList.remove("visible");
-    setTimeout(() => toast.remove(), 300);
-  }, duration);
+    toast.classList.add('show');
+  }, 10);
+  
+  // Hide after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3000);
 }
 
 function getOpenRouterKey() {
@@ -1316,25 +1315,45 @@ async function getApolloContact(name, company) {
     return { email: null, linkedin: null, twitter: null, phone: null };
   }
 }
-
 async function draftIntro(targetName) {
   const aboutMe = localStorage.getItem('eco_about') || localStorage.getItem("aboutMe") || '';
   const key = getOpenRouterKey();
   
+  // Validation checks
   if (!aboutMe) {
-    showToast("Please set 'About me' in settings first.", "error");
+    showToast("Please set 'About Me' in settings first", "error");
     const panel = document.getElementById("settingsPanel");
     if (panel) panel.classList.add("open");
     return;
   }
   
   if (!key) {
-    showToast("Please add an OpenRouter key in settings first.", "error");
+    showToast("Please add OpenRouter API key in settings", "error");
+    const panel = document.getElementById("settingsPanel");
+    if (panel) panel.classList.add("open");
     return;
   }
 
+  // Find the button that was clicked
+  const draftBtn = event?.target?.closest('.draft-btn');
+  let originalText = '';
+  
+  if (draftBtn) {
+    originalText = draftBtn.innerHTML;
+    draftBtn.disabled = true;
+    draftBtn.style.opacity = '0.6';
+    draftBtn.style.cursor = 'not-allowed';
+    draftBtn.innerHTML = `
+      <svg class="spinning-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12a9 9 0 11-6.219-8.56"/>
+      </svg>
+      Generating...
+    `;
+  }
+
   try {
-    showToast("Generating draft intro...", "info");
+    showToast("AI is drafting your intro...", "info");
+    
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -1347,22 +1366,40 @@ async function draftIntro(targetName) {
         model: 'openai/gpt-oss-20b:free',
         messages: [{
           role: 'user',
-          content: `Here's about me: ${aboutMe}. Now write a brief, warm introduction email for ${targetName}. Keep it under 100 words.`
+          content: `Here's about me: ${aboutMe}. Now write a brief, warm introduction email for ${targetName}. Keep it under 100 words. Make it professional but friendly.`
         }],
         "reasoning": {"enabled": true}
       })
     });
+    
+    if (!res.ok) {
+      throw new Error(`API Error: ${res.status}`);
+    }
     
     const data = await res.json();
     const draft = data.choices?.[0]?.message?.content || "Failed to generate draft.";
     
     // Copy to clipboard
     await navigator.clipboard.writeText(draft);
-    showToast("Draft intro copied to clipboard!", "success");
+    
+    showToast("Draft copied!", "success");
+    
+    // Show draft in a modal or alert
+    setTimeout(() => {
+      alert(`Draft Introduction:\n\n${draft}\n\n✓ Copied to clipboard!`);
+    }, 500);
     
   } catch (err) {
     console.error("Draft intro error:", err);
-    showToast("Failed to generate draft intro.", "error");
+    showToast("Failed to generate draft. Check API key.", "error");
+  } finally {
+    // Restore button
+    if (draftBtn) {
+      draftBtn.disabled = false;
+      draftBtn.style.opacity = '1';
+      draftBtn.style.cursor = 'pointer';
+      draftBtn.innerHTML = originalText;
+    }
   }
 }
 // Process results
@@ -1481,8 +1518,10 @@ function renderResults() {
 
           <button class="follow-btn ${isAlreadyFollowing ? 'following' : ''}" onclick="toggleFollow('${profile.name}', this)"> ${isAlreadyFollowing ? 'Following' : 'Follow'} </button>
 
-          <button class="draft-btn" onclick="draftIntro('${profile.name}')"><i data-lucide="sparkles" style="width: 16px; height: 16px; color: white;"></i>
-          Draft Intro</button>
+          <button class="draft-btn" onclick="event.stopPropagation(); draftIntro('${profile.name}')">
+  <i data-lucide="sparkles" style="width: 16px; height: 16px; color: white;"></i>
+  Draft Intro
+</button>
         </div>
       </div>
     `;
