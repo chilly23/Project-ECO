@@ -75,10 +75,8 @@ function init() {
   setupSettings();
   setupTheme();
   setupBackground();
-
   showWelcomeIfFirstTime();
-
-  
+  setupDemoMode();  // ADD THIS LINE
 }
 
 // Smooth image loading
@@ -763,39 +761,44 @@ async function fetchSuggestions(query) {
 }
 
 
-
 function isDemoMode() {
   return localStorage.getItem("eco_demo_mode") === "true";
 }
-// Wait for DOM to load before setting up demo toggle
-// Wait for DOM to load before setting up demo toggle
-document.addEventListener('DOMContentLoaded', () => {
+function setupDemoMode() {
   const demoToggle = document.getElementById("demoModeToggle");
-
-  if (demoToggle) {
-    // Set initial state
-    demoToggle.checked = isDemoMode();
-
-    demoToggle.addEventListener("change", () => {
-      const isDemo = demoToggle.checked;
-      localStorage.setItem("eco_demo_mode", isDemo ? "true" : "false");
-      
-      if (isDemo) {
-        showToast("Demo mode enabled - redirecting...", "info");
-        setTimeout(() => {
-          window.location.href = "/jensen.html";
-        }, 500);
-      } else {
-        showToast("Demo mode disabled", "info");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 500);
-      }
-    });
+  const demoToggleSwitch = document.getElementById("demoModeToggleSwitch");
+  
+  if (!demoToggle || !demoToggleSwitch) {
+    console.warn("Demo mode toggle elements not found");
+    return;
   }
-});
 
+  // Set initial state
+  const currentMode = isDemoMode();
+  demoToggle.checked = currentMode;
+  if (currentMode) {
+    demoToggleSwitch.classList.add('active');
+  }
 
+  // Handle visual toggle click
+  demoToggleSwitch.addEventListener("click", () => {
+    demoToggle.checked = !demoToggle.checked;
+    demoToggleSwitch.classList.toggle('active');
+    
+    const isDemo = demoToggle.checked;
+    localStorage.setItem("eco_demo_mode", isDemo ? "true" : "false");
+    
+    if (isDemo) {
+      showToast("Demo mode enabled - redirecting...", "info");
+      setTimeout(() => {
+        window.location.href = "/jensen.html";
+      }, 1000);
+    } else {
+      showToast("Demo mode disabled", "success");
+      // Don't redirect, just update state
+    }
+  });
+}
 
 function showLoader() {
   const loaderEl = document.getElementById("loader");
