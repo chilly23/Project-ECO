@@ -1806,7 +1806,7 @@ body.light-mode .network-header{
   </style>
 <script charset="utf-8" src="https://platform.twitter.com/js/tweet.d7aeb21a88e025d2ea5f5431a103f586.js"></script></head>
 <body class="vanta-active">
-  <div id="vanta-bg"><canvas class="vanta-canvas" width="2270" height="1336" style="display: block; position: absolute; z-index: 0; top: 0px; left: 0px; width: 1135px; height: 668px;"></canvas><canvas class="vanta-canvas" width="1688" height="1398" style="display: block; position: absolute; z-index: 0; top: 0px; left: 0px; width: 844px; height: 699px;"></canvas></div>
+  <div id="vanta-bg"><canvas class="vanta-canvas" width="1688" height="1398" style="display: block; position: absolute; z-index: 0; top: 0px; left: 0px; width: 844px; height: 699px;"></canvas></div>
   <div class="bg-grid" style="display: none;"></div>
 
   <!-- Header -->
@@ -1895,14 +1895,15 @@ body.light-mode .network-header{
       </div>
     </div>
     <div class="setting-group">
-      <label class="setting-label">Demo Mode <span class="help-icon" data-tooltip="Demo mode for presentation (No APIs required)*">?</span></label>
-      <div class="network-toggle-label">
-        <span class="toggle-text">Use Cached Results</span>
-        <input type="checkbox" id="demoModeToggle">
-        <span class="toggle-slider"></span></div>
-      
-
+  <label class="setting-label">Demo Mode <span class="help-icon" data-tooltip="Demo mode for presentation (No APIs required)">?</span></label>
+  <div class="network-toggle">
+    <span>Use Cached Results</span>
+    <div class="toggle-switch" id="demoModeToggleSwitch">
+      <div class="toggle-knob"></div>
     </div>
+  </div>
+  <input type="checkbox" id="demoModeToggle" style="display: none;">
+</div>
 
     <div class="setting-group">
       
@@ -1954,8 +1955,6 @@ body.light-mode .network-header{
     </div>
     
   </div>
-
-  <div id="toast-root"></div>
 
 
   
@@ -2076,8 +2075,10 @@ body.light-mode .network-header{
 
           <button class="follow-btn " onclick="toggleFollow('Jensen Huang', this)"> Follow </button>
 
-          <button class="draft-btn" onclick="draftIntro('Jensen Huang')" style="opacity: 1; cursor: pointer;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="sparkles" style="width: 16px; height: 16px; color: white;" class="lucide lucide-sparkles"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>
-          Draft Intro</button>
+          <button class="draft-btn" onclick="event.stopPropagation(); draftIntro('Jensen Huang')">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="sparkles" style="width: 16px; height: 16px; color: white;" class="lucide lucide-sparkles"><path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path><path d="M20 2v4"></path><path d="M22 4h-4"></path><circle cx="4" cy="20" r="2"></circle></svg>
+  Draft Intro
+</button>
         </div>
       </div>
     
@@ -2088,7 +2089,7 @@ body.light-mode .network-header{
       AI Synthesis
     </div>
     <p class="ai-text">
-      Jensen Huang, NVIDIA’s CEO, has been in the spotlight with a series of high‑profile announcements. At CES he challenged Tesla’s autonomous ambitions, unveiled new AI‑driven autonomous tech, and delivered a strong investor update highlighting multi‑billion‑dollar demand for NVIDIA’s products. He also cautioned investors about the evolving AI market while emphasizing NVIDIA’s leadership in the open‑model ecosystem.
+      Jensen Huang, NVIDIA’s CEO, has been in the spotlight recently, announcing a new autonomous‑driving GPU at CES, delivering a strong investor update that highlighted record demand for its products, and appearing in a live YouTube session that showcased the company’s open‑model ecosystem. He also made headlines in a quirky Oregon State football Q&amp;A, showing his willingness to engage beyond tech. These events underscore NVIDIA’s continued push into AI, automotive, and broader industry partnerships.
     </p>
   </div>
 
@@ -2096,17 +2097,17 @@ body.light-mode .network-header{
     
       <div class="draft-card stagger-item">
         <div class="draft-index"></div>
-        <p>1. Hey, did you catch Jensen Huang’s bold challenge to Tesla at CES?</p>
+        <p>1. Hey, I saw you were at CES unveiling the new autonomous‑driving GPU—what an exciting leap for NVIDIA!</p>
       </div><br>
     
       <div class="draft-card stagger-item">
         <div class="draft-index"></div>
-        <p>2. I just read about Huang’s latest investor update—NVIDIA’s AI demand is booming!</p>
+        <p>2. I just watched your live YouTube session where you talked about the open‑model ecosystem—impressive vision for the future.</p>
       </div><br>
     
       <div class="draft-card stagger-item">
         <div class="draft-index"></div>
-        <p>3. Did you see Huang’s talk on the AI infrastructure buildout? It’s shaping the future of tech.</p>
+        <p>3. I read about your recent investor update—congratulations on the record demand for NVIDIA’s products!</p>
       </div><br>
     
   </div>
@@ -2144,6 +2145,15 @@ body.light-mode .network-header{
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="linkedin" class="lucide lucide-linkedin lucide-linkedin1"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
         LinkedIn
       </div>
+      <p>Last night, I received a DGX Spark signed by Jensen Huang ...</p>
+      <a href="https://www.linkedin.com/posts/simon-kohl-4840a7124_last-night-i-received-a-dgx-spark-signed-activity-7416923956022140928-JMN6" target="_blank" style="color: #fff;">View post</a>
+    </div>
+  
+    <div class="linkedin-card">
+      <div class="card-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="linkedin" class="lucide lucide-linkedin lucide-linkedin1"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+        LinkedIn
+      </div>
       <p>Nvidia CEO Jensen Huang's Unconventional Management Tactics ...</p>
       <a href="https://www.linkedin.com/posts/ted-merz-cfa-b711257_nvidia-ceo-jensen-huang-did-an-interview-activity-7408552332897972225-gjli" target="_blank" style="color: #fff;">View post</a>
     </div>
@@ -2153,17 +2163,8 @@ body.light-mode .network-header{
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="linkedin" class="lucide lucide-linkedin lucide-linkedin1"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
         LinkedIn
       </div>
-      <p>Jensen Huang: AI's Limitations in Poorly Defined Work | Aakash ...</p>
-      <a href="https://www.linkedin.com/posts/aagupta_jensen-huang-ai-is-going-to-make-poorly-activity-7410248233110781952-fjho" target="_blank" style="color: #fff;">View post</a>
-    </div>
-  
-    <div class="linkedin-card">
-      <div class="card-title">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="linkedin" class="lucide lucide-linkedin lucide-linkedin1"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-        LinkedIn
-      </div>
-      <p>NVIDIA's Jensen Huang on Securing American Leadership on AI ...</p>
-      <a href="https://www.linkedin.com/posts/jeremyswenson00001_nvidias-jensen-huang-on-securing-american-activity-7414718917023178752-P8Jt" target="_blank" style="color: #fff;">View post</a>
+      <p>Why Jensen Huang almost never fires people “I'd rather improve you ...</p>
+      <a href="https://www.linkedin.com/posts/rubendominguezibar_why-jensen-huang-almost-never-fires-people-activity-7416864117917110273-aG8a" target="_blank" style="color: #fff;">View post</a>
     </div>
   </div><br><div class="news-grid">
         <div class="bento-card card-color-2 stagger-item">
@@ -2174,17 +2175,17 @@ body.light-mode .network-header{
         </div>
       
         <div class="bento-card card-color-3 stagger-item">
+          <img src="https://s.yimg.com/ny/api/res/1.2/kU5GOPOt5jhF0MGW5wIiig--/YXBwaWQ9aGlnaGxhbmRlcjt3PTY0MDtoPTQyNw--/https://s.yimg.com/os/creatr-uploaded-images/2026-01/c1f8ae90-ec04-11f0-8b4f-5d347eab5c0a" class="news-img loaded" alt="Nvidia takes on Tesla with what Jensen Huang calls the 'ChatGPT ..." onerror="this.closest('.bento-card').remove()">
+          <h3 class="news-title">Nvidia takes on Tesla with what Jensen Huang calls the 'ChatGPT ...</h3>
+          <p class="news-source">finance.yahoo.com</p>
+          <a href="https://finance.yahoo.com/news/nvidia-takes-on-tesla-with-what-jensen-huang-calls-the-chatgpt-moment-for-self-driving-160045664.html" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
+        </div>
+      
+        <div class="bento-card card-color-4 stagger-item">
           <img src="https://g.foolcdn.com/image/?url=https%3A%2F%2Fg.foolcdn.com%2Feditorial%2Fimages%2F849808%2Fgettyimages-1335027284.jpg&amp;w=1200&amp;op=resize" class="news-img loaded" alt="Jensen Huang Just Delivered Brilliant News to Nvidia Investors for ..." onerror="this.closest('.bento-card').remove()">
           <h3 class="news-title">Jensen Huang Just Delivered Brilliant News to Nvidia Investors for ...</h3>
           <p class="news-source">fool.com</p>
           <a href="https://www.fool.com/investing/2026/01/08/nvidias-huang-delivers-brilliant-news-to-investors/" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
-        </div>
-      
-        <div class="bento-card card-color-4 stagger-item">
-          <img src="https://i.ytimg.com/vi/0NBILspM4c4/maxresdefault.jpg" class="news-img loaded" alt="NVIDIA Live with CEO Jensen Huang - YouTube" onerror="this.closest('.bento-card').remove()">
-          <h3 class="news-title">NVIDIA Live with CEO Jensen Huang - YouTube</h3>
-          <p class="news-source">youtube.com</p>
-          <a href="https://www.youtube.com/watch?v=0NBILspM4c4" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
         </div>
       
         <div class="bento-card card-color-5 stagger-item">
@@ -2195,54 +2196,66 @@ body.light-mode .network-header{
         </div>
       
         <div class="bento-card card-color-1 stagger-item">
-          <img src="https://blogs.nvidia.com/wp-content/uploads/2026/01/ces26-nvidialive-JL3_1386-3-1280x680-1.jpg" class="news-img loaded" alt="NVIDIA Rubin Platform, Open Models, Autonomous Driving: NVIDIA ..." onerror="this.closest('.bento-card').remove()">
-          <h3 class="news-title">NVIDIA Rubin Platform, Open Models, Autonomous Driving: NVIDIA ...</h3>
-          <p class="news-source">blogs.nvidia.com</p>
-          <a href="https://blogs.nvidia.com/blog/2026-ces-special-presentation/" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
+          <img src="https://i.ytimg.com/vi/0NBILspM4c4/maxresdefault.jpg" class="news-img loaded" alt="NVIDIA Live with CEO Jensen Huang - YouTube" onerror="this.closest('.bento-card').remove()">
+          <h3 class="news-title">NVIDIA Live with CEO Jensen Huang - YouTube</h3>
+          <p class="news-source">youtube.com</p>
+          <a href="https://www.youtube.com/watch?v=0NBILspM4c4" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
         </div>
       
         <div class="bento-card card-color-2 stagger-item">
-          <img src="https://external-preview.redd.it/jensen-huang-says-nvidias-new-vera-rubin-chips-are-in-full-v0-JqzrXexM4AvPvYLll4kVhR1KExqnJb8PUYGRocyK5NQ.jpeg?width=1080&amp;crop=smart&amp;auto=webp&amp;s=1e17c7b32b9b04c99c7dd19eda703bb8234dc928" class="news-img loaded" alt="Jensen Huang Says Nvidia's New Vera Rubin Chips Are in 'Full ..." onerror="this.closest('.bento-card').remove()">
-          <h3 class="news-title">Jensen Huang Says Nvidia's New Vera Rubin Chips Are in 'Full ...</h3>
-          <p class="news-source">reddit.com</p>
-          <a href="https://www.reddit.com/r/nvidia/comments/1q51dwf/jensen_huang_says_nvidias_new_vera_rubin_chips/" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
-        </div>
-      
-        <div class="bento-card card-color-3 stagger-item">
           <img src="https://images.contentstack.io/v3/assets/blt4eb669caa7dc65b2/blta7dd42ebdd7b93b8/61899b34a3c7df383578294c/morningstar-og.png" class="news-img loaded" alt="Nvidia CEO Jensen Huang delivers some good news for investors at ..." onerror="this.closest('.bento-card').remove()">
           <h3 class="news-title">Nvidia CEO Jensen Huang delivers some good news for investors at ...</h3>
           <p class="news-source">morningstar.com</p>
           <a href="https://www.morningstar.com/news/marketwatch/20260105428/nvidia-ceo-jensen-huang-delivers-some-good-news-for-investors-at-ces" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
         </div>
       
+        <div class="bento-card card-color-3 stagger-item">
+          <img src="https://pbs.twimg.com/profile_images/1828904711124078593/SRvCZSfQ_400x400.jpg" class="news-img loaded" alt="NVIDIA (@nvidia) / Posts / X" onerror="this.closest('.bento-card').remove()">
+          <h3 class="news-title">NVIDIA (@nvidia) / Posts / X</h3>
+          <p class="news-source">x.com</p>
+          <a href="https://x.com/nvidia" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
+        </div>
+      
         <div class="bento-card card-color-4 stagger-item">
-          <img src="https://i.insider.com/6961677b04eda4732f2ed348?width=1200&amp;format=jpeg" class="news-img loaded" alt="Nvidia CEO Jensen Huang Says AI Doomerism Has 'Done a Lot of ..." onerror="this.closest('.bento-card').remove()">
-          <h3 class="news-title">Nvidia CEO Jensen Huang Says AI Doomerism Has 'Done a Lot of ...</h3>
-          <p class="news-source">businessinsider.com</p>
-          <a href="https://www.businessinsider.com/nvidia-jensen-huang-ai-doomerism-damage-investments-2026-1" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
+          <img src="https://gizmodo.com/app/uploads/2025/10/shutterstock_2681902813-e1761777398744-1200x675.jpg" class="news-img loaded" alt="Jensen Huang Is Begging You to Stop Being So Negative About AI" onerror="this.closest('.bento-card').remove()">
+          <h3 class="news-title">Jensen Huang Is Begging You to Stop Being So Negative About AI</h3>
+          <p class="news-source">gizmodo.com</p>
+          <a href="https://gizmodo.com/jensen-huang-is-begging-you-to-stop-being-so-negative-about-ai-2000709335" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
+        </div>
+      
+        <div class="bento-card card-color-5 stagger-item">
+          <img src="https://www.nvidia.com/content/dam/en-zz/Solutions/homepage/v2/sfg/nemotron-3-sfg.jpg/jcr:content/renditions/cq5dam.thumbnail.319.319.png" class="news-img loaded" alt="NVIDIA: World Leader in Artificial Intelligence Computing" onerror="this.closest('.bento-card').remove()">
+          <h3 class="news-title">NVIDIA: World Leader in Artificial Intelligence Computing</h3>
+          <p class="news-source">nvidia.com</p>
+          <a href="https://www.nvidia.com/en-us/" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
+        </div>
+      
+        <div class="bento-card card-color-1 stagger-item">
+          <img src="https://blogs.nvidia.com/wp-content/uploads/2026/01/ces26-nvidialive-JL3_1386-3-1280x680-1.jpg" class="news-img loaded" alt="NVIDIA Rubin Platform, Open Models, Autonomous Driving: NVIDIA ..." onerror="this.closest('.bento-card').remove()">
+          <h3 class="news-title">NVIDIA Rubin Platform, Open Models, Autonomous Driving: NVIDIA ...</h3>
+          <p class="news-source">blogs.nvidia.com</p>
+          <a href="https://blogs.nvidia.com/blog/2026-ces-special-presentation/" target="_blank" style="color: inherit; text-decoration: none;" class="news-source-view">View →</a><br><br>
         </div>
       </div></div><div class="bento-right">
-        <div class="x-embed" id="x-post-2008988094070915566"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-0&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2008988094070915566&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=490dc3298097f0c054ec81f952ead46d93e452d2&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 559px; display: block; flex-grow: 1;" data-tweet-id="2008988094070915566"></iframe></div>
+        <div class="x-embed" id="x-post-2008988094070915566"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-10" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-10&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2008988094070915566&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=0fe18fef88b58cce63f8fa79f7939796ddd42454&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 550px; height: 640px; display: block; flex-grow: 1;" data-tweet-id="2008988094070915566"></iframe></div>
 
 </div>
       
-        <div class="x-embed" id="x-post-2001765093361516673"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-1" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-1&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2001765093361516673&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=490dc3298097f0c054ec81f952ead46d93e452d2&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 786px; display: block; flex-grow: 1;" data-tweet-id="2001765093361516673"></iframe></div>
+        <div class="x-embed" id="x-post-2001765093361516673"><a href="https://x.com/nvidia/status/2001765093361516673" target="_blank" style="color: white; background-color: black; padding: 15px; border-radius: 5px; border: solid 1px white;">Unable to render! View X post</a></div>
+      
+        <div class="x-embed" id="x-post-2001799997537583544"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-6" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-6&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2001799997537583544&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=0fe18fef88b58cce63f8fa79f7939796ddd42454&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 708px; display: block; flex-grow: 1;" data-tweet-id="2001799997537583544"></iframe></div>
 
 </div>
       
-        <div class="x-embed" id="x-post-2001799997537583544"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-2" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-2&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2001799997537583544&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=490dc3298097f0c054ec81f952ead46d93e452d2&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 708px; display: block; flex-grow: 1;" data-tweet-id="2001799997537583544"></iframe></div>
+        <div class="x-embed" id="x-post-2009089778533454045"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-9" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-9&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2009089778533454045&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=0fe18fef88b58cce63f8fa79f7939796ddd42454&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 1177px; display: block; flex-grow: 1;" data-tweet-id="2009089778533454045"></iframe></div>
 
 </div>
       
-        <div class="x-embed" id="x-post-2009089778533454045"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-3" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-3&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2009089778533454045&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=490dc3298097f0c054ec81f952ead46d93e452d2&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 1177px; display: block; flex-grow: 1;" data-tweet-id="2009089778533454045"></iframe></div>
+        <div class="x-embed" id="x-post-2008509057888600093"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-7" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-7&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2008509057888600093&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=0fe18fef88b58cce63f8fa79f7939796ddd42454&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 785px; display: block; flex-grow: 1;" data-tweet-id="2008509057888600093"></iframe></div>
 
 </div>
       
-        <div class="x-embed" id="x-post-2008509057888600093"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-4" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-4&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2008509057888600093&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=490dc3298097f0c054ec81f952ead46d93e452d2&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 785px; display: block; flex-grow: 1;" data-tweet-id="2008509057888600093"></iframe></div>
-
-</div>
-      
-        <div class="x-embed" id="x-post-2008324372629516333"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-5" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-5&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2008324372629516333&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=490dc3298097f0c054ec81f952ead46d93e452d2&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 739px; display: block; flex-grow: 1;" data-tweet-id="2008324372629516333"></iframe></div>
+        <div class="x-embed" id="x-post-2008324372629516333"><div class="twitter-tweet twitter-tweet-rendered" style="display: flex; max-width: 550px; width: 100%; margin-top: 10px; margin-bottom: 10px;"><iframe id="twitter-widget-8" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="" title="X Post" src="https://platform.twitter.com/embed/Tweet.html?dnt=false&amp;embedId=twitter-widget-8&amp;features=eyJ0ZndfdGltZWxpbmVfbGlzdCI6eyJidWNrZXQiOltdLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X2ZvbGxvd2VyX2NvdW50X3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9iYWNrZW5kIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19yZWZzcmNfc2Vzc2lvbiI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfZm9zbnJfc29mdF9pbnRlcnZlbnRpb25zX2VuYWJsZWQiOnsiYnVja2V0Ijoib24iLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X21peGVkX21lZGlhXzE1ODk3Ijp7ImJ1Y2tldCI6InRyZWF0bWVudCIsInZlcnNpb24iOm51bGx9LCJ0ZndfZXhwZXJpbWVudHNfY29va2llX2V4cGlyYXRpb24iOnsiYnVja2V0IjoxMjA5NjAwLCJ2ZXJzaW9uIjpudWxsfSwidGZ3X3Nob3dfYmlyZHdhdGNoX3Bpdm90c19lbmFibGVkIjp7ImJ1Y2tldCI6Im9uIiwidmVyc2lvbiI6bnVsbH0sInRmd19kdXBsaWNhdGVfc2NyaWJlc190b19zZXR0aW5ncyI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdXNlX3Byb2ZpbGVfaW1hZ2Vfc2hhcGVfZW5hYmxlZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9LCJ0ZndfdmlkZW9faGxzX2R5bmFtaWNfbWFuaWZlc3RzXzE1MDgyIjp7ImJ1Y2tldCI6InRydWVfYml0cmF0ZSIsInZlcnNpb24iOm51bGx9LCJ0ZndfbGVnYWN5X3RpbWVsaW5lX3N1bnNldCI6eyJidWNrZXQiOnRydWUsInZlcnNpb24iOm51bGx9LCJ0ZndfdHdlZXRfZWRpdF9mcm9udGVuZCI6eyJidWNrZXQiOiJvbiIsInZlcnNpb24iOm51bGx9fQ%3D%3D&amp;frame=false&amp;hideCard=false&amp;hideThread=false&amp;id=2008324372629516333&amp;lang=en&amp;origin=https%3A%2F%2Fproject-eco-ten.vercel.app%2F&amp;sessionId=0fe18fef88b58cce63f8fa79f7939796ddd42454&amp;theme=light&amp;widgetsVersion=2615f7e52b7e0%3A1702314776716&amp;width=550px" style="position: static; visibility: visible; width: 390px; height: 739px; display: block; flex-grow: 1;" data-tweet-id="2008324372629516333"></iframe></div>
 
 </div>
       </div></div>
@@ -2277,16 +2290,50 @@ body.light-mode .network-header{
       
       
 
-      <!-- Toast Container -->
+      <!--
       <div class="toast-container">
-        <div class="toast error" id="toast">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="check-circle" class="lucide lucide-check-circle toast-icon" style="width: 20px; height: 20px;"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg>
-          <span class="toast-message" id="toastMessage">Draft copied!</span>
+        <div class="toast" id="toast">
+          <i data-lucide="check-circle" class="toast-icon" style="width: 20px; height: 20px;"></i>
+          <span class="toast-message" id="toastMessage">Copied to clipboard!</span>
         </div>
-      </div>
+      </div> -->
     
   </main>
 
+  <!-- Draft Intro Modal -->
+<div id="draftModal" class="draft-modal hidden">
+  <div class="draft-backdrop" onclick="closeDraftModal()"></div>
+  <div class="draft-panel">
+    <div class="draft-header">
+      <div class="draft-header-content">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="mail" style="width: 24px; height: 24px; color: #17A2B8;" class="lucide lucide-mail"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>
+        <h3>Draft Introduction</h3>
+      </div>
+      <button class="draft-close" onclick="closeDraftModal()">✕</button>
+    </div>
+    <div class="draft-body">
+      <div class="draft-message" id="draftMessageContent">Subject: Quick Introduction  
+
+Hi Sundar,
+
+I hope you’re doing well. I’m [Your Name], a software engineer at Meta working on [brief project focus]. I’ve followed your leadership at Google with great interest and admire the impact of your work. I’d love to connect and share insights on [relevant topic] whenever you have a moment.
+
+Thank you for your time.
+
+Best,  
+[Your Name]</div>
+      <div class="draft-footer">
+        <button class="draft-copy-btn" onclick="copyDraftAgain()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-lucide="copy" style="width: 16px; height: 16px;" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+          Copy Again
+        </button>
+        <button class="draft-done-btn" onclick="closeDraftModal()">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- Network Graph Popup -->
 <div id="networkModal" class="network-modal hidden">
   <div class="network-backdrop" onclick="closeNetwork()"></div>
@@ -2300,6 +2347,13 @@ body.light-mode .network-header{
 
     <svg id="networkSvg"></svg>
   </div>
+</div>
+
+  
+    
+<!-- Simple Toast Container -->
+<div id="simpleToast" class="simple-toast">
+  <span id="toastText"></span>
 </div>
 <!-- Welcome Modal -->
 <div id="welcomeModal" class="welcome-modal hidden">
@@ -2336,6 +2390,159 @@ body.light-mode .network-header{
   </div>
 </div>
 
+  <!-- Network Feed Section -->
+  <div id="networkFeed" class="network-feed">
+    <div class="network-feed-loader hidden" id="networkFeedLoader">
+      <p>Loading</p>
+      <div class="words">
+        <span class="word">Feed</span>
+      </div>
+    </div>
+    <div id="networkFeedContent" class="network-feed-content"><h3 class="network-heading">Recent activity on your network</h3>
+    <div class="network-person-section">
+      <div class="network-news-grid">
+      
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://www.independent.co.uk/img/shortcut-icons/icon-96x96.png" alt="Alia Bhatt - latest news, breaking stories and comment - The ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.the-independent.com/topic/alia-bhatt" target="_blank" style="color: #000;">Alia Bhatt - latest news, breaking stories and comment - The ...</a>
+        <div class="meta">the-independent.com</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://mma.prnewswire.com/media/2765430/Levi_Ambassador_Alia_Bhatt.jpg?p=facebook" alt="ALIA BHATT JOINS LEVI'S® AS GLOBAL BRAND AMBASSADOR ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.prnewswire.com/in/news-releases/alia-bhatt-joins-levis-as-global-brand-ambassador-ushering-in-a-new-era-of-fit-and-fashion-302547495.html" target="_blank" style="color: #000;">ALIA BHATT JOINS LEVI'S® AS GLOBAL BRAND AMBASSADOR ...</a>
+        <div class="meta">prnewswire.com</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://www.hindustantimes.com/ht-img/img/2025/12/19/550x309/Alia_Bhatt_1766124797978_1766124798125.jpg" alt="Inside Alia Bhatt's Christmas bash at new house: From posing with ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.hindustantimes.com/entertainment/bollywood/inside-alia-bhatt-s-christmas-bash-at-new-house-shaheen-bhatt-neetu-kapoor-to-mirror-selfies-with-friends-soni-razdan-101766124707341.html" target="_blank" style="color: #000;">Inside Alia Bhatt's Christmas bash at new house: From posing with ...</a>
+        <div class="meta">hindustantimes.com</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://images.news18.com/ibnlive/uploads/2021/03/1615175122_alia-bhatt-1.jpg" alt="Best alia bhatt casual outfits New Arrivals Alia Bhatt s Chic Casual ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.microcomenviro.com/?m=page-293596826" target="_blank" style="color: #000;">Best alia bhatt casual outfits New Arrivals Alia Bhatt s Chic Casual ...</a>
+        <div class="meta">microcomenviro.com</div>
+      </div>
+    
+      </div>
+    </div>
+  
+    <div class="network-person-section">
+      <div class="network-news-grid">
+      
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://media.cnn.com/api/v1/images/cnn/cnn-placeholder-image.jpeg" alt="CNN: Breaking News, Latest News and Videos" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.cnn.com/" target="_blank" style="color: #000;">CNN: Breaking News, Latest News and Videos</a>
+        <div class="meta">cnn.com</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://storage.googleapis.com/gweb-uniblog-publish-prod/original_images/HeroImage_Template-v2.png" alt="The latest product and company news from Google" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://blog.google/feed/" target="_blank" style="color: #000;">The latest product and company news from Google</a>
+        <div class="meta">blog.google</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://lh6.googleusercontent.com/proxy/3NclTnCvFtcRLZUDIB15z_AnMW0TOCYyuSQxf8PD3n_uKf5wb_jB9ovM2rESJFgJXeQjbH19BW0Bggs-Pof0x-S7g_8XEpSe4r-3vJsYRZlXvWMNrU3QCogkts8FptEMyu4aE_huQMLTogkw4oY6dfl1plHqTM3WKkypYwMA2TcaAWI=rj-c-w300-h300-l95-c0x34a853" alt="Google News" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://news.google.co.in/" target="_blank" style="color: #000;">Google News</a>
+        <div class="meta">news.google.co.in</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://blog.google/static/blogv2/images/google-200x200.png?version=pr20260107-1732" alt="Official Google AI news and updates | Google Blog" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://blog.google/innovation-and-ai/technology/ai/" target="_blank" style="color: #000;">Official Google AI news and updates | Google Blog</a>
+        <div class="meta">blog.google</div>
+      </div>
+    
+      </div>
+    </div>
+  
+    <div class="network-person-section">
+      <div class="network-news-grid">
+      
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://rcu.edu/wp-content/uploads/2025/04/RCU-November-2024-124-scaled.jpg" alt="Home | Rochester Christian University | Rochester Hills, MI" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://rcu.edu/" target="_blank" style="color: #000;">Home | Rochester Christian University | Rochester Hills, MI</a>
+        <div class="meta">rcu.edu</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://christuniversity.in/uploads/news/medium/advertisement1_20251028033027..jpg" alt="CHRIST UNIVERSITY" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://christuniversity.in/news" target="_blank" style="color: #000;">CHRIST UNIVERSITY</a>
+        <div class="meta">christuniversity.in</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://lcu.edu/fileadmin/_processed_/6/6/csm_facebook_home_6dbf59b3e0.jpg" alt="Lubbock Christian University: LCU" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://lcu.edu/" target="_blank" style="color: #000;">Lubbock Christian University: LCU</a>
+        <div class="meta">lcu.edu</div>
+      </div>
+    
+      
+    
+      </div>
+    </div>
+  
+    <div class="network-person-section">
+      <div class="network-news-grid">
+      
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://i.ytimg.com/vi/Gnl833wXRz0/maxresdefault.jpg" alt="All things AI w @altcap @sama &amp; @satyanadella. A Halloween ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.youtube.com/watch?v=Gnl833wXRz0" target="_blank" style="color: #000;">All things AI w @altcap @sama &amp; @satyanadella. A Halloween ...</a>
+        <div class="meta">youtube.com</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://news.microsoft.com/source/wp-content/uploads/2024/07/satya.jpg" alt="Satya Nadella - Source" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://news.microsoft.com/source/exec/satya-nadella/" target="_blank" style="color: #000;">Satya Nadella - Source</a>
+        <div class="meta">news.microsoft.com</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://i.insider.com/6941bb9a832e0ef1ead6527a?width=1200&amp;format=jpeg" alt="Inside Microsoft CEO Satya Nadella's AI Revolution - Business Insider" onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.businessinsider.com/microsoft-ceo-satya-nadella-ai-revolution-2025-12" target="_blank" style="color: #000;">Inside Microsoft CEO Satya Nadella's AI Revolution - Business Insider</a>
+        <div class="meta">businessinsider.com</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://g.foolcdn.com/image/?url=https%3A%2F%2Fg.foolcdn.com%2Feditorial%2Fimages%2F842726%2Fpeople-talking.jpg&amp;w=1200&amp;op=resize" alt="Microsoft CEO Satya Nadella Just Delivered Bad News to Artificial ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.fool.com/investing/2025/11/18/microsoft-ceo-satya-nadella-bad-news-ai-investor/" target="_blank" style="color: #000;">Microsoft CEO Satya Nadella Just Delivered Bad News to Artificial ...</a>
+        <div class="meta">fool.com</div>
+      </div>
+    
+      </div>
+    </div>
+  
+    <div class="network-person-section">
+      <div class="network-news-grid">
+      
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://static.independent.co.uk/2025/08/06/23/EEUU-ARANCELES_09849.jpg?quality=75&amp;width=640&amp;crop=3%3A2%2Csmart&amp;auto=webp" alt="Sundar Pichai - latest news, breaking stories and comment - The ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.the-independent.com/topic/sundar-pichai" target="_blank" style="color: #000;">Sundar Pichai - latest news, breaking stories and comment - The ...</a>
+        <div class="meta">the-independent.com</div>
+      </div>
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://ichef.bbci.co.uk/news/1024/branded_news/3315/live/e6697310-c47a-11f0-9b68-57906bffd3ed.jpg" alt="Google boss says trillion-dollar AI investment boom has 'elements of ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.bbc.com/news/articles/cwy7vrd8k4eo" target="_blank" style="color: #000;">Google boss says trillion-dollar AI investment boom has 'elements of ...</a>
+        <div class="meta">bbc.com</div>
+      </div>
+    
+      
+    
+      <div class="network-news-card bento-card stagger-item" style="color: #000; background-color: #D3DAD9">
+        <img src="https://preview.redd.it/wow-pretty-incredible-news-from-sundar-pichai-apparently-v0-ln0r5ztd82df1.png?auto=webp&amp;s=6e7a99a027a845ec2e389fbff62d9b1765ebd38c" alt="Wow, pretty incredible news from Sundar Pichai. Apparently, their AI ..." onerror="this.closest('.network-news-card').remove()" class="loaded">
+        <a href="https://www.reddit.com/r/singularity/comments/1m0lm6f/wow_pretty_incredible_news_from_sundar_pichai/" target="_blank" style="color: #000;">Wow, pretty incredible news from Sundar Pichai. Apparently, their AI ...</a>
+        <div class="meta">reddit.com</div>
+      </div>
+    
+      </div>
+    </div>
+  </div>
+  </div>
+
   <div id="errorBox" class="error-box hidden">
     <h3>Something broke</h3>
     <p>API failed or key missing. Check settings.</p>
@@ -2355,7 +2562,7 @@ body.light-mode .network-header{
           <div class="bp-newsletter">
             <p class="bp-newsletter-title">صُممت للإشارة،<br> وليس للضوضاء</p>
             <div class="bp-input-row">
-              <span class="bp-input-label">Address and mail</span>
+              <span class="bp-input-label">Adresse mail</span>
               <span class="bp-input-arrow">↗</span>
             </div>
             <div class="bp-input-line"></div>
@@ -2404,5 +2611,4 @@ body.light-mode .network-header{
 
 
 
-<iframe scrolling="no" frameborder="0" allowtransparency="true" src="https://platform.twitter.com/widgets/widget_iframe.2f70fb173b9000da126c79afe2098f02.html?origin=https%3A%2F%2Fproject-eco-ten.vercel.app" title="Twitter settings iframe" style="display: none;"></iframe><iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;" title="Twitter analytics iframe"></iframe>
 <iframe scrolling="no" frameborder="0" allowtransparency="true" src="https://platform.twitter.com/widgets/widget_iframe.2f70fb173b9000da126c79afe2098f02.html?origin=https%3A%2F%2Fproject-eco-ten.vercel.app" title="Twitter settings iframe" style="display: none;"></iframe><iframe id="rufous-sandbox" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: none;" title="Twitter analytics iframe"></iframe></body></html>
