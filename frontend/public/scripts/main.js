@@ -1318,6 +1318,7 @@ async function getApolloContact(name, company) {
     return { email: null, linkedin: null, twitter: null, phone: null };
   }
 }
+
 async function draftIntro(targetName) {
   const aboutMe = localStorage.getItem('eco_about') || localStorage.getItem("aboutMe") || '';
   const key = getOpenRouterKey();
@@ -1385,12 +1386,10 @@ async function draftIntro(targetName) {
     // Copy to clipboard
     await navigator.clipboard.writeText(draft);
     
-    showToast("Draft copied!", "success");
+    showToast("Draft copied to clipboard!", "success");
     
-    // Show draft in a modal or alert
-    setTimeout(() => {
-      alert(`Draft Introduction:\n\n${draft}\n\n✓ Copied to clipboard!`);
-    }, 500);
+    // Show in modern modal instead of alert
+    showDraftModal(draft);
     
   } catch (err) {
     console.error("Draft intro error:", err);
@@ -1405,6 +1404,40 @@ async function draftIntro(targetName) {
     }
   }
 }
+
+// Add these helper functions
+function showDraftModal(draftContent) {
+  const modal = document.getElementById('draftModal');
+  const messageContent = document.getElementById('draftMessageContent');
+  
+  if (modal && messageContent) {
+    messageContent.textContent = draftContent;
+    modal.classList.remove('hidden');
+    lucide.createIcons();
+    
+    // Store draft for copy again functionality
+    window.currentDraft = draftContent;
+  }
+}
+
+function closeDraftModal() {
+  const modal = document.getElementById('draftModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+function copyDraftAgain() {
+  if (window.currentDraft) {
+    navigator.clipboard.writeText(window.currentDraft);
+    showToast("Copied to clipboard again!", "success");
+  }
+}
+
+// Make functions globally accessible
+window.showDraftModal = showDraftModal;
+window.closeDraftModal = closeDraftModal;
+window.copyDraftAgain = copyDraftAgain;
 // Process results
 function processNews(items) {
   return items.map(item => ({
