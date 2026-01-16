@@ -360,12 +360,24 @@ function setBackground(bgType) {
   localStorage.setItem("eco_bg", bgType);
  
   document.body.classList.remove('vanta-active');
-  
-  if (bgType === 'grid' || typeof VANTA === 'undefined') {
-    const grid = document.querySelector(".bg-grid");
-    if (grid) grid.style.display = "block";
-    return;
-  }
+const profileCard = document.querySelector(".profile-card");
+
+/* CASE 1: Grid background OR VANTA missing */
+if (bgType === 'grid' || typeof VANTA === 'undefined') {
+  const grid = document.querySelector(".bg-grid");
+  if (grid) grid.style.display = "block";
+
+  if (profileCard) profileCard.classList.add("profile-light");
+  return;
+}
+
+/* CASE 2: Body switched to light mode */
+if (document.body.classList.contains("light-mode")) {
+  if (profileCard) profileCard.classList.add("profile-light");
+} else {
+  if (profileCard) profileCard.classList.remove("profile-light");
+}
+
 
   document.body.classList.add('vanta-active');
   const config = { el: "#vanta-bg" };
