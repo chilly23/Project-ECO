@@ -45,8 +45,6 @@
       --light-card-5: #EB7300;
       --light-card-6: #702006;
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      
-      /* Legacy support */
       --background: hsl(222, 47%, 5%);
       --foreground: hsl(210, 40%, 98%);
       --card: hsl(222, 47%, 8%);
@@ -85,8 +83,6 @@
   --profile-text: #000;
     }
 
-
-    /* Vanta Background */
     #vanta-bg {
       position: fixed;
       inset: 0;
@@ -117,7 +113,6 @@
       border: solid 1px white;
     }
 
-    /* Animation for "Follow" state (non-following) */
 .follow-btn:not(.following) {
   position: relative;
   transition: all 1s;
@@ -145,7 +140,6 @@
   color: #000;
 }
 
-/* Animation for "Following" state */
 .follow-btn.following::before {
   content: "";
   position: absolute;
@@ -167,8 +161,6 @@
   color: #000;
 }
 
-
-    /* Utility Classes */
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -205,23 +197,6 @@
 
 
     
-
-    /* .greet-prefix {
-      font-size: 1rem; 1x */
-      /* color: rgb(215, 90, 1);
-      opacity: 0.55;
-      font-weight: 500;
-      margin-right: 6px;
-    }
-
-    
-    
-    .greet-main {
-      font-size: 3rem; /* 3x */
-      /* font-weight: 700;
-      color: rgb(215, 90, 1);
-    }
-    
     .greet-name {
       font-size: 2rem; /* 2x */
       /* color: white;
@@ -229,7 +204,6 @@
       margin-left: 6px;
     } */
 
-    /* Settings Button */
     .settings-btn {
       position: fixed;
       top: 20px;
@@ -253,14 +227,6 @@
       background: rgba(255,255,255,0.1);
       transform: translateY(-2px);
     }
-
-    /* body.light-mode .settings-btn {
-      border-color: rgba(0,0,0,0.2);
-    }
-
-    body.light-mode .settings-btn:hover {
-      background: rgba(0,0,0,0.05);
-    } */
 
 .lable {
   line-height: 20px;
@@ -292,7 +258,6 @@
       right: 100px;
     }
 
-    /* Header */
     .header {
       position: fixed;
       top: 0;
@@ -340,10 +305,6 @@
       justify-content: center;
     }
 
-    /* body.light-mode .logo-icon {
-      background: var(--light-card-2);
-    } */
-
     .logo-text {
       font-size: 1.25rem;
       font-weight: 700;
@@ -375,17 +336,14 @@
       width: 10px;
     }
     
-    /* Track */
     ::-webkit-scrollbar-track {
       background-color: rgba(0,0,0,0.05); 
     }
      
-    /* Handle */
     ::-webkit-scrollbar-thumb {
       background: #888; 
     }
     
-    /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
       background: #b4b4b4; 
     }
@@ -400,7 +358,7 @@
   color: #58d3e6;
   font-size: 0.875rem;
   font-weight: 500;
-  margin-right: 120px; /* Increased from 60px */
+  margin-right: 120px; 
 }
 
     body.light-mode .context-badge {
@@ -434,7 +392,6 @@ main,
   }
 }
 
-    /* Settings Panel */
     .settings-panel {
       position: fixed;
       top: 0;
@@ -450,7 +407,6 @@ main,
       border-left: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Settings panel stays dark in both themes */
     body.light-mode .settings-panel {
   background: #f5f5f5;
   border-left-color: rgba(0,0,0,0.1);
@@ -551,7 +507,6 @@ body.light-mode .settings-panel .settings-close {
   cursor: pointer;
 }
 
-    /* Add to your main CSS file (stye.css or index.html inline styles) */
 
 .icebreaker-actions {
   display: flex;
@@ -578,7 +533,6 @@ body.light-mode .settings-panel .settings-close {
   transform: scale(1.02);
 }
 
-/* For light mode */
 body.light-mode .copy-btn {
   background: #333;
   color: white;
@@ -620,10 +574,6 @@ body.light-mode .copy-btn:hover {
       color: var(--primary-foreground);
     }
 
-
-
-
-    /* Main Content */
     main {
       position: relative;
       z-index: 10;
@@ -631,7 +581,6 @@ body.light-mode .copy-btn:hover {
       min-height: 80vh;
     }
 
-    /* Search View */
     .search-view {
       display: flex;
       flex-direction: column;
@@ -663,7 +612,6 @@ body.light-mode .copy-btn:hover {
       color: var(--light-card-1);
     }
 
-    /* Search Box */
     .search-container {
       width: 100%;
       max-width: 600px;
@@ -678,16 +626,6 @@ body.light-mode .copy-btn:hover {
       padding: 16px 20px;
       transition: var(--transition); */
     }
-/* 
-    body.light-mode .search-wrapper {
-      background: var(--light-search);
-      border-color: rgba(0,0,0,0.1);
-    }
-
-    .search-wrapper:focus-within {
-      border-color: var(--primary);
-      box-shadow: 0 0 20px rgba(23, 162, 184, 0.3);
-    } */
 
     .search-input {
       width: 100%;
@@ -703,7 +641,6 @@ body.light-mode .copy-btn:hover {
       opacity: 0.5;
     }
 
-    /* Suggestions Dropdown */
     .suggestions {
   position: absolute;
   top: calc(100% + 6px);
@@ -728,13 +665,6 @@ body.light-mode .copy-btn:hover {
   visibility: visible;
   transform: translateY(0);
 }
-
-
-    /* body.light-mode .suggestions {
-      background: black;
-      border-color: rgba(0,0,0,0.1);
-    } */
-
     .suggestion-item {
       padding: 12px 16px;
       cursor: pointer;
@@ -797,7 +727,6 @@ body.light-mode .copy-btn:hover {
       pointer-events: none;
     }
 
-    /* Static Suggestions */
     .static-suggestions {
       margin-top: 2rem;
       text-align: center;
@@ -845,7 +774,6 @@ body.light-mode .copy-btn:hover {
       transform: translateY(-2px);
     }
 
-    /* Network Feed Toggle */
     .network-toggle {
       margin-top: 2rem;
       display: flex;
@@ -889,7 +817,6 @@ body.light-mode .copy-btn:hover {
       50% { opacity: 0.5; transform: scale(0.95); }
     }
 
-    /* Results View */
     .results-view {
       opacity: 0;
       visibility: hidden;
@@ -927,15 +854,12 @@ body.light-mode .copy-btn:hover {
       transform: translateX(-4px);
     }
 
-    /* Bento Grid Layout */
     .bento-grid {
       display: grid;
       grid-template-columns: 350px 1fr;
       gap: 1.5rem;
       align-items: start;
     }
-
-    /* Left Column (News) */
 
     .bento-card {
       padding: 1rem;
@@ -962,7 +886,6 @@ body.light-mode .copy-btn:hover {
     body.light-mode .card-color-4 { background: var(--light-card-4); }
     body.light-mode .card-color-5 { background: var(--light-card-5); }
 
-    /* Fixed Cards */
     .profile-card {
   grid-column: span 2;
   height: 450px;
@@ -1177,7 +1100,6 @@ body.light-mode .copy-btn:hover {
       font-size: 18px;
     }
 
-    /* News Card Specific */
     .news-card {
       display: flex;
       flex-direction: column;
@@ -1202,7 +1124,6 @@ body.light-mode .copy-btn:hover {
     }
 
 
-    /* Responsive */
     @media (max-width: 1024px) {
       .bento-grid {
         grid-template-columns: 1fr;
@@ -1213,7 +1134,6 @@ body.light-mode .copy-btn:hover {
       }
     }
 
-    /* Utilities */
     .hidden { display: none !important; }
     .fade-in { animation: fadeIn 0.5s ease; }
 
@@ -1230,7 +1150,6 @@ body.light-mode .copy-btn:hover {
     width: 100%;
   }
 }
-/* Loader state: hide greeting/suggestions while loading and center loader */
 body.is-loading .greeting,
 body.is-loading .static-suggestions {
   display: none;
@@ -1340,7 +1259,6 @@ body.is-loading .static-suggestions {
   right: 0;
   z-index: 1000;
   width: 401px;
-  /* Centering properties */
   margin-left: auto;
   margin-right: auto;
 }
@@ -1406,37 +1324,7 @@ body.is-loading .static-suggestions {
   color: #0077B5;
 }
 
-
-/* .news-card {
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.3s ease;
-}
-
-.news-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
-}
-
-.news-card img {
-  transition: transform 0.5s ease;
-}
-
-.news-card:hover img {
-  transform: scale(1.05);
-}
-
-/* Stagger animation on load */
-/* .news-card:nth-child(1) { animation-delay: 0.1s; }
-.news-card:nth-child(2) { animation-delay: 0.2s; }
-.news-card:nth-child(3) { animation-delay: 0.3s; } */
-
-/* mobile.css - FINAL, SAFE VERSION */
 @media (max-width: 768px) {
-
-/* =============================
-   ROOT LAYOUT FIX
-   ============================= */
-
 
   .theme-btn{
     font-size: x-small;
@@ -1461,29 +1349,6 @@ body.is-loading .static-suggestions {
   width: 100%;
   max-width: 100%;
 } */
-
-/* =============================
-   PROFILE CARD (FIXED)
-   ============================= */
-/* 
-.profile-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 16px;
-  border-radius: 16px;
-}
-
-.profile-name {
-  font-size: 1.1rem;
-}
-
-.profile-title {
-  font-size: 0.85rem;
-  opacity: 0.8;
-} */
-
 
 
 .social-row {
@@ -1513,9 +1378,6 @@ body.is-loading .static-suggestions {
   padding: 10px;
 }
 
-/* =============================
-   SETTINGS BUTTON (ICON ONLY)
-   ============================= */
 
 .settings-btn {
   position: fixed;
@@ -1539,9 +1401,6 @@ body.is-loading .static-suggestions {
 body.light-mode .network-header{
   color: white;
 }
-/* =============================
-   AI SUMMARY (BELOW PROFILE)
-   ============================= */
 
 .ai-summary-card {
   font-size: 0.85rem;
@@ -1554,9 +1413,6 @@ body.light-mode .network-header{
   margin-bottom: 6px;
 }
 
-/* =============================
-   DRAFT / ICEBREAKERS
-   ============================= */
 
 .draft-stack {
   display: flex;
@@ -1590,34 +1446,6 @@ body.light-mode .network-header{
   padding-right: 8px;
 }
 
-/* =============================
-   NEWS / X / LINKEDIN (RESTORED)
-   ============================= */
-
-/* .news-grid,
-.twitter-card,
-.linkedin-card {
-  display: block;
-  width: 100%;
-}
-
-.news-img {
-  border-radius: 0;
-}
-
-.news-title {
-  font-size: 0.85rem;
-}
-
-.news-source,
-.news-source-view {
-  padding: 10px;
-  font-size: 0.75rem;
-} */
-
-/* =============================
-   SEARCH INPUT (UNCHANGED)
-   ============================= */
 
 #poda {
   max-width: 300px;
@@ -1642,10 +1470,6 @@ body.light-mode .network-header{
   z-index: -1;
 }
 
-/* =============================
-   VISUAL EFFECTS (UNCHANGED)
-   ============================= */
-
 .white,
 .border,
 .darkBorderBg,
@@ -1668,10 +1492,6 @@ body.light-mode .network-header{
   font-size: 18px;
   color: white;
 }
-
-/* =============================
-   LOADER (YOUR LOGIC KEPT)
-   ============================= */
 
 .loading-card,
 .loader,
@@ -1773,10 +1593,6 @@ body.light-mode .network-header{
     font-size: 0.85rem;
     padding: 10px;
   }
-
-  /* =============================
-     SETTINGS BUTTON (ICON ONLY)
-     ============================= */
 
   .settings-btn {
     position: fixed;
