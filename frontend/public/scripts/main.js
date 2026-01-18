@@ -15,16 +15,6 @@ async function loadConfig() {
 const DEMO_KEY = "demoMode";
 const isDemo = localStorage.getItem(DEMO_KEY) === "true";
 const page = location.pathname.split("/").pop();
-
-
-
-
-
-// import { handleDemoResult } from "demoresults.js";
-
-
-// Google Custom Search key rotation config index
-// We'll build configs dynamically from localStorage + these defaults
 let currentConfigIndex = 0;
 
 function sleep(ms) {
@@ -44,20 +34,15 @@ function getGoogleConfigs() {
   return configs;
 }
 
-// Global state
 let activeIndex = -1;
 let suggestionIndex = -1;
 let currentQuery = '';
 let currentExecutive = null;
 let vantaEffect = null;
 let searchResults = null;
-
-// DOM Elements - will be initialized after DOM loads
 let results, searchInput, searchView, resultsView, suggestionsList, backBtn, toast, toastMessage;
 
-// Initialize
 document.addEventListener('DOMContentLoaded', async () => {
-  // Initialize DOM references
   results = document.getElementById("results");
   searchInput = document.getElementById('searchInput');
   searchView = document.getElementById('searchView');
@@ -81,12 +66,10 @@ function init() {
   setupTheme();
   setupBackground();
   showWelcomeIfFirstTime();
-  setupDemoMode();  // ADD THIS LINE
+  setupDemoMode();
 }
 
-// Smooth image loading
 document.addEventListener('DOMContentLoaded', () => {
-  // Handle all images
   const images = document.querySelectorAll('img');
   images.forEach(img => {
     if (img.complete) {
@@ -98,7 +81,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  // Observer for dynamically added images
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
@@ -145,10 +127,7 @@ function closeWelcome() {
   }
 }
 
-// Make closeWelcome globally accessible
 window.closeWelcome = closeWelcome;
-
-// Settings
 function loadSettings() {
   const username = localStorage.getItem('eco_username') || localStorage.getItem('username') || 'Guest';
   const aboutMe = localStorage.getItem('eco_about') || localStorage.getItem('aboutMe') || '';
@@ -236,13 +215,10 @@ function showError(msg) {
 
 
 function setupSettings() {
-  // Settings panel toggle
   const settingsBtn = document.getElementById('settingsBtn');
   const settingsPanel = document.getElementById('settingsPanel');
   const settingsClose = document.getElementById('settingsClose');
-
-  // Theme toggle (checkbox based)
-const themeSwitch = document.getElementById('switch');
+  const themeSwitch = document.getElementById('switch');
 
 if (themeSwitch) {
   themeSwitch.addEventListener('change', () => {
@@ -269,8 +245,6 @@ document.getElementById("settingsBtn").addEventListener("click", () => {
   document.getElementById("settingsPanel").classList.add("open");
 });
 
-
-  // Username
   const usernameInput = document.getElementById('usernameInput');
   if (usernameInput) {
     usernameInput.addEventListener('change', (e) => {
@@ -284,7 +258,6 @@ document.getElementById("settingsBtn").addEventListener("click", () => {
     });
   }
 
-  // About Me
   const aboutMeInput = document.getElementById('aboutMeInput');
   if (aboutMeInput) {
     aboutMeInput.addEventListener('change', (e) => {
@@ -293,7 +266,6 @@ document.getElementById("settingsBtn").addEventListener("click", () => {
     });
   }
 
-  // Secondary / Apollo keys auto-save on change
   const googleKey2Input = document.getElementById('googleKey2');
   if (googleKey2Input) {
     googleKey2Input.addEventListener('change', (e) => {
@@ -315,8 +287,6 @@ document.getElementById("settingsBtn").addEventListener("click", () => {
     });
   }
 
-
-  // Background buttons
   document.querySelectorAll('[data-bg]').forEach(btn => {
     btn.addEventListener('click', () => {
       const bg = btn.dataset.bg;
@@ -327,13 +297,11 @@ document.getElementById("settingsBtn").addEventListener("click", () => {
   });
 }
 
-// Theme and Background
 function setupTheme() {
   // Already handled in loadSettings
 }
 
 
-  // Pre-fill inputs
 document.getElementById('googleKey').value = API_KEY;
 document.getElementById('googleKey2').value = API_KEY2;
 document.getElementById('googleCX').value = CX;
@@ -413,12 +381,10 @@ function destroyVanta() {
   document.querySelector(".bg-grid").style.display = "none";
 }
 
-// Network Feed
 function setupNetworkFeed() {
   const networkToggle = document.getElementById("networkToggle");
   const network = JSON.parse(localStorage.getItem("eco_network") || "[]");
   
-  // Auto-show if user has network
   if (network.length > 0) {
     loadNetworkFeed();
     if (networkToggle) networkToggle.classList.add('active');
@@ -495,7 +461,6 @@ function renderNetworkFeed(data) {
   `).join("");
 }
 
-// Search functionality
  const suggestions = [
   {name: "Satya Nadella", company: "Microsoft"},
   {name: "Jensen Huang", company: "NVIDIA"},
@@ -514,11 +479,8 @@ function renderSuggestions() {
 }
 
 function setupEventListeners() {
-  // Search input
   searchInput.addEventListener('input', handleInputChange);
   searchInput.addEventListener("keydown", handleKeyDown);
-  
-  // Search icon
   const searchIcon = document.getElementById("search-icon");
   if (searchIcon) {
     searchIcon.addEventListener("click", () => {
@@ -527,15 +489,9 @@ function setupEventListeners() {
       }
     });
   }
-  
-      // Suggestions chips are handled via onclick in renderSuggestions
-  
-  // Back button
   if (backBtn) {
     backBtn.addEventListener('click', handleBack);
   }
-
-  // Click outside suggestion dropdown to close it
   document.addEventListener('click', (evt) => {
     const dropdown = document.getElementById('suggestionsDropdown');
     const searchContainer = document.querySelector('.search-container');
@@ -569,8 +525,6 @@ function handleKeyDown(e) {
 
   if (e.key === "Enter") {
     e.preventDefault();
-    
-    // If user selected a suggestion via arrow keys, use that
     if (suggestionIndex >= 0 && items[suggestionIndex]) {
       const selectedName = items[suggestionIndex].dataset.name;
       if (selectedName) {
@@ -578,7 +532,6 @@ function handleKeyDown(e) {
       }
     }
     
-    // Now use whatever is in the input
     const query = searchInput.value.trim();
     if (!query) return;
 
@@ -587,13 +540,11 @@ function handleKeyDown(e) {
     return;
   }
 
-  // Arrow navigation
   if (e.key === "ArrowDown") {
     e.preventDefault();
     if (items.length > 0) {
       suggestionIndex = (suggestionIndex + 1) % items.length;
       updateActiveItem(items);
-      // Update input as user navigates
       if (items[suggestionIndex]?.dataset.name) {
         searchInput.value = items[suggestionIndex].dataset.name;
       }
@@ -604,7 +555,6 @@ function handleKeyDown(e) {
     if (items.length > 0) {
       suggestionIndex = (suggestionIndex - 1 + items.length) % items.length;
       updateActiveItem(items);
-      // Update input as user navigates
       if (items[suggestionIndex]?.dataset.name) {
         searchInput.value = items[suggestionIndex].dataset.name;
       }
@@ -684,15 +634,10 @@ document.addEventListener("click", (e) => {
 });
 
 
-// REPLACE fetchSuggestions with DuckDuckGo Instant Answer API (no rate limit)
 async function fetchSuggestions(query) {
   const dropdown = document.getElementById("suggestionsDropdown");
   if (!dropdown) return;
-
-  // Reset suggestion index so Enter uses raw input by default
   suggestionIndex = -1;
-
-  // Always show guidance row first
   dropdown.innerHTML = `
     <div class="suggestion-item guidance-row" style="opacity:0.7;font-size:13px;cursor:pointer;" onclick="startSearchFlow()">
       <span>Can't find someone? Press Enter to search "${query}"</span>
@@ -729,8 +674,6 @@ async function fetchSuggestions(query) {
     }
 
     names = [...new Set(names)].slice(0, 6);
-
-    // Wikipedia fallback
     if (names.length === 0) {
       const wikiRes = await fetch(
         `https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=6&namespace=0&format=json&origin=*`
@@ -738,11 +681,7 @@ async function fetchSuggestions(query) {
       const wikiData = await wikiRes.json();
       names = [...new Set(wikiData[1] || [])].slice(0, 6);
     }
-
-    // If no suggestions, keep only guidance row (don't hide dropdown!)
     if (names.length === 0) return;
-
-    // Build suggestion rows
     const items = await Promise.all(
       names.map(async name => {
         let img = "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
@@ -757,7 +696,6 @@ async function fetchSuggestions(query) {
       })
     );
 
-    // Append suggestions AFTER guidance row
     dropdown.innerHTML += items
       .map(
         (item) => `
@@ -769,7 +707,6 @@ async function fetchSuggestions(query) {
       )
       .join("");
 
-    // Events - don't set suggestionIndex until user interacts
     dropdown.querySelectorAll(".suggestion-item[data-name]").forEach((el, i) => {
       el.addEventListener("click", () => selectSuggestion(el.dataset.name));
       el.addEventListener("mouseenter", () => {
@@ -796,14 +733,12 @@ function setupDemoMode() {
     return;
   }
 
-  // Set initial state
   const currentMode = isDemoMode();
   demoToggle.checked = currentMode;
   if (currentMode) {
     demoToggleSwitch.classList.add('active');
   }
 
-  // Handle visual toggle click
   demoToggleSwitch.addEventListener("click", () => {
     demoToggle.checked = !demoToggle.checked;
     demoToggleSwitch.classList.toggle('active');
@@ -830,8 +765,6 @@ function showLoader() {
   const loaderEl = document.getElementById("loader");
   if (loaderEl) loaderEl.classList.remove("hidden");
   document.getElementById("static-suggestions").style.display = "None";
-  
-  // Disable search input
   const searchInput = document.getElementById("searchInput");
   const searchmask = document.getElementById("input-mask");
   if (searchInput) {
@@ -848,8 +781,6 @@ function showLoader() {
 function hideLoader() {
   const loaderEl = document.getElementById("loader");
   if (loaderEl) loaderEl.classList.add("hidden");
-  
-  // Re-enable search input
   const searchInput = document.getElementById("searchInput");
   const searchmask = document.getElementById("input-mask");
   if (searchInput) {
@@ -865,17 +796,11 @@ function hideLoader() {
 function extractProfileLinksFromResults(xItems, liItems) {
   let xProfile = null;
   let linkedinProfile = null;
-
-  // X / Twitter
   if (Array.isArray(xItems)) {
     for (const item of xItems) {
       const url = item.link;
       if (!url) continue;
-
-      // Ignore posts
       if (url.includes("/status/")) continue;
-
-      // Keep clean profile root
       if (url.includes("x.com/") || url.includes("twitter.com/")) {
         xProfile = url.split("/status")[0];
         break;
@@ -883,7 +808,6 @@ function extractProfileLinksFromResults(xItems, liItems) {
     }
   }
 
-  // LinkedIn
   if (Array.isArray(liItems)) {
     for (const item of liItems) {
       const url = item.link;
@@ -903,23 +827,16 @@ function extractProfileLinksFromResults(xItems, liItems) {
 }
 
 
-// Search Flow
 async function startSearchFlow() {
   const query = searchInput && searchInput.value ? searchInput.value.trim() : "";
 
   if (!query) return;
 
   currentQuery = query;
-
-  // Reset UI state for new search
   const resultsView = document.getElementById("resultsView");
   const bentoGrid = document.getElementById("bentoGrid");
-  
-  // Clear previous results
   if (bentoGrid) bentoGrid.innerHTML = '';
   if (resultsView) resultsView.classList.remove("visible");
-  
-  // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
   
   const MIN_LOADING_TIME = 4000;
@@ -938,10 +855,8 @@ if (isDemoMode()) {
 
 
   try {
-    // 1. Non-rate-limited calls can stay parallel
     const profile = await getWikiProfile(query);
 
-// 2. Google calls MUST be serial
 const newsResults = await fetchGoogleResults(
   `recent news on ${query}`,
   1,
@@ -988,7 +903,6 @@ const liResults = await fetchGoogleResults(
       socialProfiles
     };
 
-    // ⏱ Ensure loader stays for at least 4s
     const elapsed = Date.now() - startTime;
     const remaining = Math.max(0, MIN_LOADING_TIME - elapsed);
 
@@ -1016,8 +930,6 @@ const liResults = await fetchGoogleResults(
   }
 }
 
-
-// API Functions
 async function fetchGoogleResults(query, pages = 2, { recentDays = null } = {}) {
   const allResults = [];
   const configs = getGoogleConfigs();
@@ -1028,7 +940,6 @@ async function fetchGoogleResults(query, pages = 2, { recentDays = null } = {}) 
     const start = 1 + page * 10;
     let pageFetched = false;
 
-    // Try each config ONCE per page, cyclically
     for (let attempt = 0; attempt < configs.length; attempt++) {
       const configIndex =
         (currentConfigIndex + attempt) % configs.length;
@@ -1053,15 +964,13 @@ async function fetchGoogleResults(query, pages = 2, { recentDays = null } = {}) 
         const res = await fetch(url);
         const data = await res.json();
 
-        // ---- HARD QUOTA CHECK ----
         if (data?.error?.code === 429) {
           console.warn(
             `Google API quota hit on config ${configIndex}, switching`
           );
-          continue; // try next key
+          continue;
         }
 
-        // ---- OTHER API ERRORS ----
         if (!res.ok || data.error) {
           console.error(
             "Google search error on config",
@@ -1071,12 +980,10 @@ async function fetchGoogleResults(query, pages = 2, { recentDays = null } = {}) 
           continue;
         }
 
-        // ---- SUCCESS ----
         if (data.items) {
           allResults.push(...data.items);
         }
 
-        // Lock working config for next calls
         currentConfigIndex = configIndex;
         pageFetched = true;
         break;
@@ -1089,7 +996,6 @@ async function fetchGoogleResults(query, pages = 2, { recentDays = null } = {}) 
       }
     }
 
-    // If BOTH keys failed for this page, skip page and continue
     if (!pageFetched) {
       console.warn("All Google API keys exhausted for page", page);
       continue;
@@ -1126,30 +1032,22 @@ function showToast(message, type = "info") {
     return;
   }
 
-  // Remove previous classes
   toast.classList.remove('show', 'success', 'error', 'info');
-  
-  // Set message
   toastText.textContent = message;
-  
-  // Add type class
   if (type === 'success' || type === 'error' || type === 'info') {
     toast.classList.add(type);
   }
   
-  // Show toast
   setTimeout(() => {
     toast.classList.add('show');
   }, 10);
   
-  // Hide after 3 seconds
   setTimeout(() => {
     toast.classList.remove('show');
   }, 3000);
 }
 
 function getOpenRouterKey() {
-  // Prefer user-provided key from settings, fall back to baked-in key
   return localStorage.getItem('eco_openrouter_api') || OPENROUTER_KEY;
 }
 
@@ -1348,8 +1246,6 @@ async function getApolloContact(name, company) {
 async function draftIntro(targetName) {
   const aboutMe = localStorage.getItem('eco_about') || localStorage.getItem("aboutMe") || '';
   const key = getOpenRouterKey();
-  
-  // Validation checks
   if (!aboutMe) {
     showToast("Please set 'About Me' in settings first", "error");
     const panel = document.getElementById("settingsPanel");
@@ -1364,7 +1260,6 @@ async function draftIntro(targetName) {
     return;
   }
 
-  // Find the button that was clicked
   const draftBtn = event?.target?.closest('.draft-btn');
   let originalText = '';
   
@@ -1408,20 +1303,15 @@ async function draftIntro(targetName) {
     
     const data = await res.json();
     const draft = data.choices?.[0]?.message?.content || "Failed to generate draft.";
-    
-    // Copy to clipboard
     await navigator.clipboard.writeText(draft);
     
     showToast("Draft copied to clipboard!", "success");
-    
-    // Show in modern modal instead of alert
     showDraftModal(draft);
     
   } catch (err) {
     console.error("Draft intro error:", err);
     showToast("Failed to generate draft. Check API key.", "error");
   } finally {
-    // Restore button
     if (draftBtn) {
       draftBtn.disabled = false;
       draftBtn.style.opacity = '1';
@@ -1431,7 +1321,6 @@ async function draftIntro(targetName) {
   }
 }
 
-// Add these helper functions
 function showDraftModal(draftContent) {
   const modal = document.getElementById('draftModal');
   const messageContent = document.getElementById('draftMessageContent');
@@ -1440,8 +1329,6 @@ function showDraftModal(draftContent) {
     messageContent.textContent = draftContent;
     modal.classList.remove('hidden');
     lucide.createIcons();
-    
-    // Store draft for copy again functionality
     window.currentDraft = draftContent;
   }
 }
@@ -1460,11 +1347,9 @@ function copyDraftAgain() {
   }
 }
 
-// Make functions globally accessible
 window.showDraftModal = showDraftModal;
 window.closeDraftModal = closeDraftModal;
 window.copyDraftAgain = copyDraftAgain;
-// Process results
 function processNews(items) {
   return items.map(item => ({
     title: item.title,
@@ -1516,7 +1401,6 @@ function copycard(){
   document.getElementById("copy-btn").textContent = "Copied";
 }
 
-// Render results
 function renderResults() {
   const isHome = !searchResults.profile;
   
@@ -1529,9 +1413,6 @@ function renderResults() {
   
   const grid = document.getElementById("bentoGrid");
   if (!grid) return;
-
-  
-  // Get Apollo contact info
   getApolloContact(profile.name, "").then(contacts => {
     const colors = ['card-color-1', 'card-color-2', 'card-color-3', 'card-color-4','card-color-5'];
     let colorIndex = 0;
@@ -1547,11 +1428,7 @@ function renderResults() {
     };
 
     let html = '<div class="bento-left">';
-
-    // Resolve follow state once, outside of template HTML
     const isAlreadyFollowing = isFollowing(profile.name);
-
-    // Profile Card
     html += `
       <div class="bento-card profile-card">
         <img src="${profile.image}" class="profile-avatar" alt="${profile.name}">
@@ -1588,10 +1465,6 @@ function renderResults() {
       </div>
     `;
 
-  
-
-    // AI summary + drafts (column 2 of bento-left)
-// AI summary + drafts (column 2 of bento-left)
 html += `
 <div class="ai-stack">
   <div class="bento-card ai-summary-card">
@@ -1633,8 +1506,6 @@ html += `</div><br>`;
 
 
     html += `<div class="news-grid">`; 
-
-    // News Cards
     let lastColor = getNextColor();
     news.filter(n => n.image).forEach(n => {
       lastColor = getNextColor(lastColor);
@@ -1650,13 +1521,7 @@ html += `</div><br>`;
 
     html += '</div>';
     html += '</div>';
-
-    // Right column
     html += '<div class="bento-right">';
-
-    
-
-    // X Posts
     xPosts.forEach(post => {
       html += `
         <div class="x-embed" id="x-post-${post.link.split('/').pop()}">
@@ -1679,13 +1544,9 @@ html += `</div><br>`;
     card.classList.add('stagger-item');
   });
 }, 50);
-    
-    // Load X embeds
     xPosts.forEach(post => {
       loadXEmbed(post.link);
     });
-    
-    // Show results view
     if (resultsView) {
       resultsView.classList.add('visible');
     }
@@ -1695,13 +1556,11 @@ html += `</div><br>`;
 function parseAIResponse(raw) {
   if (!raw) return { summary: "", icebreakers: [] };
 
-  // Remove markdown code fences if present
   const cleaned = raw
     .replace(/```json/g, "")
     .replace(/```/g, "")
     .trim();
 
-  // Try JSON parse
   try {
     const parsed = JSON.parse(cleaned);
 
@@ -1712,7 +1571,6 @@ function parseAIResponse(raw) {
         : []
     };
   } catch {
-    // Fallback: treat as plain summary text
     return {
       summary: raw,
       icebreakers: []
@@ -1750,7 +1608,6 @@ async function loadXEmbed(tweetUrl) {
   }
 }
 
-// Follow functionality
 function handleFollow(name, image) {
   const network = JSON.parse(localStorage.getItem('eco_network') || localStorage.getItem("network") || "[]");
   
@@ -1772,7 +1629,6 @@ function showSearchView() {
   document.querySelector(".suggestions")?.classList.add("visible");
 }
 
-// Back button
 function handleBack() {
   if (searchInput) searchInput.value = '';
   currentQuery = '';
@@ -1795,7 +1651,6 @@ function handleBack() {
   
 }
 
-// Toast
 function showToast(message, isError = false) {
   if (!toast || !toastMessage) return;
   
@@ -1808,7 +1663,6 @@ function showToast(message, isError = false) {
   }, 3000);
 }
 
-// Open social links
 
 async function openSocial(platform, name, existingUrl) {
   // If we have a URL already, use it
@@ -1823,7 +1677,6 @@ async function openSocial(platform, name, existingUrl) {
     return;
   }
 
-  // Fetch from Apollo first
   showToast(`Fetching ${platform} info...`);
   const contacts = await getApolloContact(name, '');
 
@@ -1845,7 +1698,6 @@ async function openSocial(platform, name, existingUrl) {
       window.open(url, '_blank');
     }
   } else {
-    // Fallback to search
     const fallbacks = {
       x: `https://x.com/search?q=${encodeURIComponent(name)}`,
       linkedin: `https://www.linkedin.com/search/results/all/?keywords=${encodeURIComponent(name)}`,
@@ -1857,8 +1709,6 @@ async function openSocial(platform, name, existingUrl) {
   }
 }
 
-
-// Expose functions globally
 window.handleFollow = handleFollow;
 window.draftIntro = draftIntro;
 window.openSocial = openSocial;
@@ -1876,7 +1726,6 @@ function setupGreeting() {
 }
 
 function saveKey(type) {
-  // Store user-provided keys under eco_* names so they can be reused
   const map = {
     google: "eco_google_api",
     cx: "eco_CX",
